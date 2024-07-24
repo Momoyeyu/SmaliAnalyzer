@@ -13,9 +13,12 @@ public class ClassAnalyzer {
     public static String getJavaSignature(SmaliClass smaliClass) {
         Matcher matcher = classPattern.matcher(smaliClass.getClassName());
         if (matcher.find()) {
-            smaliClass.setAccessModifier(matcher.group(2) == null ? "default" : matcher.group(2));
-            smaliClass.setFinalModifier(matcher.group(7) == null ? "instance" : matcher.group(7));
+            smaliClass.setAccessModifier(matcher.group(2));
+            smaliClass.setFinalModifier(matcher.group(7));
+            smaliClass.setInterfaceModifier(matcher.group(9));
+            smaliClass.setAbstractModifier(matcher.group(11));
         }
+        return null;
     }
 
     private static String getSignatureBody(String signature) {

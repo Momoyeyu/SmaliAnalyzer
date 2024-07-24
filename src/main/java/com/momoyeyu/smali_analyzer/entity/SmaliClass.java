@@ -14,8 +14,10 @@ public class SmaliClass {
 
     private String className;
     private String packageName;
-    protected String accessModifier;
-    protected String finalModifier;
+    private String accessModifier;
+    private String finalModifier;
+    private String interfaceModifier;
+    private String abstractModifier;
 
     public SmaliClass() {
         this("");
@@ -119,5 +121,21 @@ public class SmaliClass {
 
     public void setFinalModifier(String finalModifier) {
         this.finalModifier = finalModifier;
+    }
+
+    public String getAbstractModifier() {
+        return abstractModifier;
+    }
+
+    public void setAbstractModifier(String abstractModifier) {
+        this.abstractModifier = abstractModifier;
+    }
+
+    public String getInterfaceModifier() {
+        return interfaceModifier;
+    }
+
+    public void setInterfaceModifier(String interfaceModifier) {
+        this.interfaceModifier = interfaceModifier;
     }
 }
