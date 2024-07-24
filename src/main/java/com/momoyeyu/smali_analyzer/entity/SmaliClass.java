@@ -1,5 +1,7 @@
 package com.momoyeyu.smali_analyzer.entity;
 
+import com.momoyeyu.smali_analyzer.analyzers.ClassAnalyzer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,11 @@ public class SmaliClass {
     private List<SmaliClass> subClassList; // init, add, get
     private List<SmaliMethod> smaliMethodList; // init, add, get
     private boolean init; // get
+
+    private String className;
+    private String packageName;
+    protected String accessModifier;
+    protected String finalModifier;
 
     public SmaliClass() {
         this("");
@@ -59,7 +66,7 @@ public class SmaliClass {
     }
 
     // getter
-    public String getClassSignature() {
+    public String getSignature() {
         return classSignature;
     }
 
@@ -77,5 +84,40 @@ public class SmaliClass {
 
     public boolean isInit() {
         return init;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getClassName() {
+        if (this.className == null || this.className.isEmpty()) {
+            this.className = ClassAnalyzer.getClassName(this);
+        }
+        return className;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getAccessModifier() {
+        return accessModifier;
+    }
+
+    public void setAccessModifier(String accessModifier) {
+        this.accessModifier = accessModifier;
+    }
+
+    public String getFinalModifier() {
+        return finalModifier;
+    }
+
+    public void setFinalModifier(String finalModifier) {
+        this.finalModifier = finalModifier;
     }
 }

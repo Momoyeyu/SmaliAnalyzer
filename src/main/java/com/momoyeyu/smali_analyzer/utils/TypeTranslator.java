@@ -1,9 +1,11 @@
 package com.momoyeyu.smali_analyzer.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class TypeMap {
+public class TypeTranslator {
     private static Map<String, String> typeMap = new HashMap<>();
     static {
         typeMap.put("Z", "boolean");
@@ -41,7 +43,7 @@ public class TypeMap {
         return isArray ? type + "[]" : type;
     }
 
-    private static String getObjectName(String name) {
+    public static String getObjectName(String name) {
         if (name == null || !name.startsWith("L")) {
             return null;
         }
@@ -79,5 +81,26 @@ public class TypeMap {
         System.out.println(getType("[Ljava/lang/String"));
         System.out.println(getType("[B"));
     }
+
+    /**
+     * Turn a line of smali parameters into a list of java parameters
+     *
+     * @test pass
+     * @param parameters a line of smali parameter list string
+     * @return a list of java type parameters
+     */
+    public static List<String> getJavaParameters(String parameters) {
+        List<String> parametersList = new ArrayList<>();
+        if (parameters == null || parameters.isEmpty()) {
+            return parametersList;
+        }
+        String[] parameterArray = parameters.split("[;]");
+        for (String parameter : parameterArray) {
+            parametersList.add(getType(parameter.trim()));
+        }
+        return parametersList;
+    }
+
+
 
 }

@@ -5,13 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33e179b5-9427-4919-b4e9-a093d5d239c6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliClass.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliField.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliMethod.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/SmaliFileReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliConstructor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/MethodSignature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/MethodAnalyzer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/ClassAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/ClassAnalyzer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/MethodAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/MethodAnalyzer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/SmaliFileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/SmaliFileReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/TypeMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/TypeTranslator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,10 +40,12 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.ClassAnalyzer.executor": "Run",
     "Application.MethodAnalyzer.executor": "Run",
     "Application.MethodSignature.executor": "Run",
     "Application.Test.executor": "Run",
     "Application.TypeMap.executor": "Run",
+    "Application.TypeTranslator.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "master",
@@ -75,11 +78,27 @@
       <option name="presentableId" value="Default" />
       <updated>1721716655992</updated>
       <workItem from="1721716657022" duration="11221000" />
-      <workItem from="1721782369572" duration="15722000" />
+      <workItem from="1721782369572" duration="25920000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliConstructor.java</url>
+          <line>32</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/MethodAnalyzer.java</url>
+          <line>107</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

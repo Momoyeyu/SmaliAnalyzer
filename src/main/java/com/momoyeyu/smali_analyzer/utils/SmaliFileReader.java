@@ -1,7 +1,9 @@
 package com.momoyeyu.smali_analyzer.utils;
 
 
+import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.entity.SmaliClass;
+import com.momoyeyu.smali_analyzer.entity.SmaliConstructor;
 import com.momoyeyu.smali_analyzer.entity.SmaliMethod;
 
 import java.io.File;
@@ -59,7 +61,11 @@ public class SmaliFileReader {
                         body.add(line);
                     }
                     // add method to the current class
-                    currentSmaliClass.addSmaliMethod(new SmaliMethod(signature, body));
+                    if (MethodAnalyzer.isConstructor(line)) {
+                        currentSmaliClass.addSmaliMethod(new SmaliConstructor(signature, currentSmaliClass, body));
+                    } else {
+                        currentSmaliClass.addSmaliMethod(new SmaliMethod(signature, currentSmaliClass, body));
+                    }
                 }
             }
         } catch (FileNotFoundException e) {
