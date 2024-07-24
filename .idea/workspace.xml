@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33e179b5-9427-4919-b4e9-a093d5d239c6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliClass.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliField.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliMethod.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/SmaliFileReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/MethodSignature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/MethodSignature.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/MethodSignature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/MethodAnalyzer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +39,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.MethodAnalyzer.executor": "Run",
     "Application.MethodSignature.executor": "Run",
+    "Application.Test.executor": "Run",
     "Application.TypeMap.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -68,7 +75,7 @@
       <option name="presentableId" value="Default" />
       <updated>1721716655992</updated>
       <workItem from="1721716657022" duration="11221000" />
-      <workItem from="1721782369572" duration="2812000" />
+      <workItem from="1721782369572" duration="15722000" />
     </task>
     <servers />
   </component>

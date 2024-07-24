@@ -1,4 +1,7 @@
-package com.momoyeyu.smali_analyzer.utils;
+package com.momoyeyu.smali_analyzer.analyzers;
+
+import com.momoyeyu.smali_analyzer.entity.SmaliMethod;
+import com.momoyeyu.smali_analyzer.utils.TypeMap;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,12 +11,21 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MethodSignature {
+public class MethodAnalyzer {
+
+    private static final Pattern constructorPattern = Pattern.compile(".method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?constructor\\s+((<init>)|(<clinit>))\\((.*?)\\)V");
+    private static final Pattern methodPattern = Pattern.compile(".method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((varargs)\\s+)?(\\w+)\\((.*?)\\)(.+?);");
 
     public static void main(String[] args) {
         List<String> parametersList = getParameters("Ljava/io/OutputStream;Ljava/lang/String;");
-        System.out.println(listParameters(parametersList));
-        System.out.println(smali2Java(".method public static doInBackground([Ljava/lang/Object;)Ljava/lang/Void;"));
+        System.out.println(listParameters(parametersList));  // src/main/java/com/momoyeyu/smali_analyzer/utils/MethodSignature.java
+        List<String> body = new ArrayList<>();
+        SmaliMethod smaliMethod = new SmaliMethod(
+                ".method public varargs doInBackground([Ljava/lang/Object;)Ljava/lang/Void;", body
+                );
+        MethodAnalyzer methodSignature = new MethodAnalyzer();
+        System.out.println(methodSignature.smali2Java(".method public varargs doInBackground([Ljava/lang/Object;)Ljava/lang/Void;"));
+        System.out.println(methodSignature.smali2Java(".method public bridge synthetic doInBackground([Ljava/lang/Object;)Ljava/lang/Object;"));
     }
 
     /**
@@ -22,11 +34,16 @@ public class MethodSignature {
      * @param path file path of the smali source file to be analyzed
      * @return all method signature in Java
      */
-    public static List<String> analyzerFile(String path) {
+    public List<String> analyzerFile(String path) {
         List<String> smaliMethods = smaliMethodReader(path);
         return getJavaMethod(smaliMethods);
     }
 
+    /**
+     * read the smali source file and extract all .method lines
+     * @param path the smali source file path
+     * @return
+     */
     private static List<String> smaliMethodReader(String path) {
         File file = new File(path);
         Scanner scanner = null;
@@ -49,7 +66,7 @@ public class MethodSignature {
         return smaliMethods;
     }
 
-    private static List<String> getJavaMethod(List<String> smaliMethods) {
+    private List<String> getJavaMethod(List<String> smaliMethods) {
         List<String> javaMethods = new ArrayList<>();
         for (String smaliMethod : smaliMethods) {
             javaMethods.add(smali2Java(smaliMethod));
@@ -65,22 +82,16 @@ public class MethodSignature {
      * @return Java method signature
      */
     private static String smali2Java(String smaliSignature) {
-        smaliSignature = smaliSignature.substring(8).strip(); // remove ".method "
-        String[] keys = smaliSignature.split("\\s");
-        if (isConstructor(keys)) {
-            return smaliConstructorToJavaConstructor(smaliSignature);
-        }
-        String regex = "((private)|(protected)|(public)\\s+)?((static)\\s+)?((varargs)\\s+)?(\\w+)\\((.*?)\\)(.+?);";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(smaliSignature);
+        smaliSignature = smaliSignature.strip();
+        Matcher matcher = methodPattern.matcher(smaliSignature);
 
         if (matcher.find()) {
-            String accessModifier = matcher.group(1); // access?
-            String staticModifier = matcher.group(6); // static?
-            String varargs = matcher.group(8); // varargs?
-            String methodName = matcher.group(9); // name
-            String parameters = matcher.group(10); // params?
-            String returnType = matcher.group(11); // ret type
+            String accessModifier = matcher.group(2); // access?
+            String staticModifier = matcher.group(7); // static?
+            String varargs = matcher.group(9); // varargs?
+            String methodName = matcher.group(10); // name
+            String parameters = matcher.group(11); // params?
+            String returnType = matcher.group(12); // ret type
 
             accessModifier = accessModifier == null ? "default" : accessModifier.strip();
             staticModifier = staticModifier == null ? "instance" : staticModifier.strip();
@@ -95,7 +106,7 @@ public class MethodSignature {
                     methodName, accessModifier, staticModifier, parametersList, returnType);
             return signature.toString();
         }
-        return "[ERROR] unable to generate method signature";
+        return "[ERROR] fail to analyze signature: \"" + smaliSignature + "\"";
     }
 
     /**
@@ -147,6 +158,7 @@ public class MethodSignature {
     }
 
     /**
+     * Get parameters list in Java style
      *
      * @test pass
      * @param parametersList
@@ -163,17 +175,27 @@ public class MethodSignature {
         return sb.toString();
     }
 
-    private static boolean isConstructor(String[] arr) {
-        for (String s : arr) {
-            if (s.equals("constructor")) {
-                return true;
-            }
-        }
-        return false;
+    /**
+     * Check is the method given a constructor
+     *
+     * @param smaliSignature smali constructor signature
+     * @return true or false
+     */
+    private static boolean isConstructor(String smaliSignature) {
+        return constructorPattern.matcher(smaliSignature).matches();
     }
 
     private static String smaliConstructorToJavaConstructor(String smaliConstructor) {
-
+        Matcher matcher = constructorPattern.matcher(smaliConstructor);
+        StringBuilder sb = new StringBuilder();
+        if (matcher.find()) {
+            sb.append(matcher.group(2) == null ? "" : matcher.group(2) + " "); // access?
+            sb.append(matcher.group(7) == null ? "" : matcher.group(7) + " "); // static?
+//            sb.append(className).append("(");
+            sb.append(matcher.group(9) == null ? "" : matcher.group(9)).append(")");
+            String initType = matcher.group(8); // init type
+            String parameters = matcher.group(11); // params?
+        }
         return null;
     }
 }
