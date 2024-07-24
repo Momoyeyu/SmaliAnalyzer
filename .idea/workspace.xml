@@ -5,17 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33e179b5-9427-4919-b4e9-a093d5d239c6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/ImportPackageList.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/MethodSignature.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/TypeMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/MethodSignature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/MethodSignature.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,9 +23,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2jdUsfhRczwkBVwgpDJy1TN9pYc" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -43,7 +34,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.MethodSignature.executor": "Debug",
+    "Application.MethodSignature.executor": "Run",
     "Application.TypeMap.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -54,6 +45,9 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -74,6 +68,7 @@
       <option name="presentableId" value="Default" />
       <updated>1721716655992</updated>
       <workItem from="1721716657022" duration="11221000" />
+      <workItem from="1721782369572" duration="2812000" />
     </task>
     <servers />
   </component>

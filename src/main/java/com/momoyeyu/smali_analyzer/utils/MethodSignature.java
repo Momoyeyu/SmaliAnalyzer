@@ -60,32 +60,31 @@ public class MethodSignature {
     /**
      * Turn a smali method signature into Java method signature
      *
+     * @test pass
      * @param smaliSignature smali method signature
      * @return Java method signature
      */
     private static String smali2Java(String smaliSignature) {
-        smaliSignature = smaliSignature.substring(8); // remove ".method "
+        smaliSignature = smaliSignature.substring(8).strip(); // remove ".method "
         String[] keys = smaliSignature.split("\\s");
         if (isConstructor(keys)) {
             return smaliConstructorToJavaConstructor(smaliSignature);
         }
-        if (!hasAccessModifier(keys)) {
-            smaliSignature = "default " + smaliSignature;
-        }
-        String regex = "(\\w+)(\\s+(static))?(\\s+(varargs))?\\s+(\\w+)\\s+\\((.*?)\\)\\s+(\\w+)";
+        String regex = "((private)|(protected)|(public)\\s+)?((static)\\s+)?((varargs)\\s+)?(\\w+)\\((.*?)\\)(.+?);";
         Pattern pattern = Pattern.compile(regex);
-
-        // 处理方法签名
         Matcher matcher = pattern.matcher(smaliSignature);
 
         if (matcher.find()) {
-            String accessModifier = matcher.group(1); // access
-            String staticModifier = matcher.group(3); // static?
-            String varargs = matcher.group(5); // varargs?
-            String methodName = matcher.group(6); // name
-            String parameters = matcher.group(7); // params?
-            String returnType = matcher.group(8); // ret type
-            staticModifier = staticModifier == null ? "instance" : staticModifier;
+            String accessModifier = matcher.group(1); // access?
+            String staticModifier = matcher.group(6); // static?
+            String varargs = matcher.group(8); // varargs?
+            String methodName = matcher.group(9); // name
+            String parameters = matcher.group(10); // params?
+            String returnType = matcher.group(11); // ret type
+
+            accessModifier = accessModifier == null ? "default" : accessModifier.strip();
+            staticModifier = staticModifier == null ? "instance" : staticModifier.strip();
+            returnType = TypeMap.getType(returnType).strip();
 
             List<String> parametersList = getParameters(parameters);
             if (varargs != null) {
@@ -134,17 +133,15 @@ public class MethodSignature {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            if (accessModifier.equals("default")) {
-                sb.append(accessModifier);
+            if (!accessModifier.equals("default")) {
+                sb.append(accessModifier).append(" ");
             }
-            if (staticModifier.equals("instance")) {
-                sb.append(staticModifier);
+            if (!staticModifier.equals("instance")) {
+                sb.append(staticModifier).append(" ");
             }
-            sb.append(returnType);
-            sb.append(methodName);
-            sb.append("(");
-            sb.append(listParameters(parametersList));
-            sb.append(");");
+            sb.append(returnType).append(" ");
+            sb.append(methodName).append("(");
+            sb.append(listParameters(parametersList)).append(");");
             return sb.toString();
         }
     }
@@ -178,14 +175,5 @@ public class MethodSignature {
     private static String smaliConstructorToJavaConstructor(String smaliConstructor) {
 
         return null;
-    }
-
-    private static boolean hasAccessModifier(String[] arr) {
-        for (String s : arr) {
-            if (s.equals("private") || s.equals("protected") || s.equals("public")) {
-                return true;
-            }
-        }
-        return false;
     }
 }
