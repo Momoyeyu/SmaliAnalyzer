@@ -1,12 +1,13 @@
 package com.momoyeyu.smali_analyzer.entity;
 
 import com.momoyeyu.smali_analyzer.analyzers.ClassAnalyzer;
+import com.momoyeyu.smali_analyzer.analyzers.ConstructorAnalyzer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SmaliClass {
-    private String classSignature; // init, get
+    private String signature; // init, get
     private SmaliClass superClass; // set once, get
     private List<SmaliClass> subClassList; // init, add, get
     private List<SmaliMethod> smaliMethodList; // init, add, get
@@ -18,6 +19,7 @@ public class SmaliClass {
     private String finalModifier;
     private String interfaceModifier;
     private String abstractModifier;
+    private boolean translated;
 
     public SmaliClass() {
         this("");
@@ -29,33 +31,88 @@ public class SmaliClass {
     }
 
     public SmaliClass(String classSignature, List<SmaliClass> subClassList, List<SmaliMethod> methodList) {
-        this.classSignature = classSignature;
+        this.signature = classSignature.strip();
         this.subClassList = subClassList;
         this.smaliMethodList = methodList;
         this.superClass = null;
         this.init = true;
+        this.translated = false;
     }
 
     public void init(String classSignature) {
-        this.classSignature = classSignature;
+        this.signature = classSignature;
         this.init = true;
+    }
+
+    public String toJava() {
+        if (!translated) {
+            translated = true;
+            try {
+                ClassAnalyzer.translate(this);
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+                return "[ERROR] unable to translate class: " + signature;
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        if (!accessModifier.equals("default")) {
+            sb.append(accessModifier).append(" ");
+        }
+        if (!finalModifier.equals("null")) {
+            sb.append(finalModifier).append(" ");
+        }
+        if (!interfaceModifier.equals("null")) {
+            sb.append(interfaceModifier).append(" ");
+        }
+        if (!abstractModifier.equals("null")) {
+            sb.append(abstractModifier).append(" ");
+        }
+        sb.append(className).append(";");
+        return sb.toString();
     }
 
     // setter
     /**
-     * Set the super class (only once otherwise throw a runtime exception)
+     * Set the super class.
+     * This method should only be called once.
+     * Multiple call will lead to a RuntimeException.
+     *
+     * @author momoyeyu
      * @param superClass super class object
      */
-    public void setSuperClass(SmaliClass superClass) {
+    public void setSuperClass(SmaliClass superClass) throws RuntimeException {
         if (superClass != null) {
             if (this.superClass == null) {
                 this.superClass = superClass;
             } else {
-                throw new RuntimeException("Super class already exists");
+                throw new RuntimeException("Super class already set");
             }
-        } else {
-            throw new RuntimeException("Super class is null");
         }
+    }
+
+    // setter
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public void setAccessModifier(String accessModifier) {
+        this.accessModifier = accessModifier;
+    }
+
+    public void setFinalModifier(String finalModifier) {
+        this.finalModifier = finalModifier;
+    }
+
+    public void setAbstractModifier(String abstractModifier) {
+        this.abstractModifier = abstractModifier;
+    }
+
+    public void setInterfaceModifier(String interfaceModifier) {
+        this.interfaceModifier = interfaceModifier;
     }
 
     // adder
@@ -69,7 +126,7 @@ public class SmaliClass {
 
     // getter
     public String getSignature() {
-        return classSignature;
+        return signature;
     }
 
     public SmaliClass getSuperClass() {
@@ -88,54 +145,14 @@ public class SmaliClass {
         return init;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public boolean isTranslated() {
+        return translated;
     }
 
     public String getClassName() {
-        if (this.className == null || this.className.isEmpty()) {
-            this.className = ClassAnalyzer.getClassName(this);
+        if (!translated) {
+            ClassAnalyzer.translate(this);
         }
         return className;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    public String getAccessModifier() {
-        return accessModifier;
-    }
-
-    public void setAccessModifier(String accessModifier) {
-        this.accessModifier = accessModifier;
-    }
-
-    public String getFinalModifier() {
-        return finalModifier;
-    }
-
-    public void setFinalModifier(String finalModifier) {
-        this.finalModifier = finalModifier;
-    }
-
-    public String getAbstractModifier() {
-        return abstractModifier;
-    }
-
-    public void setAbstractModifier(String abstractModifier) {
-        this.abstractModifier = abstractModifier;
-    }
-
-    public String getInterfaceModifier() {
-        return interfaceModifier;
-    }
-
-    public void setInterfaceModifier(String interfaceModifier) {
-        this.interfaceModifier = interfaceModifier;
     }
 }
