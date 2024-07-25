@@ -6,6 +6,7 @@ target/
 ### custom
 src/test/java/Test.java
 .idea/workspace.xml
+res/data/output/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
