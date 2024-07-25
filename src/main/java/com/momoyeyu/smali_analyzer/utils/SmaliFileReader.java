@@ -1,6 +1,5 @@
 package com.momoyeyu.smali_analyzer.utils;
 
-
 import com.momoyeyu.smali_analyzer.analyzers.ConstructorAnalyzer;
 import com.momoyeyu.smali_analyzer.element.SmaliClass;
 import com.momoyeyu.smali_analyzer.element.SmaliConstructor;
@@ -9,9 +8,11 @@ import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  * Scan and analyze smali source file structure to
@@ -23,6 +24,24 @@ public class SmaliFileReader {
 
     private SmaliClass smaliClass;
     private SmaliClass currentSmaliClass;
+    private static Pattern pathPattern = Pattern.compile("((.*)\\\\input\\\\)?((\\S+).smali)");
+
+    public static void main(String[] args) {
+        // TODO: test SmaliFileReader
+        String inputPath = "C:\\Users\\antiy\\Desktop\\projects\\SmaliAnalyzer\\res\\data\\input\\ActivityChooserModel.smali";
+        SmaliFileReader smaliFileReader = new SmaliFileReader(inputPath);
+        System.out.println(smaliFileReader.smaliClass.toString());
+    }
+
+    public static String getOutputPath(String inputPath) {
+        int idx = inputPath.lastIndexOf('\\');
+        int idx2 = inputPath.substring(0, idx).lastIndexOf('\\');
+        return inputPath.substring(0, idx2) + inputPath.substring(idx2, idx).replaceFirst("input", "output") + inputPath.substring(idx);
+    }
+
+    public SmaliClass getFileClass() {
+        return smaliClass;
+    }
 
     public SmaliFileReader(String fileName) {
         // create a new class instance
@@ -47,12 +66,16 @@ public class SmaliFileReader {
                         curSmaliField = null;
                     }
                 }
+
+                if (line.isEmpty() || line.startsWith("#")) continue;
+
                 // find a class, let currentSmaliClass = this class
                 if (line.startsWith(".class")) {
                     if (line.contains("$") || smaliClass.isInit()) {
                         currentSmaliClass = new SmaliClass(line);
                         smaliClass.addSubClass(currentSmaliClass);
-                    } else if (!smaliClass.isInit()) {
+                    } else {
+                        smaliClass.init(line);
                         currentSmaliClass = smaliClass;
                     }
                 }
@@ -73,7 +96,7 @@ public class SmaliFileReader {
                         if (line.startsWith(".end method")) break;
                     }
                     // add method to the current class
-                    if (ConstructorAnalyzer.isConstructor(line)) {
+                    if (ConstructorAnalyzer.isConstructor(signature)) {
                         currentSmaliClass.addSmaliMethod(new SmaliConstructor(signature, currentSmaliClass, body));
                     } else {
                         currentSmaliClass.addSmaliMethod(new SmaliMethod(signature, currentSmaliClass, body));
@@ -83,9 +106,7 @@ public class SmaliFileReader {
                     curSmaliField = new SmaliField(line);
                     currentSmaliClass.addSmaliField(curSmaliField);
                 }
-                if (!line.isEmpty()) {
-                    lastFlag = line.split(" ")[0];
-                }
+                lastFlag = line.split(" ")[0];
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

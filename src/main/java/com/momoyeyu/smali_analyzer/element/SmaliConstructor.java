@@ -25,7 +25,7 @@ public class SmaliConstructor extends SmaliMethod {
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
-                return "[ERROR] invalid constructor" + signature;
+                return "[ERROR] Unable to translate constructor" + signature;
             }
         }
         if (!ownerClass.isTranslated()) {
@@ -39,7 +39,7 @@ public class SmaliConstructor extends SmaliMethod {
             sb.append(staticModifier).append(" ");
         }
         sb.append(ownerClass.getName()).append("(");
-        sb.append(ConstructorAnalyzer.listParameters(parametersList)).append(");");
+        sb.append(ConstructorAnalyzer.listParameters(parametersList)).append(")");
         return sb.toString();
     }
 

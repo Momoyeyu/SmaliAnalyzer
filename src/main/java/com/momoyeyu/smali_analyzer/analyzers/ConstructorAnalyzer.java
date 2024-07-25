@@ -28,11 +28,11 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
     }
 
     public static boolean isConstructor(SmaliMethod smaliMethod) {
-        return isConstructor(smaliMethod.toString());
+        return isConstructor(smaliMethod.getSignature());
     }
 
     public static void translate(SmaliConstructor smaliConstructor) throws RuntimeException {
-        Matcher matcher = constructorPattern.matcher(smaliConstructor.toString());
+        Matcher matcher = constructorPattern.matcher(smaliConstructor.getSignature());
         if (matcher.find()) {
             smaliConstructor.setAccessModifier(matcher.group(2)); // access?
             smaliConstructor.setStaticModifier(matcher.group(7)); // static?
@@ -44,7 +44,7 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
     }
 
     public static String getSignature(SmaliConstructor smaliConstructor) {
-        return smaliConstructor.toJava();
+        return smaliConstructor.toJava() + ";";
     }
 
     public static String getSignature(String smaliConstructor, String onwerClass) {

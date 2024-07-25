@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class MethodAnalyzer {
 
-    private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((varargs)\\s+)?(\\w+)\\((.*?)\\)(.+?);");
+    private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((varargs)\\s+)?(\\w+)\\((.*?)\\)(\\S+?);?");
 
     public static void main(String[] args) {
         List<String> parametersList = TypeTranslator.getJavaParameters("Ljava/io/OutputStream;Ljava/lang/String;");
@@ -25,7 +25,7 @@ public class MethodAnalyzer {
      * @param smaliMethod SmaliMethod object
      */
     public static void translate(SmaliMethod smaliMethod) throws RuntimeException {
-        Matcher matcher = methodPattern.matcher(smaliMethod.toString());
+        Matcher matcher = methodPattern.matcher(smaliMethod.getSignature());
         if (matcher.find()) {
             smaliMethod.setAccessModifier(matcher.group(2)); // access?
             smaliMethod.setStaticModifier(matcher.group(7)); // static?
@@ -72,7 +72,7 @@ public class MethodAnalyzer {
         if (ConstructorAnalyzer.isConstructor(smaliMethod)) {
             return ConstructorAnalyzer.getSignature((SmaliConstructor) smaliMethod);
         }
-        return smaliMethod.toJava();
+        return smaliMethod.toJava() + ";";
     }
 
     /**

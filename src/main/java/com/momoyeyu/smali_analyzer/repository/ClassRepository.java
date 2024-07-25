@@ -11,7 +11,7 @@ public class ClassRepository {
     private static Map<String, SmaliClass> classMap = new HashMap<String, SmaliClass>();
 
     public static void addClass(SmaliClass smaliClass) {
-        classMap.put(smaliClass.toString(), smaliClass);
+        classMap.put(smaliClass.getSignature(), smaliClass);
     }
 
     public static SmaliClass getClass(String signature) {

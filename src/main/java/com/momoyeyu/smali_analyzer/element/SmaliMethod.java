@@ -36,7 +36,7 @@ public class SmaliMethod extends SmaliElement {
             } catch (Exception e) {
                 e.printStackTrace();
                 translated = true;
-                return "[ERROR] unable to translate method: " + signature;
+                return "[ERROR] Unable to translate method: " + signature;
             }
         }
         StringBuilder sb = new StringBuilder();
@@ -48,7 +48,7 @@ public class SmaliMethod extends SmaliElement {
         }
         sb.append(returnType).append(" ");
         sb.append(name).append("(");
-        sb.append(MethodAnalyzer.listParameters(parametersList)).append(");");
+        sb.append(MethodAnalyzer.listParameters(parametersList)).append(")");
         return sb.toString();
     }
 

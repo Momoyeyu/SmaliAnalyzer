@@ -16,7 +16,7 @@ public class ClassAnalyzer {
     }
 
     public static void translate(SmaliClass smaliClass) throws RuntimeException {
-        Matcher matcher = classPattern.matcher(smaliClass.toString());
+        Matcher matcher = classPattern.matcher(smaliClass.getSignature());
         if (matcher.find()) {
             smaliClass.setAccessModifier(matcher.group(2));
             smaliClass.setFinalModifier(matcher.group(7));
@@ -39,7 +39,7 @@ public class ClassAnalyzer {
     }
 
     public static String getSignature(SmaliClass smaliClass) {
-        return smaliClass.toJava();
+        return smaliClass.toJava() + ";";
     }
 
     public static String getSignature(String smaliClass) {

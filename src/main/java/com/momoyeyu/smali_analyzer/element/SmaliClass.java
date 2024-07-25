@@ -43,6 +43,28 @@ public class SmaliClass extends SmaliElement {
     }
 
     @Override
+    public String toString() {
+        return packageName + "\n\n" + toStringIndent(0);
+    }
+
+    private String toStringIndent(int indent) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\t".repeat(Math.max(0, indent - 1))).append(this.toJava()).append(" {\n\n");
+        for (SmaliField field : smaliFieldList) {
+            sb.append("\t".repeat(Math.max(0, indent + 1))).append(field.toJava()).append("\n");
+        }
+        for (SmaliMethod method : smaliMethodList) {
+            sb.append("\t".repeat(Math.max(0, indent + 1))).append(method.toJava()).append(";\n\n");
+        }
+        for (SmaliClass superClass : subClassList) {
+            sb.append("\t".repeat(Math.max(0, indent + 1))).append(superClass.toStringIndent(indent + 1)).append("\n");
+        }
+        return sb.toString();
+    }
+
+
+
+    @Override
     public String toJava() {
         if (!translated) {
             try {
@@ -50,7 +72,7 @@ public class SmaliClass extends SmaliElement {
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
-                return "[ERROR] unable to translate class: " + signature;
+                return "[ERROR] Unable to translate class: " + signature;
             }
         }
         StringBuilder sb = new StringBuilder();
@@ -60,13 +82,15 @@ public class SmaliClass extends SmaliElement {
         if (!finalModifier.equals("default")) {
             sb.append(finalModifier).append(" ");
         }
-        if (!interfaceModifier.equals("default")) {
-            sb.append(interfaceModifier).append(" ");
-        }
         if (!abstractModifier.equals("default")) {
             sb.append(abstractModifier).append(" ");
         }
-        sb.append(name).append(";");
+        if (!interfaceModifier.equals("default")) {
+            sb.append(interfaceModifier).append(" ");
+        } else {
+            sb.append("class ");
+        }
+        sb.append(name);
         return sb.toString();
     }
 

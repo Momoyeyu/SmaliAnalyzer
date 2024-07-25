@@ -30,7 +30,7 @@ public class SmaliField extends SmaliElement {
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
-                return "[ERROR] Invalid field: " + signature;
+                return "[ERROR] Unable to translate field: " + signature;
             }
         }
         StringBuilder sb = new StringBuilder();

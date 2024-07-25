@@ -1,8 +1,6 @@
 package com.momoyeyu.smali_analyzer.analyzers;
 
-import com.momoyeyu.smali_analyzer.element.SmaliConstructor;
 import com.momoyeyu.smali_analyzer.element.SmaliField;
-import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +23,7 @@ public class FieldAnalyzer {
     }
 
     public static void translate(SmaliField smaliField) throws RuntimeException {
-        Matcher matcher = fieldPattern.matcher(smaliField.toString());
+        Matcher matcher = fieldPattern.matcher(smaliField.getSignature());
         if (matcher.find()) {
             smaliField.setAccessModifier(matcher.group(2)); // default?
             smaliField.setStaticModifier(matcher.group(7)); // static?
@@ -37,7 +35,7 @@ public class FieldAnalyzer {
             smaliField.setType(matcher.group(14));
             smaliField.setValue(matcher.group(16));
         } else {
-            throw new RuntimeException("[ERROR] Invalid field: " + smaliField.toString());
+            throw new RuntimeException("[ERROR] Invalid field: " + smaliField.getSignature());
         }
     }
 

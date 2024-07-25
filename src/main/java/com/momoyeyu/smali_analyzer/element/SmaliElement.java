@@ -24,8 +24,12 @@ public class SmaliElement {
         return signature;
     }
 
+    public String getSignature() {
+        return signature;
+    }
+
     public String toJava() {
-        return "[ERROR] unknown element: " + this;
+        return "[ERROR] Unable to translate element: " + this;
     }
 
     public boolean isTranslated() {
