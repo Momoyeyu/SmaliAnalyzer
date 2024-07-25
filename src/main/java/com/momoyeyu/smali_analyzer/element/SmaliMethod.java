@@ -17,7 +17,7 @@ public class SmaliMethod extends SmaliElement {
     }
 
     public SmaliMethod(String signature, SmaliClass ownerClass, List<String> body) {
-        this.signature = signature;
+        super(signature);
         this.ownerClass = ownerClass;
         if (body != null) {
             this.body = body;
@@ -26,13 +26,11 @@ public class SmaliMethod extends SmaliElement {
         }
     }
 
-    public String getSignature() { return signature; }
-
     public List<String> getBody() { return body; }
 
     @Override
     public String toJava() {
-        if (!isTranslated()) {
+        if (!translated) {
             translated = true;
             try {
                 MethodAnalyzer.translate(this);
@@ -46,7 +44,7 @@ public class SmaliMethod extends SmaliElement {
         if (!accessModifier.equals("default")) {
             sb.append(accessModifier).append(" ");
         }
-        if (!staticModifier.equals("instance")) {
+        if (!staticModifier.equals("default")) {
             sb.append(staticModifier).append(" ");
         }
         sb.append(returnType).append(" ");
@@ -55,40 +53,12 @@ public class SmaliMethod extends SmaliElement {
         return sb.toString();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAccessModifier() {
-        return accessModifier;
-    }
-
-    public void setAccessModifier(String accessModifier) {
-        this.accessModifier = accessModifier;
-    }
-
-    public String getStaticModifier() {
-        return staticModifier;
-    }
-
-    public void setStaticModifier(String staticModifier) {
-        this.staticModifier = staticModifier;
-    }
-
     public List<String> getParametersList() {
         return parametersList;
     }
 
     public void setParametersList(List<String> parametersList) {
         this.parametersList = parametersList;
-    }
-
-    public String getReturnType() {
-        return returnType;
     }
 
     public void setReturnType(String returnType) {

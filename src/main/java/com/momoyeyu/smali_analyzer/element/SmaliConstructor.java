@@ -29,11 +29,14 @@ public class SmaliConstructor extends SmaliMethod {
                 return "[ERROR] invalid constructor" + signature;
             }
         }
+        if (!ownerClass.isTranslated()) {
+            ownerClass.toJava();
+        }
         StringBuilder sb = new StringBuilder();
-        if (!(accessModifier == null) && !accessModifier.isEmpty() && !accessModifier.equals("default")) {
+        if (!accessModifier.equals("default")) {
             sb.append(accessModifier).append(" ");
         }
-        if (!(staticModifier == null) && !staticModifier.isEmpty() && !staticModifier.equals("instance")) {
+        if (!staticModifier.equals("default")) {
             sb.append(staticModifier).append(" ");
         }
         sb.append(ownerClass.getName()).append("(");

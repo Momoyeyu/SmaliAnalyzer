@@ -13,7 +13,7 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
     private static final Pattern constructorPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?constructor\\s+((<init>)|(<clinit>))\\((.*?)\\)V");
 
     public static void main(String[] args) {
-        System.out.println(getJavaConstructor(".method public static constructor <clinit>()V",
+        System.out.println(getSignature(".method public static constructor <clinit>()V",
                 ".class public final Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;"));
     }
 
@@ -28,14 +28,14 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
     }
 
     public static boolean isConstructor(SmaliMethod smaliMethod) {
-        return isConstructor(smaliMethod.getSignature());
+        return isConstructor(smaliMethod.toString());
     }
 
     public static void translate(SmaliConstructor smaliConstructor) throws RuntimeException {
-        Matcher matcher = constructorPattern.matcher(smaliConstructor.getSignature());
+        Matcher matcher = constructorPattern.matcher(smaliConstructor.toString());
         if (matcher.find()) {
-            smaliConstructor.setAccessModifier(matcher.group(2) == null ? "default" : matcher.group(2)); // access?
-            smaliConstructor.setStaticModifier(matcher.group(7) == null ? "instance" : matcher.group(7)); // static?
+            smaliConstructor.setAccessModifier(matcher.group(2)); // access?
+            smaliConstructor.setStaticModifier(matcher.group(7)); // static?
             smaliConstructor.setInitType(matcher.group(8)); // init type
             smaliConstructor.setParametersList(TypeTranslator.getJavaParameters(matcher.group(11))); // params?
         } else {
@@ -43,11 +43,11 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
         }
     }
 
-    public static String getJavaConstructor(SmaliConstructor smaliConstructor) {
+    public static String getSignature(SmaliConstructor smaliConstructor) {
         return smaliConstructor.toJava();
     }
 
-    public static String getJavaConstructor(String smaliConstructor, String onwerClass) {
-        return getJavaConstructor(new SmaliConstructor(smaliConstructor, new SmaliClass(onwerClass)));
+    public static String getSignature(String smaliConstructor, String onwerClass) {
+        return getSignature(new SmaliConstructor(smaliConstructor, new SmaliClass(onwerClass)));
     }
 }

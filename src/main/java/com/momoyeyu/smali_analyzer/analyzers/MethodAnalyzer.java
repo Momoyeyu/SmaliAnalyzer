@@ -15,33 +15,7 @@ public class MethodAnalyzer {
     public static void main(String[] args) {
         List<String> parametersList = TypeTranslator.getJavaParameters("Ljava/io/OutputStream;Ljava/lang/String;");
         System.out.println(listParameters(parametersList));  // src/main/java/com/momoyeyu/smali_analyzer/utils/MethodSignature.java
-        System.out.println(getJavaMethod(".method public varargs doInBackground([Ljava/lang/Object;)Ljava/lang/Void;"));
-    }
-
-    /**
-     * Automatically return signature of method or constructor.
-     *
-     * @author momoyeyu
-     * @param smaliMethod SmaliMethod Object
-     * @return Java style method signature of smaliMethod
-     */
-    public static String getJavaMethod(SmaliMethod smaliMethod) {
-        if (ConstructorAnalyzer.isConstructor(smaliMethod)) {
-            return ConstructorAnalyzer.getJavaConstructor((SmaliConstructor) smaliMethod);
-        }
-        return smaliMethod.toJava();
-    }
-
-    /**
-     * Automatically return signature of method or constructor.
-     * It is String version, mostly used for testing.
-     *
-     * @author momoyeyu
-     * @param smaliMethod SmaliMethod Object
-     * @return Java style method signature of smaliMethod
-     */
-    public static String getJavaMethod(String smaliMethod) {
-        return getJavaMethod(new SmaliMethod(smaliMethod));
+        System.out.println(getSignature(".method public varargs doInBackground([Ljava/lang/Object;)Ljava/lang/Void;"));
     }
 
     /**
@@ -49,15 +23,14 @@ public class MethodAnalyzer {
      *
      * @test pass
      * @param smaliMethod SmaliMethod object
-     * @return Java method signature
      */
     public static void translate(SmaliMethod smaliMethod) throws RuntimeException {
-        Matcher matcher = methodPattern.matcher(smaliMethod.getSignature().strip());
+        Matcher matcher = methodPattern.matcher(smaliMethod.toString());
         if (matcher.find()) {
-            smaliMethod.setAccessModifier(matcher.group(2) == null ? "default" : matcher.group(2).strip()); // access?
-            smaliMethod.setStaticModifier(matcher.group(7) == null ? "instance" : matcher.group(7).strip()); // static?
+            smaliMethod.setAccessModifier(matcher.group(2)); // access?
+            smaliMethod.setStaticModifier(matcher.group(7)); // static?
             smaliMethod.setName(matcher.group(10)); // name
-            smaliMethod.setReturnType(TypeTranslator.getType(matcher.group(12)).strip()); // ret type
+            smaliMethod.setReturnType(TypeTranslator.getType(matcher.group(12))); // return type
 
             // set parameters
             List<String> parametersList = TypeTranslator.getJavaParameters(matcher.group(11));
@@ -66,7 +39,7 @@ public class MethodAnalyzer {
             }
             smaliMethod.setParametersList(parametersList);
         } else {
-            throw new RuntimeException("Invalid method signature: " + smaliMethod.getSignature());
+            throw new RuntimeException("Invalid method signature: " + smaliMethod);
         }
     }
 
@@ -86,5 +59,31 @@ public class MethodAnalyzer {
             sb.append(String.format(", %s p%d",parametersList.get(i), i + 1));
         }
         return sb.toString();
+    }
+
+    /**
+     * Automatically return signature of method or constructor.
+     *
+     * @author momoyeyu
+     * @param smaliMethod SmaliMethod Object
+     * @return Java style method signature of smaliMethod
+     */
+    public static String getSignature(SmaliMethod smaliMethod) {
+        if (ConstructorAnalyzer.isConstructor(smaliMethod)) {
+            return ConstructorAnalyzer.getSignature((SmaliConstructor) smaliMethod);
+        }
+        return smaliMethod.toJava();
+    }
+
+    /**
+     * Automatically return signature of method or constructor.
+     * It is String version, mostly used for testing.
+     *
+     * @author momoyeyu
+     * @param smaliMethod SmaliMethod Object
+     * @return Java style method signature of smaliMethod
+     */
+    public static String getSignature(String smaliMethod) {
+        return getSignature(new SmaliMethod(smaliMethod));
     }
 }

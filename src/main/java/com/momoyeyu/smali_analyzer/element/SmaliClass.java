@@ -26,8 +26,8 @@ public class SmaliClass extends SmaliElement {
         this(classSignature, new ArrayList<SmaliClass>(), new ArrayList<SmaliMethod>());
     }
 
-    public SmaliClass(String classSignature, List<SmaliClass> subClassList, List<SmaliMethod> methodList) {
-        this.signature = classSignature.strip();
+    public SmaliClass(String signature, List<SmaliClass> subClassList, List<SmaliMethod> methodList) {
+        super(signature);
         this.subClassList = subClassList;
         this.smaliMethodList = methodList;
         this.superClass = null;
@@ -55,13 +55,13 @@ public class SmaliClass extends SmaliElement {
         if (!accessModifier.equals("default")) {
             sb.append(accessModifier).append(" ");
         }
-        if (!finalModifier.equals("null")) {
+        if (!finalModifier.equals("default")) {
             sb.append(finalModifier).append(" ");
         }
-        if (!interfaceModifier.equals("null")) {
+        if (!interfaceModifier.equals("default")) {
             sb.append(interfaceModifier).append(" ");
         }
-        if (!abstractModifier.equals("null")) {
+        if (!abstractModifier.equals("default")) {
             sb.append(abstractModifier).append(" ");
         }
         sb.append(name).append(";");
@@ -97,11 +97,11 @@ public class SmaliClass extends SmaliElement {
     }
 
     public void setAbstractModifier(String abstractModifier) {
-        this.abstractModifier = abstractModifier;
+        this.abstractModifier = abstractModifier == null ? "default" : abstractModifier;
     }
 
     public void setInterfaceModifier(String interfaceModifier) {
-        this.interfaceModifier = interfaceModifier;
+        this.interfaceModifier = interfaceModifier == null ? "default" : interfaceModifier;
     }
 
     // adder

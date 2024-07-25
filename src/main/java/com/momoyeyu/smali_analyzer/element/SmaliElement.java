@@ -11,6 +11,14 @@ public class SmaliElement {
 
     protected boolean translated;
 
+    public SmaliElement(String signature) {
+        this.signature = signature;
+        accessModifier = "default";
+        staticModifier = "default";
+        finalModifier = "default";
+        translated = false;
+    }
+
     @Override
     public String toString() {
         return signature;
@@ -24,28 +32,16 @@ public class SmaliElement {
         return translated;
     }
 
-    public String getFinalModifier() {
-        return finalModifier;
-    }
-
     public void setFinalModifier(String finalModifier) {
-        this.finalModifier = finalModifier;
-    }
-
-    public String getStaticModifier() {
-        return staticModifier;
+        this.finalModifier = finalModifier == null ? "default" : finalModifier;
     }
 
     public void setStaticModifier(String staticModifier) {
-        this.staticModifier = staticModifier;
-    }
-
-    public String getAccessModifier() {
-        return accessModifier;
+        this.staticModifier = staticModifier == null ? "default" : staticModifier;
     }
 
     public void setAccessModifier(String accessModifier) {
-        this.accessModifier = accessModifier;
+        this.accessModifier = accessModifier == null ? "default" : accessModifier;
     }
 
     public String getName() {

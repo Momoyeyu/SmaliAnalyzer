@@ -5,19 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="33e179b5-9427-4919-b4e9-a093d5d239c6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/Analyzer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/FieldAnalyzer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliElement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/Analyzer.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/ClassAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/ClassAnalyzer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/ConstructorAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/ConstructorAnalyzer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/FieldAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/FieldAnalyzer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/MethodAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/analyzers/MethodAnalyzer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliConstructor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliConstructor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliField.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliMethod.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/repository/ClassRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/repository/ClassRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/SmaliFileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/utils/SmaliFileReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliConstructor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliConstructor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/element/SmaliMethod.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +84,7 @@
       <updated>1721716655992</updated>
       <workItem from="1721716657022" duration="11221000" />
       <workItem from="1721782369572" duration="26428000" />
-      <workItem from="1721869247511" duration="15198000" />
+      <workItem from="1721869247511" duration="18547000" />
     </task>
     <servers />
   </component>
