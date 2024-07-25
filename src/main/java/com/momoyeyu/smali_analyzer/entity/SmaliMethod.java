@@ -2,6 +2,7 @@ package com.momoyeyu.smali_analyzer.entity;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SmaliMethod {
@@ -14,26 +15,41 @@ public class SmaliMethod {
     protected String staticModifier;
     protected List<String> parametersList;
     private String returnType;
+    protected boolean translated;
 
     public SmaliMethod(String signature) {
-        this.signature = signature;
+        this(signature, null, new ArrayList<>());
     }
 
     public SmaliMethod(String signature, SmaliClass ownerClass) {
-        this(signature);
-        this.ownerClass = ownerClass;
+        this(signature, ownerClass, new ArrayList<>());
     }
 
     public SmaliMethod(String signature, SmaliClass ownerClass, List<String> body) {
-        this(signature, ownerClass);
-        this.body = body;
+        this.signature = signature;
+        this.ownerClass = ownerClass;
+        if (body != null) {
+            this.body = body;
+        } else {
+            this.body = new ArrayList<>();
+        }
     }
 
     public String getSignature() { return signature; }
 
     public List<String> getBody() { return body; }
 
-    public String getJavaSignature() {
+    public String toJava() {
+        if (!isTranslated()) {
+            translated = true;
+            try {
+                MethodAnalyzer.translate(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+                translated = false;
+                return "[ERROR] unable to translate method: " + signature;
+            }
+        }
         StringBuilder sb = new StringBuilder();
         if (!accessModifier.equals("default")) {
             sb.append(accessModifier).append(" ");
@@ -45,15 +61,6 @@ public class SmaliMethod {
         sb.append(methodName).append("(");
         sb.append(MethodAnalyzer.listParameters(parametersList)).append(");");
         return sb.toString();
-    }
-
-    public void getAnalysis(String methodName, String accessModifier,
-                            String staticMofidier, List<String> parametersList, String returnType) {
-        this.methodName = methodName;
-        this.accessModifier = accessModifier;
-        this.staticModifier = staticMofidier;
-        this.parametersList = parametersList;
-        this.returnType = returnType;
     }
 
     public String getMethodName() {
@@ -94,5 +101,9 @@ public class SmaliMethod {
 
     public void setReturnType(String returnType) {
         this.returnType = returnType;
+    }
+
+    public boolean isTranslated() {
+        return translated;
     }
 }
