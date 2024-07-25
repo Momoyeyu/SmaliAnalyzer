@@ -52,11 +52,17 @@ public class TypeTranslator {
     }
 
     private static String getPackageRoutes(String smaliObject) {
-        if (smaliObject == null || !smaliObject.startsWith("L")) {
-            return null;
+        if (smaliObject == null) {
+            return "Object";
+        }
+        if (!smaliObject.startsWith("L")) {
+            throw new RuntimeException("[ERROR] Invalid Object: " + smaliObject);
         }
         smaliObject = smaliObject.substring(1);
         smaliObject = smaliObject.replaceAll("[/$]", ".");
+        if (smaliObject.endsWith(";")) {
+            return smaliObject.substring(0, smaliObject.length() - 1);
+        }
         return smaliObject;
     }
 

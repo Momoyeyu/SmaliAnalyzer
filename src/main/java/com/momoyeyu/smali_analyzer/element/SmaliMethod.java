@@ -31,12 +31,11 @@ public class SmaliMethod extends SmaliElement {
     @Override
     public String toJava() {
         if (!translated) {
-            translated = true;
             try {
                 MethodAnalyzer.translate(this);
             } catch (Exception e) {
                 e.printStackTrace();
-                translated = false;
+                translated = true;
                 return "[ERROR] unable to translate method: " + signature;
             }
         }

@@ -20,12 +20,11 @@ public class SmaliConstructor extends SmaliMethod {
     @Override
     public String toJava() {
         if (!translated) {
-            translated = true;
             try {
                 ConstructorAnalyzer.translate(this);
+                translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
-                translated = false;
                 return "[ERROR] invalid constructor" + signature;
             }
         }

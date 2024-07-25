@@ -1,16 +1,27 @@
 package com.momoyeyu.smali_analyzer.analyzers;
 
+import com.momoyeyu.smali_analyzer.element.SmaliConstructor;
 import com.momoyeyu.smali_analyzer.element.SmaliField;
+import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FieldAnalyzer {
 
-    private static Pattern fieldPattern = Pattern.compile("\\.field\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?(\\S*:)(\\[)?((\\S+)(\\s+=\\s+(\\S+))?)");
+    private static Pattern fieldPattern = Pattern.compile("\\.field\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((\\S*):)(\\[)?((\\S+)(\\s+=\\s+(\\S+))?)");
 
     public static void main(String[] args) {
-
+        String[] examples = {
+                ".field static final ATTRIBUTE_ACTIVITY:Ljava/lang/String; = \"activity\"",
+                ".field static final ATTRIBUTE_TIME:[Ljava/lang/String; = \"time\"",
+                ".field static final ATTRIBUTE_WEIGHT:Ljava/lang/String; = \"weight\"",
+                ".field static final DEBUG:Z = false",
+                ".field private static final DEFAULT_ACTIVITY_INFLATION:I = 0x5",
+        };
+        for (String example : examples) {
+            System.out.println(getSignature(example));
+        }
     }
 
     public static void translate(SmaliField smaliField) throws RuntimeException {
@@ -18,10 +29,41 @@ public class FieldAnalyzer {
         if (matcher.find()) {
             smaliField.setAccessModifier(matcher.group(2)); // default?
             smaliField.setStaticModifier(matcher.group(7)); // static?
-            smaliField.setStaticModifier(matcher.group(7)); // final?
+            smaliField.setFinalModifier(matcher.group(9)); // final?
+            smaliField.setName(matcher.group(11));
+            if (matcher.group(12) != null) {
+                smaliField.setArrayFlag(true);
+            }
+            smaliField.setType(matcher.group(14));
+            smaliField.setValue(matcher.group(16));
         } else {
             throw new RuntimeException("[ERROR] Invalid field: " + smaliField.toString());
         }
+    }
+
+    /**
+     * Return Java style field signature.
+     * Only support simple type.
+     *
+     * @author momoyeyu
+     * @param smaliField SmaliMethod Object
+     * @return Java style method signature of smaliMethod
+     */
+    public static String getSignature(SmaliField smaliField) {
+        return smaliField.toJava();
+    }
+
+    /**
+     * Return Java style field signature.
+     * Only support simple type.
+     * This is the String version for basic testing
+     *
+     * @author momoyeyu
+     * @param smaliField SmaliMethod Object
+     * @return Java style method signature of smaliMethod
+     */
+    public static String getSignature(String smaliField) {
+        return getSignature(new SmaliField(smaliField));
     }
 
 }

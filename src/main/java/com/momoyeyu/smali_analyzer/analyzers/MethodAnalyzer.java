@@ -62,7 +62,7 @@ public class MethodAnalyzer {
     }
 
     /**
-     * Automatically return signature of method or constructor.
+     * Return Java style method signature.
      *
      * @author momoyeyu
      * @param smaliMethod SmaliMethod Object
@@ -76,8 +76,8 @@ public class MethodAnalyzer {
     }
 
     /**
-     * Automatically return signature of method or constructor.
-     * It is String version, mostly used for testing.
+     * Return Java style method signature.
+     * It is the String version for basic testing.
      *
      * @author momoyeyu
      * @param smaliMethod SmaliMethod Object

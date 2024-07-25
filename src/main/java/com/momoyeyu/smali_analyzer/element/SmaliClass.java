@@ -43,9 +43,9 @@ public class SmaliClass extends SmaliElement {
     @Override
     public String toJava() {
         if (!translated) {
-            translated = true;
             try {
                 ClassAnalyzer.translate(this);
+                translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 return "[ERROR] unable to translate class: " + signature;
