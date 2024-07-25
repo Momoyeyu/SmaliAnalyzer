@@ -5,6 +5,7 @@ target/
 
 ### custom
 src/test/java/Test.java
+.idea/workspace.xml
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
