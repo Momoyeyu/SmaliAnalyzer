@@ -44,7 +44,8 @@ public class SmaliClass extends SmaliElement {
 
     @Override
     public String toString() {
-        return packageName + "\n\n" + toStringIndent(0);
+        this.toJava();
+        return "package " + packageName + ";\n\n" + toStringIndent(0);
     }
 
     private String toStringIndent(int indent) {

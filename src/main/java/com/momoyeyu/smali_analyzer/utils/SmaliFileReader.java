@@ -8,11 +8,13 @@ import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.lang.System.exit;
 
 /**
  * Scan and analyze smali source file structure to
@@ -34,9 +36,14 @@ public class SmaliFileReader {
     }
 
     public static String getOutputPath(String inputPath) {
-        int idx = inputPath.lastIndexOf('\\');
-        int idx2 = inputPath.substring(0, idx).lastIndexOf('\\');
-        return inputPath.substring(0, idx2) + inputPath.substring(idx2, idx).replaceFirst("input", "output") + inputPath.substring(idx);
+        Matcher matcher = pathPattern.matcher(inputPath);
+        StringBuffer sb = new StringBuffer();
+        if (matcher.find()) {
+            sb.append(matcher.group(2)).append("\\output\\");
+            sb.append(matcher.group(4)).append(".java");
+            return sb.toString();
+        }
+        return null;
     }
 
     public SmaliClass getFileClass() {
