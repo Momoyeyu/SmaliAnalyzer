@@ -1,8 +1,7 @@
 package com.momoyeyu.smali_analyzer.analyzers;
 
-import com.momoyeyu.smali_analyzer.entity.SmaliClass;
-import com.momoyeyu.smali_analyzer.entity.SmaliConstructor;
-import com.momoyeyu.smali_analyzer.entity.SmaliMethod;
+import com.momoyeyu.smali_analyzer.element.SmaliConstructor;
+import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 
 import java.util.List;
@@ -57,7 +56,7 @@ public class MethodAnalyzer {
         if (matcher.find()) {
             smaliMethod.setAccessModifier(matcher.group(2) == null ? "default" : matcher.group(2).strip()); // access?
             smaliMethod.setStaticModifier(matcher.group(7) == null ? "instance" : matcher.group(7).strip()); // static?
-            smaliMethod.setMethodName(matcher.group(10)); // name
+            smaliMethod.setName(matcher.group(10)); // name
             smaliMethod.setReturnType(TypeTranslator.getType(matcher.group(12)).strip()); // ret type
 
             // set parameters

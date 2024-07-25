@@ -1,26 +1,22 @@
-package com.momoyeyu.smali_analyzer.entity;
+package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.ClassAnalyzer;
-import com.momoyeyu.smali_analyzer.analyzers.ConstructorAnalyzer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SmaliClass {
-    private String signature; // init, get
+public class SmaliClass extends SmaliElement {
     private SmaliClass superClass; // set once, get
     private List<SmaliClass> subClassList; // init, add, get
     private List<SmaliMethod> smaliMethodList; // init, add, get
     private boolean init; // get
 
-    private String className;
     private String packageName;
-    private String accessModifier;
-    private String finalModifier;
     private String interfaceModifier;
     private String abstractModifier;
     private boolean translated;
 
+    // constructor
     public SmaliClass() {
         this("");
         this.init = false;
@@ -44,6 +40,7 @@ public class SmaliClass {
         this.init = true;
     }
 
+    @Override
     public String toJava() {
         if (!translated) {
             translated = true;
@@ -67,8 +64,13 @@ public class SmaliClass {
         if (!abstractModifier.equals("null")) {
             sb.append(abstractModifier).append(" ");
         }
-        sb.append(className).append(";");
+        sb.append(name).append(";");
         return sb.toString();
+    }
+
+    // getter
+    public String getPackage() {
+        return "package " + packageName.strip() + ";";
     }
 
     // setter
@@ -90,21 +92,8 @@ public class SmaliClass {
         }
     }
 
-    // setter
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
     public void setPackageName(String packageName) {
         this.packageName = packageName;
-    }
-
-    public void setAccessModifier(String accessModifier) {
-        this.accessModifier = accessModifier;
-    }
-
-    public void setFinalModifier(String finalModifier) {
-        this.finalModifier = finalModifier;
     }
 
     public void setAbstractModifier(String abstractModifier) {
@@ -124,35 +113,7 @@ public class SmaliClass {
         smaliMethodList.add(method);
     }
 
-    // getter
-    public String getSignature() {
-        return signature;
-    }
-
-    public SmaliClass getSuperClass() {
-        return superClass;
-    }
-
-    public List<SmaliClass> getSubClassList() {
-        return subClassList;
-    }
-
-    public List<SmaliMethod> getSmaliMethodList() {
-        return smaliMethodList;
-    }
-
     public boolean isInit() {
         return init;
-    }
-
-    public boolean isTranslated() {
-        return translated;
-    }
-
-    public String getClassName() {
-        if (!translated) {
-            ClassAnalyzer.translate(this);
-        }
-        return className;
     }
 }

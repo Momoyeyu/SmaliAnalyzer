@@ -1,28 +1,19 @@
-package com.momoyeyu.smali_analyzer.entity;
+package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SmaliMethod {
-    protected String signature;
+public class SmaliMethod extends SmaliElement {
     private List<String> body;
     protected SmaliClass ownerClass;
 
-    private String methodName;
-    protected String accessModifier;
-    protected String staticModifier;
     protected List<String> parametersList;
     private String returnType;
-    protected boolean translated;
 
     public SmaliMethod(String signature) {
         this(signature, null, new ArrayList<>());
-    }
-
-    public SmaliMethod(String signature, SmaliClass ownerClass) {
-        this(signature, ownerClass, new ArrayList<>());
     }
 
     public SmaliMethod(String signature, SmaliClass ownerClass, List<String> body) {
@@ -39,6 +30,7 @@ public class SmaliMethod {
 
     public List<String> getBody() { return body; }
 
+    @Override
     public String toJava() {
         if (!isTranslated()) {
             translated = true;
@@ -58,17 +50,17 @@ public class SmaliMethod {
             sb.append(staticModifier).append(" ");
         }
         sb.append(returnType).append(" ");
-        sb.append(methodName).append("(");
+        sb.append(name).append("(");
         sb.append(MethodAnalyzer.listParameters(parametersList)).append(");");
         return sb.toString();
     }
 
-    public String getMethodName() {
-        return methodName;
+    public String getName() {
+        return name;
     }
 
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAccessModifier() {

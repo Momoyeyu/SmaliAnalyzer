@@ -1,4 +1,4 @@
-package com.momoyeyu.smali_analyzer.entity;
+package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.ConstructorAnalyzer;
 
@@ -36,7 +36,7 @@ public class SmaliConstructor extends SmaliMethod {
         if (!(staticModifier == null) && !staticModifier.isEmpty() && !staticModifier.equals("instance")) {
             sb.append(staticModifier).append(" ");
         }
-        sb.append(ownerClass.getClassName()).append("(");
+        sb.append(ownerClass.getName()).append("(");
         sb.append(ConstructorAnalyzer.listParameters(parametersList)).append(");");
         return sb.toString();
     }

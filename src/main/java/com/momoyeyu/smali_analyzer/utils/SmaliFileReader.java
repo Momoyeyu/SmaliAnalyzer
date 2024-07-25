@@ -2,10 +2,9 @@ package com.momoyeyu.smali_analyzer.utils;
 
 
 import com.momoyeyu.smali_analyzer.analyzers.ConstructorAnalyzer;
-import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
-import com.momoyeyu.smali_analyzer.entity.SmaliClass;
-import com.momoyeyu.smali_analyzer.entity.SmaliConstructor;
-import com.momoyeyu.smali_analyzer.entity.SmaliMethod;
+import com.momoyeyu.smali_analyzer.element.SmaliClass;
+import com.momoyeyu.smali_analyzer.element.SmaliConstructor;
+import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 
 import java.io.File;
 import java.io.FileNotFoundException;
