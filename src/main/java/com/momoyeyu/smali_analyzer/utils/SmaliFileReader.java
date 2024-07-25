@@ -4,6 +4,7 @@ package com.momoyeyu.smali_analyzer.utils;
 import com.momoyeyu.smali_analyzer.analyzers.ConstructorAnalyzer;
 import com.momoyeyu.smali_analyzer.element.SmaliClass;
 import com.momoyeyu.smali_analyzer.element.SmaliConstructor;
+import com.momoyeyu.smali_analyzer.element.SmaliField;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 
 import java.io.File;
@@ -26,19 +27,32 @@ public class SmaliFileReader {
     public SmaliFileReader(String fileName) {
         // create a new class instance
         smaliClass = new SmaliClass();
+        SmaliField curSmaliField = null;
+        String lastFlag = null;
         File file = new File(fileName);
         Scanner scanner = null;
         try {
             scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().strip();
+                if (lastFlag != null && lastFlag.equals(".field") && curSmaliField != null) {
+                    if (line.startsWith(".annotation")) {
+                        curSmaliField.addAnnotation(line);
+                        while (scanner.hasNextLine()) {
+                            line = scanner.nextLine().strip();
+                            curSmaliField.addAnnotation(line);
+                            if (line.startsWith(".end annotation")) break;
+                        }
+                    } else {
+                        curSmaliField = null;
+                    }
+                }
                 // find a class, let currentSmaliClass = this class
                 if (line.startsWith(".class")) {
                     if (line.contains("$") || smaliClass.isInit()) {
                         currentSmaliClass = new SmaliClass(line);
                         smaliClass.addSubClass(currentSmaliClass);
                     } else if (!smaliClass.isInit()) {
-                        smaliClass.init(line);
                         currentSmaliClass = smaliClass;
                     }
                 }
@@ -55,10 +69,8 @@ public class SmaliFileReader {
                     // read the whole method
                     while (scanner.hasNextLine()) {
                         line = scanner.nextLine().strip();
-                        if (line.startsWith(".end method")) {
-                            break;
-                        }
                         body.add(line);
+                        if (line.startsWith(".end method")) break;
                     }
                     // add method to the current class
                     if (ConstructorAnalyzer.isConstructor(line)) {
@@ -66,6 +78,13 @@ public class SmaliFileReader {
                     } else {
                         currentSmaliClass.addSmaliMethod(new SmaliMethod(signature, currentSmaliClass, body));
                     }
+                }
+                if (line.startsWith(".field")) {
+                    curSmaliField = new SmaliField(line);
+                    currentSmaliClass.addSmaliField(curSmaliField);
+                }
+                if (!line.isEmpty()) {
+                    lastFlag = line.split(" ")[0];
                 }
             }
         } catch (FileNotFoundException e) {

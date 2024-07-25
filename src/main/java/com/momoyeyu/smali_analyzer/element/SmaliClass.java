@@ -7,8 +7,9 @@ import java.util.List;
 
 public class SmaliClass extends SmaliElement {
     private SmaliClass superClass; // set once, get
-    private List<SmaliClass> subClassList; // init, add, get
-    private List<SmaliMethod> smaliMethodList; // init, add, get
+    private List<SmaliClass> subClassList; // add, get
+    private List<SmaliMethod> smaliMethodList; // add, get
+    private List<SmaliField> smaliFieldList; // add, get
     private boolean init; // get
 
     private String packageName;
@@ -23,13 +24,14 @@ public class SmaliClass extends SmaliElement {
     }
 
     public SmaliClass(String classSignature) {
-        this(classSignature, new ArrayList<SmaliClass>(), new ArrayList<SmaliMethod>());
+        this(classSignature, null, null, null);
     }
 
-    public SmaliClass(String signature, List<SmaliClass> subClassList, List<SmaliMethod> methodList) {
+    public SmaliClass(String signature, List<SmaliClass> subClassList, List<SmaliMethod> methodList, List<SmaliField> fieldList) {
         super(signature);
-        this.subClassList = subClassList;
-        this.smaliMethodList = methodList;
+        this.subClassList = subClassList == null ? new ArrayList<>() : subClassList;
+        this.smaliMethodList = methodList == null ? new ArrayList<>() : methodList;
+        this.smaliFieldList = fieldList == null ? new ArrayList<>() : fieldList;
         this.superClass = null;
         this.init = true;
         this.translated = false;
@@ -111,6 +113,10 @@ public class SmaliClass extends SmaliElement {
 
     public void addSmaliMethod(SmaliMethod method) {
         smaliMethodList.add(method);
+    }
+
+    public void addSmaliField(SmaliField field) {
+        smaliFieldList.add(field);
     }
 
     public boolean isInit() {

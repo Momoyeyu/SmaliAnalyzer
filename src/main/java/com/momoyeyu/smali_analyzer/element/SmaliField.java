@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SmaliField extends SmaliElement {
-    private List<String> annotations = new ArrayList<String>();
+    private List<String> annotations;
     private boolean arrayFlag;
     private String type;
     private Object value;
@@ -64,5 +64,10 @@ public class SmaliField extends SmaliElement {
 
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    // adder
+    public void addAnnotation(String line) {
+        this.annotations.add(line);
     }
 }
