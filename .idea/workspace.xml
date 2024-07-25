@@ -44,7 +44,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.ClassAnalyzer.executor": "Run",
-    "Application.ConstructorAnalyzer.executor": "Debug",
+    "Application.ConstructorAnalyzer.executor": "Run",
     "Application.MethodAnalyzer.executor": "Run",
     "Application.MethodSignature.executor": "Run",
     "Application.Test.executor": "Run",
@@ -83,11 +83,22 @@
       <updated>1721716655992</updated>
       <workItem from="1721716657022" duration="11221000" />
       <workItem from="1721782369572" duration="26428000" />
-      <workItem from="1721869247511" duration="8670000" />
+      <workItem from="1721869247511" duration="9054000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/momoyeyu/smali_analyzer/entity/SmaliConstructor.java</url>
+          <line>31</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

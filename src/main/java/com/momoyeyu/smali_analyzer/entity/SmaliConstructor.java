@@ -1,19 +1,16 @@
 package com.momoyeyu.smali_analyzer.entity;
 
-import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
+import com.momoyeyu.smali_analyzer.analyzers.ConstructorAnalyzer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SmaliConstructor extends SmaliMethod {
 
     private String initType;
 
-    public SmaliConstructor(String signature) {
-        super(signature);
-    }
-
     public SmaliConstructor(String signature, SmaliClass ownerClass) {
-        super(signature, ownerClass);
+        super(signature, ownerClass, new ArrayList<>());
     }
 
     public SmaliConstructor(String signature, SmaliClass ownerClass, List<String> body) {
@@ -21,7 +18,17 @@ public class SmaliConstructor extends SmaliMethod {
     }
 
     @Override
-    public String getJavaSignature() {
+    public String toJava() {
+        if (!translated) {
+            translated = true;
+            try {
+                ConstructorAnalyzer.translate(this);
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+                translated = false;
+                return "[ERROR] invalid constructor" + signature;
+            }
+        }
         StringBuilder sb = new StringBuilder();
         if (!(accessModifier == null) && !accessModifier.isEmpty() && !accessModifier.equals("default")) {
             sb.append(accessModifier).append(" ");
@@ -30,14 +37,8 @@ public class SmaliConstructor extends SmaliMethod {
             sb.append(staticModifier).append(" ");
         }
         sb.append(ownerClass.getClassName()).append("(");
-        sb.append(MethodAnalyzer.listParameters(parametersList)).append(");");
+        sb.append(ConstructorAnalyzer.listParameters(parametersList)).append(");");
         return sb.toString();
-    }
-
-    public void getAnalysis(String accessModifier, String staticMofidier, List<String> parametersList) {
-        this.accessModifier = accessModifier;
-        this.staticModifier = staticMofidier;
-        this.parametersList = parametersList;
     }
 
     public String getInitType() {
