@@ -4,6 +4,7 @@ import com.momoyeyu.smali_analyzer.analyzers.FieldAnalyzer;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class SmaliField extends SmaliElement {
@@ -13,7 +14,7 @@ public class SmaliField extends SmaliElement {
 
     // constructor
     public SmaliField(String signature) {
-        this(signature, null);
+        this(signature, new LinkedList<>());
     }
 
     public SmaliField(String signature, List<String> annotations) {
@@ -71,7 +72,7 @@ public class SmaliField extends SmaliElement {
             this.annotations.add(line);
         }
         else {
-            Logger.log("[WARN] Trying to add annotation to incorrect field");
+            Logger.log("[WARN] Trying to add annotation to incorrect field: " + this.signature);
         }
     }
 }
