@@ -40,7 +40,7 @@ public class SmaliConstructor extends SmaliMethod {
             sb.append("static ");
         }
         sb.append(ownerClass.getName()).append("(");
-        sb.append(ConstructorAnalyzer.listParameters(parametersList)).append(")");
+        sb.append(listParameters(parametersList)).append(")");
         return sb.toString();
     }
 

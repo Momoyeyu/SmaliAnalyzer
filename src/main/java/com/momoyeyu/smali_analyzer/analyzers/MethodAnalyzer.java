@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.analyzers;
 
 import com.momoyeyu.smali_analyzer.element.SmaliConstructor;
+import com.momoyeyu.smali_analyzer.element.SmaliElement;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 
@@ -11,8 +12,6 @@ import java.util.regex.Pattern;
 public class MethodAnalyzer {
 
     public static void main(String[] args) {
-        List<String> parametersList = TypeTranslator.getJavaParameters("Ljava/io/OutputStream;Ljava/lang/String;");
-        System.out.println(listParameters(parametersList));  // src/main/java/com/momoyeyu/smali_analyzer/utils/MethodSignature.java
         System.out.println(getSignature(".method public varargs doInBackground([Ljava/lang/Object;)Ljava/lang/Void;"));
         System.out.println(getSignature(".method public abstract setActivityChooserModel(Landroidx/appcompat/widget/ActivityChooserModel;)V;"));
         System.out.println(getSignature(".method public static get(Landroid/content/Context;Ljava/lang/String;)Landroidx/appcompat/widget/ActivityChooserModel;"));
@@ -45,24 +44,6 @@ public class MethodAnalyzer {
         } else {
             throw new RuntimeException("Invalid method signature: " + smaliMethod.getSignature());
         }
-    }
-
-    /**
-     * Get parameters list in Java style
-     *
-     * @test pass
-     * @param parametersList a List of java parameters type
-     * @return Java method signature
-     */
-    public static String listParameters(List<String> parametersList) {
-        if (parametersList == null || parametersList.isEmpty()) {
-            return "";
-        }
-        StringBuilder sb = new StringBuilder(parametersList.getFirst() + " p1");
-        for (int i = 1; i < parametersList.size(); i++) {
-            sb.append(String.format(", %s p%d",parametersList.get(i), i + 1));
-        }
-        return sb.toString();
     }
 
     /**

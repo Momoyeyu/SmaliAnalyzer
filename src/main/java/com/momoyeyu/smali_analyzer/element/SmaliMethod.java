@@ -67,7 +67,7 @@ public class SmaliMethod extends SmaliElement {
         }
         sb.append(TypeTranslator.isBasicType(returnType) ? returnType : TypeTranslator.getObjectName(returnType));
         sb.append(" ").append(name).append("(");
-        sb.append(MethodAnalyzer.listParameters(parametersList)).append(")");
+        sb.append(listParameters(parametersList)).append(")");
         return sb.toString();
     }
 

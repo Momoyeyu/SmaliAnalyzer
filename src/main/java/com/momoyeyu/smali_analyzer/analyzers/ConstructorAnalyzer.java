@@ -13,7 +13,7 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
     private static final Pattern constructorPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?constructor\\s+((<init>)|(<clinit>))\\((.*?)\\)V");
 
     public static void main(String[] args) {
-        System.out.println(getSignature(".method public static constructor <clinit>()V",
+        System.out.println(getSignature(".method public constructor <init>(Landroid/content/ComponentName;JF)V",
                 ".class public final Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;"));
     }
 

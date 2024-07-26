@@ -45,15 +45,18 @@ public class TypeTranslator {
         }
         if (smaliType.startsWith("[")) {
             isArray = true;
-            smaliType = smaliType.substring(1, smaliType.length());
+            smaliType = smaliType.substring(1);
         }
         String type;
         if (smaliType.startsWith("L")) {
             type = getObjectType(smaliType);
-        } else {
+            return isArray ? type + "[]" : type;
+        } else if (isBasicType(smaliType)){
             type = basicTypeMap.get(smaliType);
+            return isArray ? type + "[]" : type;
         }
-        return isArray ? type + "[]" : type;
+        System.out.println("[WARN] Unknown smali type: " + smaliType);
+        return smaliType;
     }
 
     /**
@@ -62,16 +65,17 @@ public class TypeTranslator {
      * @return the classname of the object
      * @throws RuntimeException let the Logger catch and log invalid object
      */
-    public static String getObjectName(String objectType) throws RuntimeException {
+    public static String getObjectName(String objectType) throws IllegalArgumentException {
         if (objectType == null || objectType.isBlank()) {
             throw new RuntimeException("[ERROR] Invalid type: " + objectType);
-        }
-        if (objectType.startsWith("L")) {
-            objectType = getObjectType(objectType);
         }
         if (isBasicType(objectType)) {
             Logger.log("[WARN] " + objectType + " is a basic type, shouldn't call getObjectName()");
             return objectType;
+        }
+        if (objectType.endsWith("...")) { // deal with varargs type
+            String tmp = objectType.substring(0, objectType.length() - 3);
+            return objectType.substring(tmp.lastIndexOf('.') + 1);
         }
         return objectType.substring(objectType.lastIndexOf(".") + 1);
     }
@@ -138,6 +142,11 @@ public class TypeTranslator {
         return parametersList;
     }
 
+    /**
+     * Return weather a Java type is a basic Java type.
+     * @param type it should be a type that get from the getType() method
+     * @return boolean, weather the input type is a Java basic type
+     */
     public static boolean isBasicType(String type) {
         return basicTypeMap.get(type) != null;
     }

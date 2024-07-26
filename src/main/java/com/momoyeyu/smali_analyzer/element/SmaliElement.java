@@ -1,6 +1,9 @@
 package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.utils.Logger;
+import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
+
+import java.util.List;
 
 public class SmaliElement {
     // properties
@@ -14,6 +17,12 @@ public class SmaliElement {
     // status
     protected boolean translated;
 
+    public static void main(String[] args) {
+        List<String> parametersList = TypeTranslator.getJavaParameters("Ljava/io/OutputStream;Ljava/lang/String;");
+        System.out.println(SmaliElement.listParameters(parametersList, false));
+        System.out.println(SmaliElement.listParameters(parametersList, true));
+    }
+
     public SmaliElement(String signature) {
         this.signature = signature;
         accessModifier = "default";
@@ -21,6 +30,35 @@ public class SmaliElement {
         finalModifier = false;
         syntheticModifier = false;
         translated = false;
+    }
+
+    /**
+     * Get parameters list in Java style
+     *
+     * @test pass
+     * @param parametersList a List of java parameters type
+     * @return Java method signature
+     */
+    public String listParameters(List<String> parametersList) {
+        return listParameters(parametersList, staticModifier);
+    }
+
+    /**
+     * Get parameters list in Java style
+     *
+     * @test pass
+     * @param parametersList a List of java parameters type
+     * @return Java method signature
+     */
+    public static String listParameters(List<String> parametersList, boolean isStatic) {
+        if (parametersList == null || parametersList.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder(TypeTranslator.getObjectName(parametersList.getFirst()) + " p" + (isStatic ? 0 : 1));
+        for (int i = 1; i < parametersList.size(); i++) {
+            sb.append(String.format(", %s p%d",TypeTranslator.getObjectName(parametersList.get(i)), isStatic ? i : i + 1));
+        }
+        return sb.toString();
     }
 
     @Override
@@ -55,10 +93,6 @@ public class SmaliElement {
 
     public void setStaticModifier(String staticModifier) {
         this.staticModifier = staticModifier != null;
-    }
-
-    public void setStaticFlag(boolean staticFlag) {
-        this.staticModifier = staticFlag;
     }
 
     public void setAccessModifier(String accessModifier) {
