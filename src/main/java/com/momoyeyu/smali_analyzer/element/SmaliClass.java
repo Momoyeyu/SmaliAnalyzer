@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.ClassAnalyzer;
+import com.momoyeyu.smali_analyzer.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +75,7 @@ public class SmaliClass extends SmaliElement {
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
-                return "// [ERROR] Unable to translate class: " + signature;
+                return Logger.failToAnalyze("class", signature);
             }
         }
         StringBuilder sb = new StringBuilder();

@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.FieldAnalyzer;
+import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class SmaliField extends SmaliElement {
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
-                return "// [ERROR] Unable to translate field: " + signature;
+                return Logger.failToAnalyze("field", signature);
             }
         }
         StringBuilder sb = new StringBuilder();

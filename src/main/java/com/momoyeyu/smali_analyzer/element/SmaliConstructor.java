@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.ConstructorAnalyzer;
+import com.momoyeyu.smali_analyzer.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class SmaliConstructor extends SmaliMethod {
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
-                return "// [ERROR] Unable to translate constructor" + signature;
+                return Logger.failToAnalyze("constructor", signature);
             }
         }
         if (!ownerClass.isTranslated()) {

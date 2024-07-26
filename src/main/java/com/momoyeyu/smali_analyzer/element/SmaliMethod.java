@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
+import com.momoyeyu.smali_analyzer.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class SmaliMethod extends SmaliElement {
             } catch (Exception e) {
                 e.printStackTrace();
                 translated = true;
-                return "// [ERROR] Unable to translate method: " + signature;
+                return Logger.failToAnalyze("method", signature);
             }
         }
         StringBuilder sb = new StringBuilder();

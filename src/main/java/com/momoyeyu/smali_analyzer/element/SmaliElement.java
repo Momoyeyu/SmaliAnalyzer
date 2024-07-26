@@ -1,5 +1,7 @@
 package com.momoyeyu.smali_analyzer.element;
 
+import com.momoyeyu.smali_analyzer.utils.Logger;
+
 public class SmaliElement {
 
     protected String signature;
@@ -29,7 +31,7 @@ public class SmaliElement {
     }
 
     public String toJava() {
-        return "// [ERROR] Unable to translate element: " + this;
+        return Logger.failToAnalyze("element", signature);
     }
 
     public boolean isTranslated() {
@@ -54,5 +56,15 @@ public class SmaliElement {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isSynthetic(String signature) {
+        String[] keys = signature.strip().split("\\s");
+        for (String key : keys) {
+            if (key.equals("synthetic")) {
+                return true;
+            }
+        }
+        return false;
     }
 }
