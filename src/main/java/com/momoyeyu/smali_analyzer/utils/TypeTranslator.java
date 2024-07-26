@@ -165,7 +165,12 @@ public class TypeTranslator {
                     if (c == '[') { // is an array
                         state = 1;
                     } else if (c == 'L') { // is an object
-                        state = 2;
+                        objIdx = i;
+                        while(parameters.charAt(i) != ';') {
+                            i += 1;
+                        }
+                        parametersList.add(parameters.substring(objIdx, i));
+                        state = 0;
                     } else { // is a basic type
                         parametersList.add(String.valueOf(c));
                         // state = 0;
@@ -174,29 +179,16 @@ public class TypeTranslator {
                 }
                 case 1: { // is an array
                     if (c == 'L') { // is an array of object
-                        state = 3;
+                        objIdx = i;
+                        while(parameters.charAt(i) != ';') {
+                            i += 1;
+                        }
+                        parametersList.add("[" + parameters.substring(objIdx, i));
+                        state = 0;
                     } else { // is an array of basic type
                         parametersList.add("[" + String.valueOf(c));
                         state = 0;
                     }
-                    break;
-                }
-                case 2: {
-                    objIdx = i;
-                    while(parameters.charAt(i) != ';') {
-                        i += 1;
-                    }
-                    parametersList.add("L" + parameters.substring(objIdx, i));
-                    state = 0;
-                    break;
-                }
-                case 3: { // is an array of object
-                    objIdx = i;
-                    while(parameters.charAt(i) != ';') {
-                        i += 1;
-                    }
-                    parametersList.add("[" + parameters.substring(objIdx, i));
-                    state = 0;
                     break;
                 }
             }
