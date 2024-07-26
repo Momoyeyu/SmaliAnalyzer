@@ -95,12 +95,24 @@ public class SmaliClass extends SmaliElement {
             sb.append("class ");
         }
         sb.append(name);
+        if (superClass != null && !superClass.getName().equals("Object")) {
+            sb.append(" extends ");
+            sb.append(superClass.getName());
+        }
         return sb.toString();
     }
 
     // getter
     public String getPackage() {
         return "package " + packageName.strip() + ";";
+    }
+
+    @Override
+    public String getName() {
+        if (this.name == null) {
+            ClassAnalyzer.translate(this);
+        }
+        return this.name;
     }
 
     // setter

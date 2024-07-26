@@ -190,11 +190,10 @@ public class TypeTranslator {
                             i += 1;
                         }
                         parametersList.add("[" + parameters.substring(objIdx, i));
-                        state = 0;
                     } else { // is an array of basic type
                         parametersList.add("[" + String.valueOf(c));
-                        state = 0;
                     }
+                    state = 0;
                     break;
                 }
             }
