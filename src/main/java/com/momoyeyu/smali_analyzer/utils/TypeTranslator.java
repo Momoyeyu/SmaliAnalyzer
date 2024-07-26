@@ -6,17 +6,30 @@ import java.util.List;
 import java.util.Map;
 
 public class TypeTranslator {
-    private static Map<String, String> typeMap = new HashMap<>();
+    /**
+     * Test
+     * @param args user input
+     */
+    public static void main(String[] args) {
+        System.out.println(getObjectPackage("Landroidx/appcompat/widget/ActivityChooserModel"));
+        System.out.println(getType("Landroidx/appcompat/widget/ActivityChooserModel"));
+        System.out.println(getType("Z"));
+        System.out.println(getType("[Ljava/lang/String"));
+        System.out.println(getType("[B"));
+        System.out.println(getObjectName("java.lang.String[]"));
+    }
+
+    private static final Map<String, String> basicTypeMap = new HashMap<>();
     static {
-        typeMap.put("Z", "boolean");
-        typeMap.put("B", "byte");
-        typeMap.put("C", "char");
-        typeMap.put("D", "double");
-        typeMap.put("F", "float");
-        typeMap.put("I", "int");
-        typeMap.put("J", "long");
-        typeMap.put("S", "short");
-        typeMap.put("V", "void");
+        basicTypeMap.put("Z", "boolean");
+        basicTypeMap.put("B", "byte");
+        basicTypeMap.put("C", "char");
+        basicTypeMap.put("D", "double");
+        basicTypeMap.put("F", "float");
+        basicTypeMap.put("I", "int");
+        basicTypeMap.put("J", "long");
+        basicTypeMap.put("S", "short");
+        basicTypeMap.put("V", "void");
     }
 
     /**
@@ -36,22 +49,39 @@ public class TypeTranslator {
         }
         String type;
         if (smaliType.startsWith("L")) {
-            type = getObjectName(smaliType);
+            type = getObjectType(smaliType);
         } else {
-            type = typeMap.get(smaliType);
+            type = basicTypeMap.get(smaliType);
         }
         return isArray ? type + "[]" : type;
     }
 
-    public static String getObjectName(String name) {
-        if (name == null || !name.startsWith("L")) {
-            return null;
+    /**
+     * Extract Java object's classname from its Type
+     * @param objectType Java Object
+     * @return the classname of the object
+     * @throws RuntimeException let the Logger catch and log invalid object
+     */
+    public static String getObjectName(String objectType) throws RuntimeException {
+        if (objectType == null || objectType.isBlank()) {
+            throw new RuntimeException("[ERROR] Invalid type: " + objectType);
         }
-        String routes = getPackageRoutes(name);
-        return routes.substring(routes.lastIndexOf(".") + 1);
+        if (objectType.startsWith("L")) {
+            objectType = getObjectType(objectType);
+        }
+        if (isBasicType(objectType)) {
+            Logger.log("[WARN] " + objectType + " is a basic type, shouldn't call getObjectName()");
+            return objectType;
+        }
+        return objectType.substring(objectType.lastIndexOf(".") + 1);
     }
 
-    private static String getPackageRoutes(String smaliObject) {
+    /**
+     * Turn smali object type into Java type
+     * @param smaliObject a String of smali object (like "Ljava/lang/String;")
+     * @return the corresponding Java object type of input smali object
+     */
+    private static String getObjectType(String smaliObject) {
         if (smaliObject == null) {
             return "Object";
         }
@@ -67,25 +97,26 @@ public class TypeTranslator {
     }
 
     /**
-     * Get the package the smali object belong to.
-     *
-     * @param objectName smali full name of an Object like "Ljava/lang/String"
-     * @return package of the object like "java.lang"
+     * Return package the smali object belong to.
+     * <pre>
+     *     getObjectPackage("java.lang.String");
+     *     return "java.lang"
+     * </pre>
+     * @param objectType a smali object with package and name
+     * @return package of the object
      */
-    public static String getPackage(String objectName) {
-        if (objectName == null || !objectName.startsWith("L")) {
-            return null;
+    public static String getObjectPackage(String objectType) {
+        if (objectType == null || objectType.isBlank()) {
+            throw new RuntimeException("[ERROR] Invalid type: " + objectType);
         }
-        String routes = getPackageRoutes(objectName);
-        return routes.substring(0, routes.lastIndexOf("."));
-    }
-
-    public static void main(String[] args) {
-        System.out.println(getPackage("Landroidx/appcompat/widget/ActivityChooserModel"));
-        System.out.println(getType("Landroidx/appcompat/widget/ActivityChooserModel"));
-        System.out.println(getType("Z"));
-        System.out.println(getType("[Ljava/lang/String"));
-        System.out.println(getType("[B"));
+        if (objectType.startsWith("L")) {
+            objectType = getObjectType(objectType);
+        }
+        if (isBasicType(objectType)) {
+            Logger.log("[WARN] " + objectType + " is a basic type, shouldn't call getObjectName()");
+            return objectType;
+        }
+        return objectType.substring(0, objectType.lastIndexOf("."));
     }
 
     /**
@@ -107,6 +138,8 @@ public class TypeTranslator {
         return parametersList;
     }
 
-
+    public static boolean isBasicType(String type) {
+        return basicTypeMap.get(type) != null;
+    }
 
 }

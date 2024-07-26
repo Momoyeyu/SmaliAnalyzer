@@ -9,7 +9,6 @@ import java.util.List;
 
 public class SmaliField extends SmaliElement {
     private List<String> annotations;
-    private boolean arrayFlag;
     private String type;
     private Object value;
 
@@ -49,8 +48,7 @@ public class SmaliField extends SmaliElement {
         if (finalModifier) {
             sb.append("final ");
         }
-        sb.append(TypeTranslator.getType(type));
-        sb.append(arrayFlag ? "[] " : " ");
+        sb.append(TypeTranslator.isBasicType(type) ? type : TypeTranslator.getObjectName(type));
         sb.append(name);
         if (value != null) {
             sb.append(" = ").append(value);
@@ -60,10 +58,6 @@ public class SmaliField extends SmaliElement {
     }
 
     // setter
-    public void setArrayFlag(boolean arrayFlag) {
-        this.arrayFlag = arrayFlag;
-    }
-
     public void setType(String type) {
         this.type = type;
     }
@@ -74,9 +68,11 @@ public class SmaliField extends SmaliElement {
 
     // adder
     public void addAnnotation(String line) {
-        if (annotations != null)
+        if (annotations != null) {
             this.annotations.add(line);
-        else
+        }
+        else {
             Logger.log("[WARN] Trying to add annotation to incorrect field");
+        }
     }
 }
