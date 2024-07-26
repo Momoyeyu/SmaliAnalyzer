@@ -1,9 +1,6 @@
 package com.momoyeyu.smali_analyzer.utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TypeTranslator {
     /**
@@ -17,6 +14,10 @@ public class TypeTranslator {
         System.out.println(getType("[Ljava/lang/String"));
         System.out.println(getType("[B"));
         System.out.println(getObjectName("java.lang.String[]"));
+        List<String> strings = splitParameters("Landroid/content/ComponentName;JF");
+        for (String string : strings) {
+            System.out.println(string);
+        }
     }
 
     private static final Map<String, String> basicTypeMap = new HashMap<>();
@@ -137,7 +138,9 @@ public class TypeTranslator {
         }
         String[] parameterArray = parameters.split("[;]");
         for (String parameter : parameterArray) {
-            parametersList.add(getType(parameter.trim()));
+            if (parameter.startsWith("L") || parameter.startsWith("[")) {
+                parametersList.add(getType(parameter.trim()));
+            }
         }
         return parametersList;
     }
@@ -149,6 +152,56 @@ public class TypeTranslator {
      */
     public static boolean isBasicType(String type) {
         return basicTypeMap.get(type) != null;
+    }
+
+    public static List<String> splitParameters(String parameters) {
+        List<String> parametersList = new LinkedList<>();
+        int state = 0;
+        int objIdx;
+        for (int i = 0; i < parameters.length(); i++) {
+            char c = parameters.charAt(i);
+            switch (state) {
+                case 0: { // scan a new parameter
+                    if (c == '[') { // is an array
+                        state = 1;
+                    } else if (c == 'L') { // is an object
+                        state = 2;
+                    } else { // is a basic type
+                        parametersList.add(String.valueOf(c));
+                        // state = 0;
+                    }
+                    break;
+                }
+                case 1: { // is an array
+                    if (c == 'L') { // is an array of object
+                        state = 3;
+                    } else { // is an array of basic type
+                        parametersList.add("[" + String.valueOf(c));
+                        state = 0;
+                    }
+                    break;
+                }
+                case 2: {
+                    objIdx = i;
+                    while(parameters.charAt(i) != ';') {
+                        i += 1;
+                    }
+                    parametersList.add("L" + parameters.substring(objIdx, i));
+                    state = 0;
+                    break;
+                }
+                case 3: { // is an array of object
+                    objIdx = i;
+                    while(parameters.charAt(i) != ';') {
+                        i += 1;
+                    }
+                    parametersList.add("[" + parameters.substring(objIdx, i));
+                    state = 0;
+                    break;
+                }
+            }
+        }
+        return parametersList;
     }
 
 }
