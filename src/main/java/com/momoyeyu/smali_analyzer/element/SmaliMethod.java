@@ -31,6 +31,22 @@ public class SmaliMethod extends SmaliElement {
     public List<String> getBody() { return body; }
 
     @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        try {
+            sb.append(this.toJava()).append(" {\n");
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return Logger.failToAnalyze("method", signature);
+        }
+        for (String line : this.body) {
+            sb.append("\t").append(line).append("\n");
+        }
+        sb.append("}\n");
+        return sb.toString();
+    }
+
+    @Override
     public String toJava() {
         if (!translated) {
             try {
@@ -51,7 +67,12 @@ public class SmaliMethod extends SmaliElement {
         if (!abstractModifier.equals("default")) {
             sb.append(abstractModifier).append(" ");
         }
-        sb.append(returnType).append(" ");
+        if (!returnType.isBlank()) {
+            sb.append(returnType).append(" ");
+        } else {
+            System.out.println(this.signature);
+            throw new RuntimeException("[ERROR] returnType is blank");
+        }
         sb.append(name).append("(");
         sb.append(MethodAnalyzer.listParameters(parametersList)).append(")");
         return sb.toString();
@@ -60,10 +81,6 @@ public class SmaliMethod extends SmaliElement {
     // getter
     public List<String> getParametersList() {
         return parametersList;
-    }
-
-    public boolean isTranslated() {
-        return translated;
     }
 
     // setter

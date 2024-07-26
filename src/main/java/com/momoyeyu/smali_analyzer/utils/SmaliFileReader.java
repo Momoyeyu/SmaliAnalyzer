@@ -14,8 +14,6 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.lang.System.exit;
-
 /**
  * Scan and analyze smali source file structure to
  * construct a SmaliClass object with well structure.
@@ -99,6 +97,7 @@ public class SmaliFileReader {
                     // read the whole method
                     while (scanner.hasNextLine()) {
                         line = scanner.nextLine().strip();
+                        if (line.isBlank()) continue;
                         body.add(line);
                         if (line.startsWith(".end method")) break;
                     }

@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.ClassAnalyzer;
+import com.momoyeyu.smali_analyzer.utils.Formatter;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 
 import java.util.ArrayList;
@@ -51,15 +52,17 @@ public class SmaliClass extends SmaliElement {
 
     private String toStringIndent(int indent) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\t".repeat(Math.max(0, indent - 1))).append(this.toJava()).append(" {\n");
+        sb.append("\t".repeat(Math.max(0, indent))).append(this.toJava()).append(" {\n");
         for (SmaliField field : smaliFieldList) {
-            sb.append("\t".repeat(Math.max(0, indent + 1))).append(field.toJava()).append("\n");
+            sb.append(Formatter.addIndent(field.toString(), indent + 1));
+//            sb.append("\t".repeat(Math.max(0, indent + 1))).append(field.toJava()).append("\n");
         }
         for (SmaliMethod method : smaliMethodList) {
-            sb.append("\t".repeat(Math.max(0, indent + 1))).append(method.toJava()).append(";\n\n");
+            sb.append(Formatter.addIndent(method.toString(), indent + 1));
+//            sb.append("\t".repeat(Math.max(0, indent + 1))).append(method.toJava()).append(";\n\n");
         }
         for (SmaliClass superClass : subClassList) {
-            sb.append("\t".repeat(Math.max(0, indent + 1))).append(superClass.toStringIndent(indent + 1)).append("\n");
+            sb.append(Formatter.addIndent(superClass.toStringIndent(indent), indent + 1));
         }
         sb.append("\t".repeat(Math.max(0, indent))).append("}\n");
         return sb.toString();

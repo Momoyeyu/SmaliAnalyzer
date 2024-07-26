@@ -34,7 +34,7 @@ public class ClassAnalyzer {
                 smaliClass.setName(matcher.group(15));
             }
         } else {
-            throw new RuntimeException("Invalid signature: " + smaliClass);
+            throw new RuntimeException("Invalid signature: " + smaliClass.getSignature());
         }
     }
 

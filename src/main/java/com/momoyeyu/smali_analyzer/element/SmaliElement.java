@@ -10,6 +10,7 @@ public class SmaliElement {
     protected String accessModifier;
     protected String staticModifier;
     protected String finalModifier;
+    protected boolean synthetic;
 
     protected boolean translated;
 
@@ -18,6 +19,7 @@ public class SmaliElement {
         accessModifier = "default";
         staticModifier = "default";
         finalModifier = "default";
+        synthetic = false;
         translated = false;
     }
 
@@ -38,8 +40,13 @@ public class SmaliElement {
         return translated;
     }
 
+    // setter
     public void setFinalModifier(String finalModifier) {
         this.finalModifier = finalModifier == null ? "default" : finalModifier;
+    }
+
+    public void setSynthetic(boolean synthetic) {
+        this.synthetic = synthetic;
     }
 
     public void setStaticModifier(String staticModifier) {
@@ -56,15 +63,5 @@ public class SmaliElement {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public boolean isSynthetic(String signature) {
-        String[] keys = signature.strip().split("\\s");
-        for (String key : keys) {
-            if (key.equals("synthetic")) {
-                return true;
-            }
-        }
-        return false;
     }
 }

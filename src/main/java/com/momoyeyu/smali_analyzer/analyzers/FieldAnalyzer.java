@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class FieldAnalyzer {
 
-    private static Pattern fieldPattern = Pattern.compile("\\.field\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((\\S*):)(\\[)?((\\S+)(\\s+=\\s+(\\S+))?)");
+    private static Pattern fieldPattern = Pattern.compile("\\.field\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((synthetic)\\s+)?((\\S*):)(\\[)?((\\S+)(\\s+=\\s+(\\S+))?)");
 
     public static void main(String[] args) {
         String[] examples = {
@@ -28,12 +28,13 @@ public class FieldAnalyzer {
             smaliField.setAccessModifier(matcher.group(2)); // default?
             smaliField.setStaticModifier(matcher.group(7)); // static?
             smaliField.setFinalModifier(matcher.group(9)); // final?
-            smaliField.setName(matcher.group(11));
-            if (matcher.group(12) != null) {
+            smaliField.setSynthetic(matcher.group(11) != null); // synthetic?
+            smaliField.setName(matcher.group(13));
+            if (matcher.group(14) != null) {
                 smaliField.setArrayFlag(true);
             }
-            smaliField.setType(matcher.group(14));
-            smaliField.setValue(matcher.group(16));
+            smaliField.setType(matcher.group(16));
+            smaliField.setValue(matcher.group(18));
         } else {
             throw new RuntimeException("[ERROR] Invalid field: " + smaliField.getSignature());
         }

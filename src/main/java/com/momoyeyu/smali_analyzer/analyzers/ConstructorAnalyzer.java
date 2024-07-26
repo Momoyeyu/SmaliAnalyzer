@@ -39,7 +39,7 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
             smaliConstructor.setInitType(matcher.group(8)); // init type
             smaliConstructor.setParametersList(TypeTranslator.getJavaParameters(matcher.group(11))); // params?
         } else {
-            throw new RuntimeException("[WARN] Invalid constructor signature");
+            throw new RuntimeException("[WARN] Invalid constructor: " + smaliConstructor.getSignature());
         }
     }
 

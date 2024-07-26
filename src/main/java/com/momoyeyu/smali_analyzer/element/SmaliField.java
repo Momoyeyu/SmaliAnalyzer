@@ -24,6 +24,11 @@ public class SmaliField extends SmaliElement {
     }
 
     @Override
+    public String toString() {
+        return this.toJava();
+    }
+
+    @Override
     public String toJava() {
         if (!translated) {
             try {
