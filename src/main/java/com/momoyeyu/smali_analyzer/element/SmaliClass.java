@@ -50,7 +50,7 @@ public class SmaliClass extends SmaliElement {
 
     private String toStringIndent(int indent) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\t".repeat(Math.max(0, indent - 1))).append(this.toJava()).append(" {\n\n");
+        sb.append("\t".repeat(Math.max(0, indent - 1))).append(this.toJava()).append(" {\n");
         for (SmaliField field : smaliFieldList) {
             sb.append("\t".repeat(Math.max(0, indent + 1))).append(field.toJava()).append("\n");
         }
@@ -60,6 +60,7 @@ public class SmaliClass extends SmaliElement {
         for (SmaliClass superClass : subClassList) {
             sb.append("\t".repeat(Math.max(0, indent + 1))).append(superClass.toStringIndent(indent + 1)).append("\n");
         }
+        sb.append("\t".repeat(Math.max(0, indent))).append("}\n");
         return sb.toString();
     }
 
@@ -73,7 +74,7 @@ public class SmaliClass extends SmaliElement {
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
-                return "[ERROR] Unable to translate class: " + signature;
+                return "// [ERROR] Unable to translate class: " + signature;
             }
         }
         StringBuilder sb = new StringBuilder();

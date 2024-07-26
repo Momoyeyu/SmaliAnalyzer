@@ -10,6 +10,7 @@ public class SmaliMethod extends SmaliElement {
     protected SmaliClass ownerClass;
 
     protected List<String> parametersList;
+    private String abstractModifier;
     private String returnType;
 
     public SmaliMethod(String signature) {
@@ -36,7 +37,7 @@ public class SmaliMethod extends SmaliElement {
             } catch (Exception e) {
                 e.printStackTrace();
                 translated = true;
-                return "[ERROR] Unable to translate method: " + signature;
+                return "// [ERROR] Unable to translate method: " + signature;
             }
         }
         StringBuilder sb = new StringBuilder();
@@ -46,16 +47,25 @@ public class SmaliMethod extends SmaliElement {
         if (!staticModifier.equals("default")) {
             sb.append(staticModifier).append(" ");
         }
+        if (!abstractModifier.equals("default")) {
+            sb.append(abstractModifier).append(" ");
+        }
         sb.append(returnType).append(" ");
         sb.append(name).append("(");
         sb.append(MethodAnalyzer.listParameters(parametersList)).append(")");
         return sb.toString();
     }
 
+    // getter
     public List<String> getParametersList() {
         return parametersList;
     }
 
+    public boolean isTranslated() {
+        return translated;
+    }
+
+    // setter
     public void setParametersList(List<String> parametersList) {
         this.parametersList = parametersList;
     }
@@ -63,8 +73,7 @@ public class SmaliMethod extends SmaliElement {
     public void setReturnType(String returnType) {
         this.returnType = returnType;
     }
-
-    public boolean isTranslated() {
-        return translated;
+    public void setAbstractModifier(String abstractModifier) {
+        this.abstractModifier = abstractModifier == null ? "default" : abstractModifier;
     }
 }

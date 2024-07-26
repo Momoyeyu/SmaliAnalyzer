@@ -10,12 +10,13 @@ import java.util.regex.Pattern;
 
 public class MethodAnalyzer {
 
-    private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((varargs)\\s+)?(\\w+)\\((.*?)\\)(\\S+?);?");
+    private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((abstract)\\s+)?((varargs)\\s+)?(\\w+)\\((.*?)\\)(\\S+?);?");
 
     public static void main(String[] args) {
         List<String> parametersList = TypeTranslator.getJavaParameters("Ljava/io/OutputStream;Ljava/lang/String;");
         System.out.println(listParameters(parametersList));  // src/main/java/com/momoyeyu/smali_analyzer/utils/MethodSignature.java
         System.out.println(getSignature(".method public varargs doInBackground([Ljava/lang/Object;)Ljava/lang/Void;"));
+        System.out.println(getSignature(".method public abstract setActivityChooserModel(Landroidx/appcompat/widget/ActivityChooserModel;)V;"));
     }
 
     /**
@@ -29,12 +30,13 @@ public class MethodAnalyzer {
         if (matcher.find()) {
             smaliMethod.setAccessModifier(matcher.group(2)); // access?
             smaliMethod.setStaticModifier(matcher.group(7)); // static?
-            smaliMethod.setName(matcher.group(10)); // name
-            smaliMethod.setReturnType(TypeTranslator.getType(matcher.group(12))); // return type
+            smaliMethod.setAbstractModifier(matcher.group(9));
+            smaliMethod.setName(matcher.group(12)); // name
+            smaliMethod.setReturnType(TypeTranslator.getType(matcher.group(14))); // return type
 
             // set parameters
-            List<String> parametersList = TypeTranslator.getJavaParameters(matcher.group(11));
-            if (matcher.group(9) != null) { // varargs?
+            List<String> parametersList = TypeTranslator.getJavaParameters(matcher.group(13));
+            if (matcher.group(11) != null) { // varargs?
                 parametersList.set(parametersList.size() - 1, parametersList.getLast() + "...");
             }
             smaliMethod.setParametersList(parametersList);

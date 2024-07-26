@@ -29,7 +29,7 @@ public class SmaliElement {
     }
 
     public String toJava() {
-        return "[ERROR] Unable to translate element: " + this;
+        return "// [ERROR] Unable to translate element: " + this;
     }
 
     public boolean isTranslated() {
