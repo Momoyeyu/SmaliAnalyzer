@@ -8,4 +8,8 @@ public class Logger {
         return sb.toString();
     }
 
+    public static void log(String msg) {
+        // TODO: write WARN and ERROR into log
+    }
+
 }

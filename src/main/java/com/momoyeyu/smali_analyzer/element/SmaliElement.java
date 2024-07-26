@@ -3,23 +3,23 @@ package com.momoyeyu.smali_analyzer.element;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 
 public class SmaliElement {
-
+    // properties
     protected String signature;
     protected String name;
-
+    // modifiers
     protected String accessModifier;
-    protected String staticModifier;
-    protected String finalModifier;
-    protected boolean synthetic;
-
+    protected boolean staticModifier;
+    protected boolean finalModifier;
+    protected boolean syntheticModifier;
+    // status
     protected boolean translated;
 
     public SmaliElement(String signature) {
         this.signature = signature;
         accessModifier = "default";
-        staticModifier = "default";
-        finalModifier = "default";
-        synthetic = false;
+        staticModifier = false;
+        finalModifier = false;
+        syntheticModifier = false;
         translated = false;
     }
 
@@ -42,15 +42,23 @@ public class SmaliElement {
 
     // setter
     public void setFinalModifier(String finalModifier) {
-        this.finalModifier = finalModifier == null ? "default" : finalModifier;
+        this.finalModifier = finalModifier != null;
     }
 
-    public void setSynthetic(boolean synthetic) {
-        this.synthetic = synthetic;
+    public void setFinalModifier(boolean finalModifier) {
+        this.finalModifier = finalModifier;
+    }
+
+    public void setSyntheticModifier(boolean syntheticModifier) {
+        this.syntheticModifier = syntheticModifier;
     }
 
     public void setStaticModifier(String staticModifier) {
-        this.staticModifier = staticModifier == null ? "default" : staticModifier;
+        this.staticModifier = staticModifier != null;
+    }
+
+    public void setStaticFlag(boolean staticFlag) {
+        this.staticModifier = staticFlag;
     }
 
     public void setAccessModifier(String accessModifier) {

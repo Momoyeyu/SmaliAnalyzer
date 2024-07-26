@@ -32,7 +32,7 @@ public class MethodAnalyzer {
             smaliMethod.setAccessModifier(matcher.group(2)); // access?
             smaliMethod.setStaticModifier(matcher.group(7)); // static?
             smaliMethod.setAbstractModifier(matcher.group(9)); // abstract?
-            smaliMethod.setSynthetic(matcher.group(13) != null); // synthetic?
+            smaliMethod.setSyntheticModifier(matcher.group(13) != null); // synthetic?
             smaliMethod.setName(matcher.group(16)); // name
             smaliMethod.setReturnType(TypeTranslator.getType(matcher.group(18))); // return type
 

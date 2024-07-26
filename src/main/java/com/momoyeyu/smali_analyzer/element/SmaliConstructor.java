@@ -36,8 +36,8 @@ public class SmaliConstructor extends SmaliMethod {
         if (!accessModifier.equals("default")) {
             sb.append(accessModifier).append(" ");
         }
-        if (!staticModifier.equals("default")) {
-            sb.append(staticModifier).append(" ");
+        if (staticModifier) {
+            sb.append("static ");
         }
         sb.append(ownerClass.getName()).append("(");
         sb.append(ConstructorAnalyzer.listParameters(parametersList)).append(")");

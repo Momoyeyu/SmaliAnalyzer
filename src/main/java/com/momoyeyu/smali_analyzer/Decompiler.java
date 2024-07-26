@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer;
 
 import com.momoyeyu.smali_analyzer.element.SmaliClass;
+import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.SmaliFileReader;
 
 import java.io.FileWriter;
@@ -37,6 +38,7 @@ public class Decompiler {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            Logger.log("[ERROR] IOException: Error while decompiling " + inputPath);
         }
     }
 

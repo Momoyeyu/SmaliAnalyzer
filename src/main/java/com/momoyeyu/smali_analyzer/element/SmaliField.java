@@ -20,7 +20,7 @@ public class SmaliField extends SmaliElement {
 
     public SmaliField(String signature, List<String> annotations) {
         super(signature);
-        this.annotations = annotations == null ? new ArrayList<>() : annotations;
+        this.annotations = annotations;
     }
 
     @Override
@@ -43,17 +43,17 @@ public class SmaliField extends SmaliElement {
         if (!accessModifier.equals("default")) {
             sb.append(accessModifier).append(" ");
         }
-        if (!staticModifier.equals("default")) {
-            sb.append(staticModifier).append(" ");
+        if (staticModifier) {
+            sb.append("static ");
         }
-        if (!finalModifier.equals("default")) {
-            sb.append(finalModifier).append(" ");
+        if (finalModifier) {
+            sb.append("final ");
         }
         sb.append(TypeTranslator.getType(type));
         sb.append(arrayFlag ? "[] " : " ");
         sb.append(name);
         if (value != null) {
-            sb.append(" = ").append(value.toString());
+            sb.append(" = ").append(value);
         }
         sb.append(";");
         return sb.toString();
@@ -74,6 +74,9 @@ public class SmaliField extends SmaliElement {
 
     // adder
     public void addAnnotation(String line) {
-        this.annotations.add(line);
+        if (annotations != null)
+            this.annotations.add(line);
+        else
+            Logger.log("[WARN] Trying to add annotation to incorrect field");
     }
 }

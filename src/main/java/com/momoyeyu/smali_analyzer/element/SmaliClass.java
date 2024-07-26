@@ -15,8 +15,8 @@ public class SmaliClass extends SmaliElement {
     private boolean init; // get
 
     private String packageName;
-    private String interfaceModifier;
-    private String abstractModifier;
+    private boolean interfaceModifier;
+    private boolean abstractModifier;
     private boolean translated;
 
     // constructor
@@ -85,14 +85,14 @@ public class SmaliClass extends SmaliElement {
         if (!accessModifier.equals("default")) {
             sb.append(accessModifier).append(" ");
         }
-        if (!finalModifier.equals("default")) {
-            sb.append(finalModifier).append(" ");
+        if (finalModifier) {
+            sb.append("final ");
         }
-        if (!abstractModifier.equals("default")) {
-            sb.append(abstractModifier).append(" ");
+        if (abstractModifier) {
+            sb.append("abstract ");
         }
-        if (!interfaceModifier.equals("default")) {
-            sb.append(interfaceModifier).append(" ");
+        if (interfaceModifier) {
+            sb.append("interface ");
         } else {
             sb.append("class ");
         }
@@ -129,11 +129,15 @@ public class SmaliClass extends SmaliElement {
     }
 
     public void setAbstractModifier(String abstractModifier) {
-        this.abstractModifier = abstractModifier == null ? "default" : abstractModifier;
+        this.abstractModifier = abstractModifier != null;
     }
 
     public void setInterfaceModifier(String interfaceModifier) {
-        this.interfaceModifier = interfaceModifier == null ? "default" : interfaceModifier;
+        this.interfaceModifier = interfaceModifier != null;
+    }
+
+    public void setInterfaceModifier(boolean interfaceModifier) {
+        this.interfaceModifier = interfaceModifier;
     }
 
     // adder

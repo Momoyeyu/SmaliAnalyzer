@@ -28,7 +28,7 @@ public class FieldAnalyzer {
             smaliField.setAccessModifier(matcher.group(2)); // default?
             smaliField.setStaticModifier(matcher.group(7)); // static?
             smaliField.setFinalModifier(matcher.group(9)); // final?
-            smaliField.setSynthetic(matcher.group(11) != null); // synthetic?
+            smaliField.setSyntheticModifier(matcher.group(11) != null); // synthetic?
             smaliField.setName(matcher.group(13));
             if (matcher.group(14) != null) {
                 smaliField.setArrayFlag(true);

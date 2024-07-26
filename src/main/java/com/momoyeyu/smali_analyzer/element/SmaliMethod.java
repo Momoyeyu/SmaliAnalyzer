@@ -5,13 +5,14 @@ import com.momoyeyu.smali_analyzer.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SmaliMethod extends SmaliElement {
     private List<String> body;
     protected SmaliClass ownerClass;
 
     protected List<String> parametersList;
-    private String abstractModifier;
+    private boolean abstractModifier;
     private String returnType;
 
     public SmaliMethod(String signature) {
@@ -21,11 +22,7 @@ public class SmaliMethod extends SmaliElement {
     public SmaliMethod(String signature, SmaliClass ownerClass, List<String> body) {
         super(signature);
         this.ownerClass = ownerClass;
-        if (body != null) {
-            this.body = body;
-        } else {
-            this.body = new ArrayList<>();
-        }
+        this.body = Objects.requireNonNullElseGet(body, ArrayList::new);
     }
 
     public List<String> getBody() { return body; }
@@ -58,14 +55,14 @@ public class SmaliMethod extends SmaliElement {
             }
         }
         StringBuilder sb = new StringBuilder();
-        if (!accessModifier.equals("default")) {
+        if (accessModifier.equals("default")) {
             sb.append(accessModifier).append(" ");
         }
-        if (!staticModifier.equals("default")) {
-            sb.append(staticModifier).append(" ");
+        if (staticModifier) {
+            sb.append("static ");
         }
-        if (!abstractModifier.equals("default")) {
-            sb.append(abstractModifier).append(" ");
+        if (abstractModifier) {
+            sb.append("abstract ");
         }
         if (!returnType.isBlank()) {
             sb.append(returnType).append(" ");
@@ -91,7 +88,12 @@ public class SmaliMethod extends SmaliElement {
     public void setReturnType(String returnType) {
         this.returnType = returnType;
     }
+
     public void setAbstractModifier(String abstractModifier) {
-        this.abstractModifier = abstractModifier == null ? "default" : abstractModifier;
+        this.abstractModifier = abstractModifier != null;
+    }
+
+    public void setAbstractModifier(boolean abstractModifier) {
+        this.abstractModifier = abstractModifier;
     }
 }
