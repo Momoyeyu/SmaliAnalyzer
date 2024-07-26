@@ -4,7 +4,6 @@ import com.momoyeyu.smali_analyzer.analyzers.FieldAnalyzer;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SmaliField extends SmaliElement {
@@ -35,7 +34,7 @@ public class SmaliField extends SmaliElement {
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
-                return Logger.failToAnalyze("field", signature);
+                return Logger.logAnalysisFailure("field", signature);
             }
         }
         StringBuilder sb = new StringBuilder();
@@ -48,7 +47,7 @@ public class SmaliField extends SmaliElement {
         if (finalModifier) {
             sb.append("final ");
         }
-        sb.append(TypeTranslator.isBasicType(type) ? type : TypeTranslator.getObjectName(type));
+        sb.append(TypeTranslator.isBasicType(type) ? type : TypeTranslator.getObjectName(type)).append(" ");
         sb.append(name);
         if (value != null) {
             sb.append(" = ").append(value);

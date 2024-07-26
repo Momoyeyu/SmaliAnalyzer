@@ -26,7 +26,7 @@ public class SmaliConstructor extends SmaliMethod {
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
-                return Logger.failToAnalyze("constructor", signature);
+                return Logger.logAnalysisFailure("constructor", signature);
             }
         }
         if (!ownerClass.isTranslated()) {

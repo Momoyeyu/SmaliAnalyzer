@@ -33,7 +33,7 @@ public class SmaliElement {
     }
 
     public String toJava() {
-        return Logger.failToAnalyze("element", signature);
+        return Logger.logAnalysisFailure("element", signature);
     }
 
     public boolean isTranslated() {

@@ -35,7 +35,7 @@ public class SmaliMethod extends SmaliElement {
             sb.append(this.toJava()).append(" {\n");
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return Logger.failToAnalyze("method", signature);
+            return Logger.logAnalysisFailure("method", signature);
         }
         for (String line : this.body) {
             sb.append("\t").append(line).append("\n");
@@ -52,7 +52,7 @@ public class SmaliMethod extends SmaliElement {
             } catch (Exception e) {
                 e.printStackTrace();
                 translated = true;
-                return Logger.failToAnalyze("method", signature);
+                return Logger.logAnalysisFailure("method", signature);
             }
         }
         StringBuilder sb = new StringBuilder();

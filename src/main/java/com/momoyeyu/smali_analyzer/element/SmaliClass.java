@@ -68,8 +68,6 @@ public class SmaliClass extends SmaliElement {
         return sb.toString();
     }
 
-
-
     @Override
     public String toJava() {
         if (!translated) {
@@ -78,7 +76,7 @@ public class SmaliClass extends SmaliElement {
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
-                return Logger.failToAnalyze("class", signature);
+                return Logger.logAnalysisFailure("class", signature);
             }
         }
         StringBuilder sb = new StringBuilder();

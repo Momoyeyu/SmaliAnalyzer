@@ -1,6 +1,5 @@
 package com.momoyeyu.smali_analyzer;
 
-import com.momoyeyu.smali_analyzer.element.SmaliClass;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.SmaliFileReader;
 
@@ -17,8 +16,6 @@ public class Decompiler {
     public static void decompile(String inputPath) {
         String outputPath = SmaliFileReader.getOutputPath(inputPath);
         decompile(inputPath, outputPath);
-        System.out.println("Finished Decompiling " + inputPath);
-        System.out.println("Output path: " + outputPath);
     }
 
     public static void decompile(String inputPath, String outputPath) {
@@ -38,8 +35,11 @@ public class Decompiler {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            Logger.log("[ERROR] IOException: Error while decompiling " + inputPath);
+            Logger.log("[ERROR] IOException occur while decompiling " + inputPath);
         }
+        System.out.println("[INFO] Finished Decompiling: " + inputPath);
+        System.out.println("[INFO] Result save to: " + outputPath);
+        Logger.saveLogs();
     }
 
 }
