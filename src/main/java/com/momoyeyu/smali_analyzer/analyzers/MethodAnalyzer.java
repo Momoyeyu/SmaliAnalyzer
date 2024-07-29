@@ -11,13 +11,17 @@ import java.util.regex.Pattern;
 
 public class MethodAnalyzer {
 
+    private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((abstract)\\s+)?((bridge)\\s+)?((synthetic)\\s+)?((varargs)\\s+)?(\\S+)\\((.*?)\\)([a-zA-Z/]++);?");
+
+    /**
+     * Test
+     * @param args user input
+     */
     public static void main(String[] args) {
         System.out.println(getSignature(".method public varargs doInBackground([Ljava/lang/Object;)Ljava/lang/Void;"));
         System.out.println(getSignature(".method public abstract setActivityChooserModel(Landroidx/appcompat/widget/ActivityChooserModel;)V;"));
         System.out.println(getSignature(".method public static get(Landroid/content/Context;Ljava/lang/String;)Landroidx/appcompat/widget/ActivityChooserModel;"));
     }
-
-    private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((abstract)\\s+)?((bridge)\\s+)?((synthetic)\\s+)?((varargs)\\s+)?(\\S+)\\((.*?)\\)([a-zA-Z/]++);?");
 
     /**
      * Turn a smali method signature into Java method signature

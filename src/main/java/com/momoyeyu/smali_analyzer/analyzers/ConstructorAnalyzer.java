@@ -12,6 +12,10 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
 
     private static final Pattern constructorPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?constructor\\s+((<init>)|(<clinit>))\\((.*?)\\)V");
 
+    /**
+     * Testing ConstructorAnalyzer/
+     * @param args user input
+     */
     public static void main(String[] args) {
         System.out.println(getSignature(".method public constructor <init>(Landroid/content/ComponentName;JF)V",
                 ".class public final Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;"));
@@ -27,10 +31,21 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
         return constructorPattern.matcher(smaliSignature).matches();
     }
 
+    /**
+     * Judge if the given method a constructor.
+     * @param smaliMethod SmaliMethod object
+     * @return boolean
+     */
     public static boolean isConstructor(SmaliMethod smaliMethod) {
         return isConstructor(smaliMethod.getSignature());
     }
 
+    /**
+     * Translate SmaliConstructor's signature into Java signature.
+     * The translation result will be stored in the param object.
+     * @param smaliConstructor SmaliConstructor object to be translated
+     * @throws RuntimeException constructor signature mismatch regex.
+     */
     public static void translate(SmaliConstructor smaliConstructor) throws RuntimeException {
         Matcher matcher = constructorPattern.matcher(smaliConstructor.getSignature());
         if (matcher.find()) {
@@ -43,10 +58,21 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
         }
     }
 
+    /**
+     * Get SmaliConstructor's Java signature
+     * @param smaliConstructor SmaliConstructor object
+     * @return Java signature
+     */
     public static String getSignature(SmaliConstructor smaliConstructor) {
         return smaliConstructor.toJava() + ";";
     }
 
+    /**
+     * Get Java signature of smaliConstructor from a String of smaliConstructor.
+     * Mostly used for testing.
+     * @param smaliConstructor smaliConstructor signature String
+     * @return Java signature
+     */
     public static String getSignature(String smaliConstructor, String onwerClass) {
         return getSignature(new SmaliConstructor(smaliConstructor, new SmaliClass(onwerClass)));
     }

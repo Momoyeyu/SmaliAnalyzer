@@ -11,6 +11,10 @@ public class FieldAnalyzer {
     private static final Pattern fieldPattern = Pattern.compile("\\.field\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((synthetic)\\s+)?((\\S*):)(\\[)?((\\S+)(\\s+=\\s+(\\S+))?)");
     private static final Pattern annotationPattern = Pattern.compile(".annotation\\s+system\\s+Ldalvik/annotation/Signature;value\\s+=\\s+\\{\"\\S+<\",\"(\\S+)\",\">;\"\\}.end\\s+annotation");
 
+    /**
+     * Test
+     * @param args user input
+     */
     public static void main(String[] args) {
         String[] examples = {
                 ".field static final ATTRIBUTE_ACTIVITY:Ljava/lang/String; = \"activity\"",
@@ -24,6 +28,12 @@ public class FieldAnalyzer {
         }
     }
 
+    /**
+     * Translate smaliField's signature into Java signature.
+     * The translation result will be stored in the param object.
+     * @param smaliField smaliField object to be translated
+     * @throws RuntimeException field signature mismatch regex.
+     */
     public static void translate(SmaliField smaliField) throws RuntimeException {
         Matcher matcher = fieldPattern.matcher(smaliField.getSignature());
         if (matcher.find()) {
