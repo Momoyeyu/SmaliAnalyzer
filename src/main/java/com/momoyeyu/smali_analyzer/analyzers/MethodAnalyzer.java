@@ -36,7 +36,7 @@ public class MethodAnalyzer {
             smaliMethod.setAbstractModifier(matcher.group(9)); // abstract?
             smaliMethod.setSyntheticModifier(matcher.group(13) != null); // synthetic?
             smaliMethod.setName(matcher.group(16)); // name
-            smaliMethod.setReturnType(TypeTranslator.getType(matcher.group(18))); // return type
+            smaliMethod.setReturnType(TypeTranslator.getRoutes(matcher.group(18))); // return type
 
             // set parameters
             List<String> parametersList = TypeTranslator.getJavaParameters(matcher.group(17));

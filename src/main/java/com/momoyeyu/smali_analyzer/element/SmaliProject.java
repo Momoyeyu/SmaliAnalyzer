@@ -18,7 +18,15 @@ public class SmaliProject {
         project.files.put(routes, file);
     }
 
+    /**
+     * Return SmaliFile object.
+     * @param routes file routes that extracted only package routes.
+     * @return SmaliFile object
+     */
     public static SmaliFile getFile(String routes) {
+        if (!project.files.containsKey(routes)) {
+            addFile(routes, new SmaliFile(routes));
+        }
         return project.files.get(routes);
     }
 

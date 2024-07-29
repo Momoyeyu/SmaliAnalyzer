@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.utils;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ImportPackageList {
     // 'java.lang' packages are imported by default.

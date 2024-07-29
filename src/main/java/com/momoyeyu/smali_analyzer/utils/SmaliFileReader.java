@@ -1,10 +1,8 @@
 package com.momoyeyu.smali_analyzer.utils;
 
+import com.momoyeyu.smali_analyzer.analyzers.ClassAnalyzer;
 import com.momoyeyu.smali_analyzer.analyzers.ConstructorAnalyzer;
-import com.momoyeyu.smali_analyzer.element.SmaliClass;
-import com.momoyeyu.smali_analyzer.element.SmaliConstructor;
-import com.momoyeyu.smali_analyzer.element.SmaliField;
-import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.element.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,7 +20,7 @@ import java.util.regex.Pattern;
  */
 public class SmaliFileReader {
 
-    private SmaliClass smaliClass;
+    private SmaliFile smaliFile;
     private SmaliClass currentSmaliClass;
     private static Pattern pathPattern = Pattern.compile("((.*)\\\\input\\\\)?((\\S+).smali)");
 
@@ -30,7 +28,7 @@ public class SmaliFileReader {
         // TODO: test SmaliFileReader
         String inputPath = "C:\\Users\\antiy\\Desktop\\projects\\SmaliAnalyzer\\res\\data\\input\\ActivityChooserModel.smali";
         SmaliFileReader smaliFileReader = new SmaliFileReader(inputPath);
-        System.out.println(smaliFileReader.smaliClass.toString());
+        System.out.println(smaliFileReader.smaliFile.toString());
     }
 
     public static String getOutputPath(String inputPath) {
@@ -44,16 +42,18 @@ public class SmaliFileReader {
         return null;
     }
 
-    public SmaliClass getFileClass() {
-        return smaliClass;
+    public SmaliFile getFile() {
+        return smaliFile;
     }
 
-    public SmaliFileReader(String fileName) {
-        // create a new class instance
-        smaliClass = new SmaliClass();
+    /**
+     * Constructor
+     * @param routes file routes
+     */
+    public SmaliFileReader(String routes) {
         SmaliField curSmaliField = null;
         String lastFlag = null;
-        File file = new File(fileName);
+        File file = new File(routes);
         Scanner scanner = null;
         try {
             scanner = new Scanner(file);
@@ -71,18 +71,13 @@ public class SmaliFileReader {
                         curSmaliField = null;
                     }
                 }
-
                 if (line.isEmpty() || line.startsWith("#")) continue;
-
-                // find a class, let currentSmaliClass = this class
                 if (line.startsWith(".class")) {
-                    if (line.contains("$") || smaliClass.isInit()) {
-                        currentSmaliClass = new SmaliClass(line);
-                        smaliClass.addSubClass(currentSmaliClass);
-                    } else {
-                        smaliClass.init(line);
-                        currentSmaliClass = smaliClass;
+                    currentSmaliClass = new SmaliClass(line);
+                    if (smaliFile == null) {
+                        ClassAnalyzer.getSignature(currentSmaliClass);
                     }
+                    smaliFile.addClass(currentSmaliClass);
                 }
                 if (line.startsWith(".super")) {
                     try {

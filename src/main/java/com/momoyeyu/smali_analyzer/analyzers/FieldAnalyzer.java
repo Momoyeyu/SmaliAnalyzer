@@ -43,9 +43,9 @@ public class FieldAnalyzer {
             smaliField.setSyntheticModifier(matcher.group(11) != null); // synthetic?
             smaliField.setName(matcher.group(13));
             if (matcher.group(14) != null) {
-                smaliField.setType(TypeTranslator.getType(matcher.group(16)) + "[]");
+                smaliField.setType(TypeTranslator.getRoutes(matcher.group(16)) + "[]");
             } else {
-                smaliField.setType(TypeTranslator.getType(matcher.group(16)));
+                smaliField.setType(TypeTranslator.getRoutes(matcher.group(16)));
             }
             smaliField.setValue(matcher.group(18));
         } else {
@@ -57,7 +57,7 @@ public class FieldAnalyzer {
             StringBuilder sb = new StringBuilder();
             sb.append(type.endsWith("[]") ? type.substring(0, type.length() - 2) : type).append("<");
             for (String t : matcher.group(1).split("(\",\\s*\")")) {
-                sb.append(TypeTranslator.getName(t)).append(", ");
+                sb.append(TypeTranslator.getType(t)).append(", ");
             }
             sb.delete(sb.length() - 2, sb.length()).append(">").append(type.endsWith("[]") ? "[]" : "");
             smaliField.setType(sb.toString());

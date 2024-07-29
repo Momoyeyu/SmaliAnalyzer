@@ -45,7 +45,7 @@ public class SmaliField extends SmaliElement {
         if (finalModifier) {
             sb.append("final ");
         }
-        sb.append(TypeTranslator.isBasicType(type) ? type : TypeTranslator.getObjectName(type)).append(" ");
+        sb.append(TypeTranslator.isBasicType(type) ? type : TypeTranslator.getJavaObjectName(type)).append(" ");
         sb.append(name);
         if (value != null) {
             sb.append(" = ").append(value);

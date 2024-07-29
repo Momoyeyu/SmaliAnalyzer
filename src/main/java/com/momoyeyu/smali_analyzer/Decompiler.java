@@ -27,7 +27,7 @@ public class Decompiler {
             outputPath = SmaliFileReader.getOutputPath(inputPath);
         }
         SmaliFileReader smaliFileReader = new SmaliFileReader(inputPath);
-        String content = smaliFileReader.getFileClass().toString();
+        String content = smaliFileReader.getFile().toString();
         try (FileWriter writer = new FileWriter(outputPath)) {
             Scanner scanner = new Scanner(content);
             while (scanner.hasNextLine()) {
