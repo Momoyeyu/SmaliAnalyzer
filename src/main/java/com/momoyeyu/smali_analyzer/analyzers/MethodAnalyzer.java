@@ -1,7 +1,6 @@
 package com.momoyeyu.smali_analyzer.analyzers;
 
 import com.momoyeyu.smali_analyzer.element.SmaliConstructor;
-import com.momoyeyu.smali_analyzer.element.SmaliElement;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 

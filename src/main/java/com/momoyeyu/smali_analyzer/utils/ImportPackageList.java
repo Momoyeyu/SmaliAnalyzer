@@ -1,16 +1,12 @@
 package com.momoyeyu.smali_analyzer.utils;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ImportPackageList {
-    private List<String> list;
-    private static List<String> defaultImportPackageList = new LinkedList<>();
-    static {
-        // 'java.lang' packages are imported by default.
-        defaultImportPackageList.add("java\\.lang(\\.\\S+)?");
-    }
+    // 'java.lang' packages are imported by default.
+    private static final String defaultImportPackages = "java\\.lang(\\.\\S+)?";
+    private final Set<String> importPackages;
+    private final Set<String> localPackages;
 
     /**
      * Test
@@ -26,26 +22,34 @@ public class ImportPackageList {
     }
 
     public ImportPackageList() {
-        this.list = new ArrayList<>();
+        this.importPackages = new HashSet<>();
+        this.localPackages = new HashSet<>();
     }
 
+    /**
+     * Add a new package to the importPackageList.
+     *
+     * @param packageName both package and object name.
+     */
     public void importPackage(String packageName) {
+        if (packageName == null || packageName.matches(defaultImportPackages)) {
+            return;
+        }
         packageName = packageName.strip();
-        for (String importPackage : defaultImportPackageList) {
-            if (packageName.matches(importPackage)) {
-                return;
-            }
+        this.importPackages.add(packageName);
+    }
+
+    public void addLocalPackage(String packageName) {
+        if (packageName == null || packageName.matches(defaultImportPackages) || localPackages.contains(packageName)) {
+            return;
         }
-        if (packageName != null && !packageName.isEmpty()) {
-            this.list.add(packageName);
-        }
+        this.localPackages.add(packageName);
     }
 
     @Override
     public String toString() {
-        list.sort(null);
         StringBuilder sb = new StringBuilder();
-        for (String importPackage : this.list) {
+        for (String importPackage : this.importPackages) {
             sb.append("import ").append(importPackage).append(";\n");
         }
         return sb.toString();
