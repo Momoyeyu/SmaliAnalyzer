@@ -3,6 +3,20 @@ package com.momoyeyu.smali_analyzer.utils;
 import java.util.*;
 
 public class TypeTranslator {
+
+    private static final Map<String, String> basicTypeMap = new HashMap<>();
+    static {
+        basicTypeMap.put("Z", "boolean");
+        basicTypeMap.put("B", "byte");
+        basicTypeMap.put("C", "char");
+        basicTypeMap.put("D", "double");
+        basicTypeMap.put("F", "float");
+        basicTypeMap.put("I", "int");
+        basicTypeMap.put("J", "long");
+        basicTypeMap.put("S", "short");
+        basicTypeMap.put("V", "void");
+    }
+
     /**
      * Test
      * @param args user input
@@ -20,17 +34,18 @@ public class TypeTranslator {
         }
     }
 
-    private static final Map<String, String> basicTypeMap = new HashMap<>();
-    static {
-        basicTypeMap.put("Z", "boolean");
-        basicTypeMap.put("B", "byte");
-        basicTypeMap.put("C", "char");
-        basicTypeMap.put("D", "double");
-        basicTypeMap.put("F", "float");
-        basicTypeMap.put("I", "int");
-        basicTypeMap.put("J", "long");
-        basicTypeMap.put("S", "short");
-        basicTypeMap.put("V", "void");
+    public static String getName(String smaliType) {
+        String type = getType(smaliType);
+        if (isBasicType(type)) {
+            return type;
+        }
+        try {
+            return getObjectName(type);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            Logger.logAnalysisFailure("type", smaliType);
+            return "/* " + smaliType + " */";
+        }
     }
 
     /**
@@ -153,9 +168,9 @@ public class TypeTranslator {
     }
 
     /**
-     * A state machine that split parameters
-     * @param parameters
-     * @return
+     * A state machine that split smali parameters
+     * @param parameters smali parameters String
+     * @return Java parameters List
      */
     public static List<String> splitParameters(String parameters) {
         List<String> parametersList = new LinkedList<>();

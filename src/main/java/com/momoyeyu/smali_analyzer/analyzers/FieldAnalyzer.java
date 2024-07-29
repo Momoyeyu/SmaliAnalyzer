@@ -8,7 +8,8 @@ import java.util.regex.Pattern;
 
 public class FieldAnalyzer {
 
-    private static Pattern fieldPattern = Pattern.compile("\\.field\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((synthetic)\\s+)?((\\S*):)(\\[)?((\\S+)(\\s+=\\s+(\\S+))?)");
+    private static final Pattern fieldPattern = Pattern.compile("\\.field\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((synthetic)\\s+)?((\\S*):)(\\[)?((\\S+)(\\s+=\\s+(\\S+))?)");
+    private static final Pattern annotationPattern = Pattern.compile(".annotation\\s+system\\s+Ldalvik/annotation/Signature;value\\s+=\\s+\\{\"\\S+<\",\"(\\S+)\",\">;\"\\}.end\\s+annotation");
 
     public static void main(String[] args) {
         String[] examples = {
@@ -39,6 +40,17 @@ public class FieldAnalyzer {
             smaliField.setValue(matcher.group(18));
         } else {
             throw new RuntimeException("[ERROR] Invalid field: " + smaliField.getSignature());
+        }
+        matcher = annotationPattern.matcher(smaliField.getAnnotations());
+        if (matcher.find()) {
+            String type = smaliField.getType();
+            StringBuilder sb = new StringBuilder();
+            sb.append(type.endsWith("[]") ? type.substring(0, type.length() - 2) : type).append("<");
+            for (String t : matcher.group(1).split("(\",\\s*\")")) {
+                sb.append(TypeTranslator.getName(t)).append(", ");
+            }
+            sb.delete(sb.length() - 2, sb.length()).append(">").append(type.endsWith("[]") ? "[]" : "");
+            smaliField.setType(sb.toString());
         }
     }
 

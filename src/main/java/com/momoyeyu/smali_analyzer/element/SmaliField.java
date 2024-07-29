@@ -4,22 +4,19 @@ import com.momoyeyu.smali_analyzer.analyzers.FieldAnalyzer;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class SmaliField extends SmaliElement {
-    private List<String> annotations;
+    private String annotations;
     private String type;
     private Object value;
 
     // constructor
     public SmaliField(String signature) {
-        this(signature, new LinkedList<>());
+        this(signature, "");
     }
 
-    public SmaliField(String signature, List<String> annotations) {
+    public SmaliField(String signature, String annotations) {
         super(signature);
-        this.annotations = annotations;
+        this.annotations = annotations.strip();
     }
 
     @Override
@@ -66,13 +63,22 @@ public class SmaliField extends SmaliElement {
         this.value = value;
     }
 
+    // getter
+    public String getAnnotations() {
+        return annotations;
+    }
+
+    public String getType() {
+        return type;
+    }
+
     // adder
     public void addAnnotation(String line) {
         if (annotations != null) {
-            this.annotations.add(line);
+            this.annotations += line.strip();
         }
         else {
-            Logger.log("[WARN] Trying to add annotation to incorrect field: " + this.signature);
+            Logger.log("[WARN] Trying to add annotation '" + line + "' to incorrect field: '" + this.signature + "'");
         }
     }
 }
