@@ -46,7 +46,7 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
      * @param smaliConstructor SmaliConstructor object to be translated
      * @throws RuntimeException constructor signature mismatch regex.
      */
-    public static void translate(SmaliConstructor smaliConstructor) throws RuntimeException {
+    public static void analyze(SmaliConstructor smaliConstructor) throws RuntimeException {
         Matcher matcher = constructorPattern.matcher(smaliConstructor.getSignature());
         if (matcher.find()) {
             smaliConstructor.setAccessModifier(matcher.group(2)); // access?

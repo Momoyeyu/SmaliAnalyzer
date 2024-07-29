@@ -48,7 +48,7 @@ public class SmaliMethod extends SmaliElement {
     public String toJava() {
         if (!translated) {
             try {
-                MethodAnalyzer.translate(this);
+                MethodAnalyzer.analyze(this);
             } catch (Exception e) {
                 e.printStackTrace();
                 translated = true;

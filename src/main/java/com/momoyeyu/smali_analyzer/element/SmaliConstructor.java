@@ -22,7 +22,7 @@ public class SmaliConstructor extends SmaliMethod {
     public String toJava() {
         if (!translated) {
             try {
-                ConstructorAnalyzer.translate(this);
+                ConstructorAnalyzer.analyze(this);
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();

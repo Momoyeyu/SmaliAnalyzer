@@ -28,7 +28,7 @@ public class MethodAnalyzer {
      * @test pass
      * @param smaliMethod SmaliMethod object
      */
-    public static void translate(SmaliMethod smaliMethod) throws RuntimeException {
+    public static void analyze(SmaliMethod smaliMethod) throws RuntimeException {
         Matcher matcher = methodPattern.matcher(smaliMethod.getSignature());
         if (matcher.find()) {
             smaliMethod.setAccessModifier(matcher.group(2)); // access?

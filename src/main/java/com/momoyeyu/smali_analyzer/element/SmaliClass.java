@@ -72,7 +72,7 @@ public class SmaliClass extends SmaliElement {
     public String toJava() {
         if (!translated) {
             try {
-                ClassAnalyzer.translate(this);
+                ClassAnalyzer.analyze(this);
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
@@ -110,7 +110,7 @@ public class SmaliClass extends SmaliElement {
     @Override
     public String getName() {
         if (this.name == null) {
-            ClassAnalyzer.translate(this);
+            ClassAnalyzer.analyze(this);
         }
         return this.name;
     }

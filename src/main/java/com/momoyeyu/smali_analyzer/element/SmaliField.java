@@ -28,7 +28,7 @@ public class SmaliField extends SmaliElement {
     public String toJava() {
         if (!translated) {
             try {
-                FieldAnalyzer.translate(this);
+                FieldAnalyzer.analyze(this);
                 translated = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();

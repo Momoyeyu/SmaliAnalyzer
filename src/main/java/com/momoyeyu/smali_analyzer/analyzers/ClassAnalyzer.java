@@ -1,7 +1,6 @@
 package com.momoyeyu.smali_analyzer.analyzers;
 
 import com.momoyeyu.smali_analyzer.element.SmaliClass;
-import com.momoyeyu.smali_analyzer.repository.ClassRepository;
 import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 
 import java.util.regex.Matcher;
@@ -27,7 +26,7 @@ public class ClassAnalyzer {
      * @param smaliClass SmaliClass object
      * @throws RuntimeException its super class might not be stored in ClassRepository
      */
-    public static void translate(SmaliClass smaliClass) throws RuntimeException {
+    public static void analyze(SmaliClass smaliClass) throws RuntimeException {
         Matcher matcher = classPattern.matcher(smaliClass.getSignature());
         if (matcher.find()) {
             smaliClass.setAccessModifier(matcher.group(5));

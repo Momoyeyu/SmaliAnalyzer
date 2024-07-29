@@ -29,12 +29,12 @@ public class FieldAnalyzer {
     }
 
     /**
-     * Translate smaliField's signature into Java signature.
+     * Analyze smaliField's signature and store its Java properties.
      * The translation result will be stored in the param object.
      * @param smaliField smaliField object to be translated
      * @throws RuntimeException field signature mismatch regex.
      */
-    public static void translate(SmaliField smaliField) throws RuntimeException {
+    public static void analyze(SmaliField smaliField) throws RuntimeException {
         Matcher matcher = fieldPattern.matcher(smaliField.getSignature());
         if (matcher.find()) {
             smaliField.setAccessModifier(matcher.group(2)); // default?
