@@ -103,8 +103,8 @@ public class SmaliClass extends SmaliElement {
     }
 
     // getter
-    public String getPackage() {
-        return "package " + packageName.strip() + ";";
+    public String getPackageName() {
+        return packageName;
     }
 
     @Override

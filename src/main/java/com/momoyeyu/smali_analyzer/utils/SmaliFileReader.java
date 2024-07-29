@@ -3,6 +3,7 @@ package com.momoyeyu.smali_analyzer.utils;
 import com.momoyeyu.smali_analyzer.analyzers.ClassAnalyzer;
 import com.momoyeyu.smali_analyzer.analyzers.ConstructorAnalyzer;
 import com.momoyeyu.smali_analyzer.element.*;
+import com.momoyeyu.smali_analyzer.repository.ClassRepository;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -78,12 +79,14 @@ public class SmaliFileReader {
                         smaliFile = SmaliProject.getFile(ClassAnalyzer.getRoutes(currentSmaliClass));
                     }
                     smaliFile.addClass(currentSmaliClass);
-                }
-                if (line.startsWith(".super")) {
-                    try {
-                        currentSmaliClass.setSuperClass(new SmaliClass(line));
-                    } catch (RuntimeException e) {
-                        e.printStackTrace();
+                    ClassRepository.addClass(currentSmaliClass);
+                    line = scanner.nextLine().strip();
+                    if (line.startsWith(".super")) {
+                        try {
+                            currentSmaliClass.setSuperClass(ClassRepository.getClass(line));
+                        } catch (RuntimeException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 if (line.startsWith(".method")) {
