@@ -37,11 +37,6 @@ public class ClassAnalyzer {
             smaliClass.setPackageName(matcher.group(16).replaceAll("/", "."));
             if (matcher.group(20) != null) {
                 smaliClass.setName(matcher.group(20));
-                try {
-                    smaliClass.setSuperClass(ClassRepository.getClass(matcher.group(18)));
-                } catch (RuntimeException e) {
-                    e.printStackTrace();
-                }
             } else {
                 smaliClass.setName(matcher.group(18));
             }
