@@ -23,6 +23,7 @@ public class SmaliFile {
             if (mainClass == null) {
                 classStack.push(smaliClass);
             } else {
+                mainClass.addSubClass(smaliClass);
                 arrangeFile();
             }
         }
@@ -39,6 +40,7 @@ public class SmaliFile {
 
     @Override
     public String toString() {
+        arrangeFile();
         if (mainClass == null) {
             Logger.log("[ERROR] lost main class at: " + routes);
             StringBuilder builder = new StringBuilder();

@@ -75,7 +75,7 @@ public class SmaliFileReader {
                 if (line.startsWith(".class")) {
                     currentSmaliClass = new SmaliClass(line);
                     if (smaliFile == null) {
-                        ClassAnalyzer.getSignature(currentSmaliClass);
+                        smaliFile = SmaliProject.getFile(ClassAnalyzer.getRoutes(currentSmaliClass));
                     }
                     smaliFile.addClass(currentSmaliClass);
                 }
