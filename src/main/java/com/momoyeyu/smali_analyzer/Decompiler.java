@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Decompiler {
+
     public static void main(String[] args) {
         String inputPath = "C:\\Users\\antiy\\Desktop\\projects\\SmaliAnalyzer\\res\\data\\input\\ActivityChooserModel.smali";
         decompile(inputPath);
