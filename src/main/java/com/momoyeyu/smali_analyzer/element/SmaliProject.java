@@ -57,7 +57,7 @@ public class SmaliProject {
     public void save(String saveDir) {
         for (SmaliFile smaliFile : files.values()) {
             File file = new File(
-                    saveDir + "/output/" + PathUtils.route2path(smaliFile.getRoutes()) + ".java");
+                    saveDir + "/" + PathUtils.route2path(smaliFile.getRoutes()) + ".java");
             File parent = file.getParentFile();
             if (!parent.exists()) {
                 boolean isDirCreated = parent.mkdirs(); // 创建多级目录
@@ -77,6 +77,7 @@ public class SmaliProject {
                 Logger.log("[ERROR] IOException occur while decompiling " + smaliFile.getRoutes());
             }
         }
-        Logger.log("[INFO] Result save at: " + saveDir + "/output");
+        Logger.log("[INFO] Total output files: " + files.size());
+        Logger.log("[INFO] Result save at: " + saveDir);
     }
 }
