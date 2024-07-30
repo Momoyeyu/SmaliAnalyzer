@@ -1,11 +1,11 @@
 package com.momoyeyu.smali_analyzer;
 
-import com.momoyeyu.smali_analyzer.utils.FileTraverser;
+import com.momoyeyu.smali_analyzer.element.SmaliProject;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.PathUtils;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 
 public class Decompiler {
 
@@ -22,17 +22,14 @@ public class Decompiler {
     }
 
     public static void decompile(String inputDir, String outputDir) {
-        File inputDirFile = new File(inputDir);
-        if (!inputDirFile.exists()) {
-            Logger.log("[ERROR] Input directory does not exist: " + inputDir);
-            throw new RuntimeException("Input directory does not exist: " + inputDir);
-        }
-        FileTraverser project;
+        SmaliProject project = SmaliProject.getProject();
         try {
-            project = new FileTraverser(inputDir);
-            project.save(outputDir);
-        } catch (IOException e) {
-            e.printStackTrace();
+            project.load(inputDir);
+        } catch (FileNotFoundException e) {
+            Logger.log("[ERROR] " + e.getMessage());
+            Logger.saveLogs();
+            System.exit(1);
         }
+        project.save(outputDir);
     }
 }

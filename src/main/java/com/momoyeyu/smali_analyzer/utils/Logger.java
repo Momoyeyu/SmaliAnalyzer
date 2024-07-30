@@ -22,7 +22,7 @@ public class Logger {
      * @return error log for analysis failure
      */
     public static String logAnalysisFailure(String type, String element) {
-        return "// " + log("// [ERROR] Fail to analyze " + type + ": " + element + "\n");
+        return "// " + log("[ERROR] Fail to analyze " + type + ": " + element + "\n");
     }
 
     /**

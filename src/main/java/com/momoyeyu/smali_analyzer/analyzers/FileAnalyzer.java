@@ -47,10 +47,10 @@ public class FileAnalyzer {
 
     /**
      * Constructor
-     * @param routes file routes
+     * @param filepath file routes
      */
-    public FileAnalyzer(String routes) {
-        this(new File(routes));
+    public FileAnalyzer(String filepath) {
+        this(new File(filepath));
     }
 
     /**

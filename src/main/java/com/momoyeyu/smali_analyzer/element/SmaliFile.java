@@ -7,13 +7,17 @@ import com.momoyeyu.smali_analyzer.utils.Logger;
 import java.util.Stack;
 
 public class SmaliFile {
-    private String routes;
+    private final String routes;
     private SmaliClass mainClass;
     private final Stack<SmaliClass> classStack = new Stack<>();
     private final ImportPackageList importPackageList = new ImportPackageList();;
 
     public SmaliFile(String routes) {
         this.routes = routes;
+    }
+
+    public String getRoutes() {
+        return routes;
     }
 
     public void addClass(SmaliClass smaliClass) {

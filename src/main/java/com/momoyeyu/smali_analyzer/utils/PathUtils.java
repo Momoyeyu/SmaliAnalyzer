@@ -5,9 +5,9 @@ import java.io.File;
 
 public class PathUtils {
 
-    public static final String DEFAULT_LOAD = PathUtils.getProjectRoot() + File.separator + "res/data/input";
-    public static final String DEFAULT_SAVE = PathUtils.getProjectRoot() + File.separator + "res/data/output";
     public static final String DEFAULT = PathUtils.getProjectRoot() + File.separator + "res/data";
+    public static final String DEFAULT_LOAD = PathUtils.getProjectRoot() + File.separator + "res/data/input";
+    public static final String DEFAULT_SAVE = DEFAULT;
     /**
      * Get relative path from base to path.
      * @param base base directory
@@ -59,6 +59,10 @@ public class PathUtils {
         if (type == SelectType.SAVE)
             return DEFAULT_SAVE;
         return null;
+    }
+
+    public static String route2path(String route) {
+        return route.replaceAll("\\.", "/");
     }
 
     public enum SelectType {
