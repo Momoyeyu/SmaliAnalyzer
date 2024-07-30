@@ -4,7 +4,6 @@ import com.momoyeyu.smali_analyzer.element.SmaliProject;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.PathUtils;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 
 public class Decompiler {

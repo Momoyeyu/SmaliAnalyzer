@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.analyzers;
 
 import com.momoyeyu.smali_analyzer.element.SmaliField;
+import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 
 import java.util.regex.Matcher;
@@ -37,17 +38,18 @@ public class FieldAnalyzer {
     public static void analyze(SmaliField smaliField) throws RuntimeException {
         Matcher matcher = fieldPattern.matcher(smaliField.getSignature());
         if (matcher.find()) {
-            smaliField.setAccessModifier(matcher.group(2)); // default?
-            smaliField.setStaticModifier(matcher.group(7)); // static?
-            smaliField.setFinalModifier(matcher.group(9)); // final?
-            smaliField.setSyntheticModifier(matcher.group(11) != null); // synthetic?
-            smaliField.setName(matcher.group(13));
-            if (matcher.group(14) != null) {
-                smaliField.setType(TypeTranslator.getRoutes(matcher.group(16)) + "[]");
+            Stepper stepper = new Stepper();
+            smaliField.setAccessModifier(matcher.group(stepper.step(2))); // default?
+            smaliField.setStaticModifier(matcher.group(stepper.step(5))); // static?
+            smaliField.setFinalModifier(matcher.group(stepper.step(2))); // final?
+            smaliField.setSyntheticModifier(matcher.group(stepper.step(2)) != null); // synthetic?
+            smaliField.setName(matcher.group(stepper.step(2)));
+            if (matcher.group(stepper.step(1)) != null) {
+                smaliField.setType(TypeTranslator.getRoutes(matcher.group(stepper.step(2))) + "[]");
             } else {
-                smaliField.setType(TypeTranslator.getRoutes(matcher.group(16)));
+                smaliField.setType(TypeTranslator.getRoutes(matcher.group(stepper.step(2))));
             }
-            smaliField.setValue(matcher.group(18));
+            smaliField.setValue(matcher.group(stepper.step(2)));
         } else {
             throw new RuntimeException("[ERROR] Invalid field: " + smaliField.getSignature());
         }

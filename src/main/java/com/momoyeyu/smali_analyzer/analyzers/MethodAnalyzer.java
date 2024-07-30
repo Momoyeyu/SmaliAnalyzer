@@ -2,6 +2,7 @@ package com.momoyeyu.smali_analyzer.analyzers;
 
 import com.momoyeyu.smali_analyzer.element.SmaliConstructor;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 
 import java.util.List;
@@ -31,16 +32,17 @@ public class MethodAnalyzer {
     public static void analyze(SmaliMethod smaliMethod) throws RuntimeException {
         Matcher matcher = methodPattern.matcher(smaliMethod.getSignature());
         if (matcher.find()) {
-            smaliMethod.setAccessModifier(matcher.group(2)); // access?
-            smaliMethod.setStaticModifier(matcher.group(7)); // static?
-            smaliMethod.setAbstractModifier(matcher.group(9)); // abstract?
-            smaliMethod.setSyntheticModifier(matcher.group(13) != null); // synthetic?
-            smaliMethod.setName(matcher.group(16)); // name
-            smaliMethod.setReturnType(TypeTranslator.getRoutes(matcher.group(18))); // return type
+            Stepper stepper = new Stepper();
+            smaliMethod.setAccessModifier(matcher.group(stepper.step(2))); // access?
+            smaliMethod.setStaticModifier(matcher.group(stepper.step(5))); // static?
+            smaliMethod.setAbstractModifier(matcher.group(stepper.step(2))); // abstract?
+            smaliMethod.setSyntheticModifier(matcher.group(stepper.step(4)) != null); // synthetic?
+            smaliMethod.setName(matcher.group(stepper.step(3))); // name
+            smaliMethod.setReturnType(TypeTranslator.getRoutes(matcher.group(stepper.step(2)))); // return type
 
             // set parameters
-            List<String> parametersList = TypeTranslator.getJavaParameters(matcher.group(17));
-            if (matcher.group(15) != null) { // varargs?
+            List<String> parametersList = TypeTranslator.getJavaParameters(matcher.group(stepper.step(-1)));
+            if (matcher.group(stepper.step(-2)) != null) { // varargs?
                 parametersList.set(parametersList.size() - 1, parametersList.getLast() + "...");
             }
             smaliMethod.setParametersList(parametersList);

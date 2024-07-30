@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.analyzers;
 
 import com.momoyeyu.smali_analyzer.element.SmaliClass;
+import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 
 import java.util.regex.Matcher;
@@ -29,15 +30,16 @@ public class ClassAnalyzer {
     public static void analyze(SmaliClass smaliClass) throws RuntimeException {
         Matcher matcher = classPattern.matcher(smaliClass.getSignature());
         if (matcher.find()) {
-            smaliClass.setAccessModifier(matcher.group(5));
-            smaliClass.setFinalModifier(matcher.group(10));
-            smaliClass.setInterfaceModifier(matcher.group(12));
-            smaliClass.setAbstractModifier(matcher.group(14));
-            smaliClass.setPackageName(matcher.group(16).replaceAll("/", "."));
-            if (matcher.group(20) != null) {
-                smaliClass.setName(matcher.group(20));
+            Stepper stepper = new Stepper();
+            smaliClass.setAccessModifier(matcher.group(stepper.step(5)));
+            smaliClass.setFinalModifier(matcher.group(stepper.step(5)));
+            smaliClass.setInterfaceModifier(matcher.group(stepper.step(2)));
+            smaliClass.setAbstractModifier(matcher.group(stepper.step(2)));
+            smaliClass.setPackageName(matcher.group(stepper.step(2)).replaceAll("/", "."));
+            if (matcher.group(stepper.step(4)) != null) {
+                smaliClass.setName(matcher.group(stepper.step(0)));
             } else {
-                smaliClass.setName(matcher.group(18));
+                smaliClass.setName(matcher.group(stepper.step(-2)));
             }
         } else {
             throw new RuntimeException("Invalid signature: " + smaliClass.getSignature());

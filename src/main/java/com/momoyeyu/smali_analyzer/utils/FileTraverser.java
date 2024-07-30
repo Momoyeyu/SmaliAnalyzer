@@ -2,10 +2,11 @@ package com.momoyeyu.smali_analyzer.utils;
 
 import com.momoyeyu.smali_analyzer.analyzers.FileAnalyzer;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class FileTraverser {
 

@@ -1,6 +1,5 @@
 package com.momoyeyu.smali_analyzer.utils;
 
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
