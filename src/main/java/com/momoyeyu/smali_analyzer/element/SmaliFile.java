@@ -40,7 +40,6 @@ public class SmaliFile {
 
     @Override
     public String toString() {
-        arrangeFile();
         if (mainClass == null) {
             Logger.log("[ERROR] lost main class at: " + routes);
             StringBuilder builder = new StringBuilder();
@@ -49,6 +48,7 @@ public class SmaliFile {
             }
             return builder.toString();
         }
+        arrangeFile();
         return mainClass.toString();
     }
 

@@ -1,7 +1,5 @@
-package com.momoyeyu.smali_analyzer.utils;
+package com.momoyeyu.smali_analyzer.analyzers;
 
-import com.momoyeyu.smali_analyzer.analyzers.ClassAnalyzer;
-import com.momoyeyu.smali_analyzer.analyzers.ConstructorAnalyzer;
 import com.momoyeyu.smali_analyzer.element.*;
 import com.momoyeyu.smali_analyzer.repository.ClassRepository;
 
@@ -19,7 +17,7 @@ import java.util.regex.Pattern;
  *
  * @author momoyeyu
  */
-public class SmaliFileReader {
+public class FileAnalyzer {
 
     private SmaliFile smaliFile;
     private SmaliClass currentSmaliClass;
@@ -28,7 +26,7 @@ public class SmaliFileReader {
     public static void main(String[] args) {
         // TODO: test SmaliFileReader
         String inputPath = "C:\\Users\\antiy\\Desktop\\projects\\SmaliAnalyzer\\res\\data\\input\\ActivityChooserModel.smali";
-        SmaliFileReader smaliFileReader = new SmaliFileReader(inputPath);
+        FileAnalyzer smaliFileReader = new FileAnalyzer(inputPath);
         System.out.println(smaliFileReader.smaliFile.toString());
     }
 
@@ -51,10 +49,17 @@ public class SmaliFileReader {
      * Constructor
      * @param routes file routes
      */
-    public SmaliFileReader(String routes) {
+    public FileAnalyzer(String routes) {
+        this(new File(routes));
+    }
+
+    /**
+     * Constructor
+     * @param file file to be analyzed
+     */
+    public FileAnalyzer(File file) {
         SmaliField curSmaliField = null;
         String lastFlag = null;
-        File file = new File(routes);
         Scanner scanner = null;
         try {
             scanner = new Scanner(file);

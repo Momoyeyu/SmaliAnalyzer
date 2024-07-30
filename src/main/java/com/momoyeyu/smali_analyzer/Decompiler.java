@@ -1,46 +1,38 @@
 package com.momoyeyu.smali_analyzer;
 
+import com.momoyeyu.smali_analyzer.utils.FileTraverser;
 import com.momoyeyu.smali_analyzer.utils.Logger;
-import com.momoyeyu.smali_analyzer.utils.SmaliFileReader;
+import com.momoyeyu.smali_analyzer.utils.PathUtils;
 
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Decompiler {
 
     public static void main(String[] args) {
-        String inputPath = "C:\\Users\\antiy\\Desktop\\projects\\SmaliAnalyzer\\res\\data\\input\\ActivityChooserModel.smali";
-        decompile(inputPath);
+        String inputDir = PathUtils.selectPath("Please select the input directory", PathUtils.SelectType.LOAD);
+        if (inputDir == null) {
+            Logger.saveLogs();
+            System.exit(1);
+        }
+        String outputDir = PathUtils.selectPath("Please select the output directory", PathUtils.SelectType.SAVE);
+        decompile(inputDir, outputDir);
+        Logger.saveLogs();
+        System.exit(0);
     }
 
-    public static void decompile(String inputPath) {
-        String outputPath = SmaliFileReader.getOutputPath(inputPath);
-        decompile(inputPath, outputPath);
-    }
-
-    public static void decompile(String inputPath, String outputPath) {
-        if (inputPath == null) {
-            throw new NullPointerException("Input path is null");
+    public static void decompile(String inputDir, String outputDir) {
+        File inputDirFile = new File(inputDir);
+        if (!inputDirFile.exists()) {
+            Logger.log("[ERROR] Input directory does not exist: " + inputDir);
+            throw new RuntimeException("Input directory does not exist: " + inputDir);
         }
-        if (outputPath == null) {
-            outputPath = SmaliFileReader.getOutputPath(inputPath);
-        }
-        SmaliFileReader smaliFileReader = new SmaliFileReader(inputPath);
-        String content = smaliFileReader.getFile().toString();
-        try (FileWriter writer = new FileWriter(outputPath)) {
-            Scanner scanner = new Scanner(content);
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                writer.write(line + System.lineSeparator());
-            }
+        FileTraverser project;
+        try {
+            project = new FileTraverser(inputDir);
+            project.save(outputDir);
         } catch (IOException e) {
             e.printStackTrace();
-            Logger.log("[ERROR] IOException occur while decompiling " + inputPath);
         }
-        System.out.println("[INFO] Finished Decompiling: " + inputPath);
-        System.out.println("[INFO] Result save to: " + outputPath);
-        Logger.saveLogs();
     }
-
 }

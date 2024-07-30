@@ -66,16 +66,25 @@ public class SmaliElement {
         return signature;
     }
 
-    public String getSignature() {
-        return signature;
-    }
-
     public String toJava() {
         return Logger.logAnalysisFailure("element", signature);
     }
 
+    // getter
     public boolean isTranslated() {
         return translated;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public boolean isStaticModifier() {
+        return staticModifier;
     }
 
     // setter
@@ -97,10 +106,6 @@ public class SmaliElement {
 
     public void setAccessModifier(String accessModifier) {
         this.accessModifier = accessModifier == null ? "default" : accessModifier;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {

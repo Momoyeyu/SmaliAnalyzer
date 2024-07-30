@@ -76,7 +76,7 @@ public class TypeTranslator {
             type = basicTypeMap.get(smaliType);
             return isArray ? type + "[]" : type;
         }
-        System.out.println("[WARN] Unknown smali type: " + smaliType);
+        Logger.log("[WARN] Unknown smali type: " + smaliType);
         return smaliType;
     }
 

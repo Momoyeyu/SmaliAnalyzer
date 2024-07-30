@@ -72,6 +72,10 @@ public class SmaliMethod extends SmaliElement {
     }
 
     // getter
+    /**
+     * Return a list of method's parameters (type only)
+     * @return parameters list
+     */
     public List<String> getParametersList() {
         return parametersList;
     }
