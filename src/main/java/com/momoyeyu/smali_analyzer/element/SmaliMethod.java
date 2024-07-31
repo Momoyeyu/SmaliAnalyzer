@@ -46,12 +46,12 @@ public class SmaliMethod extends SmaliElement {
 
     @Override
     public String toJava() {
-        if (!translated) {
+        if (!analyzed) {
             try {
                 MethodAnalyzer.analyze(this);
             } catch (Exception e) {
                 e.printStackTrace();
-                translated = true;
+                analyzed = true;
                 return Logger.logAnalysisFailure("method", signature);
             }
         }

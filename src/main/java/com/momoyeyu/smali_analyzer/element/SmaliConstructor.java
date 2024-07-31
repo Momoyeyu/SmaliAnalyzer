@@ -20,16 +20,16 @@ public class SmaliConstructor extends SmaliMethod {
 
     @Override
     public String toJava() {
-        if (!translated) {
+        if (!analyzed) {
             try {
                 ConstructorAnalyzer.analyze(this);
-                translated = true;
+                analyzed = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 return Logger.logAnalysisFailure("constructor", signature);
             }
         }
-        if (!ownerClass.isTranslated()) {
+        if (!ownerClass.isAnalyzed()) {
             ownerClass.toJava();
         }
         StringBuilder sb = new StringBuilder();

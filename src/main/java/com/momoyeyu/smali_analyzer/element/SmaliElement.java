@@ -15,7 +15,7 @@ public class SmaliElement {
     protected boolean finalModifier;
     protected boolean syntheticModifier;
     // status
-    protected boolean translated;
+    protected boolean analyzed;
 
     public static void main(String[] args) {
         List<String> parametersList = TypeTranslator.getJavaParameters("Ljava/io/OutputStream;Ljava/lang/String;");
@@ -29,7 +29,7 @@ public class SmaliElement {
         staticModifier = false;
         finalModifier = false;
         syntheticModifier = false;
-        translated = false;
+        analyzed = false;
     }
 
     /**
@@ -71,8 +71,8 @@ public class SmaliElement {
     }
 
     // getter
-    public boolean isTranslated() {
-        return translated;
+    public boolean isAnalyzed() {
+        return analyzed;
     }
 
     public String getName() {
@@ -88,6 +88,10 @@ public class SmaliElement {
     }
 
     // setter
+    public void analyze() {
+        this.analyzed = true;
+    }
+
     public void setFinalModifier(String finalModifier) {
         this.finalModifier = finalModifier != null;
     }

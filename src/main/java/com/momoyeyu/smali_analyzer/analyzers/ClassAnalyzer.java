@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class ClassAnalyzer {
 
-    private static final Pattern classPattern = Pattern.compile("\\.((class)|(super))\\s+(((private)|(protected)|(public))\\s+)?((final)\\s+)?((interface)\\s+)?((abstract)\\s+)?(L(.*)/((.*?)(\\$(.*))?));\\s*");
+    private static final Pattern classPattern = Pattern.compile("\\.((class)|(super))\\s+(((private)|(protected)|(public))\\s+)?((final)\\s+)?((interface)\\s+)?((abstract)\\s+)?(L(\\S*)/((\\S*?)(\\$(.*))?));\\s*");
 
     /**
      * Testing usage of ClassAnalyzer.
@@ -35,8 +35,8 @@ public class ClassAnalyzer {
             smaliClass.setFinalModifier(matcher.group(stepper.step(5)));
             smaliClass.setInterfaceModifier(matcher.group(stepper.step(2)));
             smaliClass.setAbstractModifier(matcher.group(stepper.step(2)));
-            smaliClass.setPackageName(matcher.group(stepper.step(2)).replaceAll("/", "."));
-            if (matcher.group(stepper.step(4)) != null) {
+            smaliClass.setPackageName(matcher.group(stepper.step(2)).replaceAll("/", ".") + "." + matcher.group(stepper.step(2)));
+            if (matcher.group(stepper.step(2)) != null) {
                 smaliClass.setName(matcher.group(stepper.step(0)));
             } else {
                 smaliClass.setName(matcher.group(stepper.step(-2)));
@@ -47,11 +47,9 @@ public class ClassAnalyzer {
     }
 
     public static String getRoutes(SmaliClass smaliClass) {
-        Matcher matcher = classPattern.matcher(smaliClass.getSignature());
-        if (matcher.find()) {
-            return TypeTranslator.getRoutes("L" + matcher.group(16) + "/" + matcher.group(18));
-        }
-        return "";
+        if (!smaliClass.isAnalyzed())
+            analyze(smaliClass);
+        return smaliClass.getPackageName();
     }
 
     /**

@@ -3,6 +3,7 @@ package com.momoyeyu.smali_analyzer.element;
 import com.momoyeyu.smali_analyzer.analyzers.ClassAnalyzer;
 import com.momoyeyu.smali_analyzer.utils.Formatter;
 import com.momoyeyu.smali_analyzer.utils.Logger;
+import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,19 +13,12 @@ public class SmaliClass extends SmaliElement {
     private List<SmaliClass> subClassList; // add, get
     private List<SmaliMethod> smaliMethodList; // add, get
     private List<SmaliField> smaliFieldList; // add, get
-    private boolean init; // get
 
     private String packageName;
     private boolean interfaceModifier;
     private boolean abstractModifier;
-    private boolean translated;
 
     // constructor
-    public SmaliClass() {
-        this("");
-        this.init = false;
-    }
-
     public SmaliClass(String classSignature) {
         this(classSignature, null, null, null);
     }
@@ -35,19 +29,12 @@ public class SmaliClass extends SmaliElement {
         this.smaliMethodList = methodList == null ? new ArrayList<>() : methodList;
         this.smaliFieldList = fieldList == null ? new ArrayList<>() : fieldList;
         this.superClass = null;
-        this.init = true;
-        this.translated = false;
-    }
-
-    public void init(String classSignature) {
-        this.signature = classSignature;
-        this.init = true;
     }
 
     @Override
     public String toString() {
         this.toJava();
-        return "package " + packageName + ";\n\n" + toStringIndent(0);
+        return "package " + TypeTranslator.getObjectPackage(packageName) + ";\n\n" + toStringIndent(0);
     }
 
     private String toStringIndent(int indent) {
@@ -68,14 +55,18 @@ public class SmaliClass extends SmaliElement {
         return sb.toString();
     }
 
+    /**
+     * A Safe method that generate Java class signature from SmaliClass
+     * @return Java signature of SmaliClass
+     */
     @Override
     public String toJava() {
-        if (!translated) {
+        if (!analyzed) {
             try {
                 ClassAnalyzer.analyze(this);
-                translated = true;
+                analyzed = true;
             } catch (RuntimeException e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
                 return Logger.logAnalysisFailure("class", signature);
             }
         }
@@ -161,9 +152,5 @@ public class SmaliClass extends SmaliElement {
 
     public void addSmaliField(SmaliField field) {
         smaliFieldList.add(field);
-    }
-
-    public boolean isInit() {
-        return init;
     }
 }

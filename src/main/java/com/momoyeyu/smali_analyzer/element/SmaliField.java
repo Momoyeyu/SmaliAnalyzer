@@ -26,10 +26,10 @@ public class SmaliField extends SmaliElement {
 
     @Override
     public String toJava() {
-        if (!translated) {
+        if (!analyzed) {
             try {
                 FieldAnalyzer.analyze(this);
-                translated = true;
+                analyzed = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 return Logger.logAnalysisFailure("field", signature);
