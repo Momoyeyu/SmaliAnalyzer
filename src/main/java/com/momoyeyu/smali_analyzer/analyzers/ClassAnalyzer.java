@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class ClassAnalyzer {
 
-    private static final Pattern classPattern = Pattern.compile("\\.((class)|(super))\\s+(((private)|(protected)|(public))\\s+)?((final)\\s+)?((interface)\\s+)?((abstract)\\s+)?(L(\\S*)/((\\S*?)(\\$(.*))?));\\s*");
+    private static final Pattern classPattern = Pattern.compile("\\.((class)|(super))\\s+(((private)|(protected)|(public))\\s+)?((final)\\s+)?((synthetic)\\s+)?((interface)\\s+)?((abstract)\\s+)?((annotation)\\s+)?(L(\\S*)/((\\S*?)(\\$(.*))?));\\s*");
 
     /**
      * Testing usage of ClassAnalyzer.
@@ -33,8 +33,10 @@ public class ClassAnalyzer {
             Stepper stepper = new Stepper();
             smaliClass.setAccessModifier(matcher.group(stepper.step(5)));
             smaliClass.setFinalModifier(matcher.group(stepper.step(5)));
+            stepper.step(2); // synthetic
             smaliClass.setInterfaceModifier(matcher.group(stepper.step(2)));
             smaliClass.setAbstractModifier(matcher.group(stepper.step(2)));
+            stepper.step(2); // annotation
             smaliClass.setPackageName(matcher.group(stepper.step(2)).replaceAll("/", ".") + "." + matcher.group(stepper.step(2)));
             if (matcher.group(stepper.step(2)) != null) {
                 smaliClass.setName(matcher.group(stepper.step(0)));

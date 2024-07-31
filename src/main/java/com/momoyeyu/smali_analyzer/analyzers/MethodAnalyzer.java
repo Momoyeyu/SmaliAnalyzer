@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class MethodAnalyzer {
 
-    private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((abstract)\\s+)?((bridge)\\s+)?((synthetic)\\s+)?((varargs)\\s+)?(\\S+)\\((.*?)\\)([a-zA-Z/]++);?");
+    private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((declared-synchronized)\\s+)?((abstract)\\s+)?((bridge)\\s+)?((synthetic)\\s+)?((varargs)\\s+)?(\\S+)\\((.*?)\\)([a-zA-Z/\\[]++);?");
 
     /**
      * Test
@@ -35,6 +35,8 @@ public class MethodAnalyzer {
             Stepper stepper = new Stepper();
             smaliMethod.setAccessModifier(matcher.group(stepper.step(2))); // access?
             smaliMethod.setStaticModifier(matcher.group(stepper.step(5))); // static?
+            smaliMethod.setFinalModifier(matcher.group(stepper.step(2))); // final?
+            smaliMethod.setSynchronizedModifier(matcher.group(stepper.step(2))); // synchronized?
             smaliMethod.setAbstractModifier(matcher.group(stepper.step(2))); // abstract?
             smaliMethod.setSyntheticModifier(matcher.group(stepper.step(4)) != null); // synthetic?
             smaliMethod.setName(matcher.group(stepper.step(3))); // name

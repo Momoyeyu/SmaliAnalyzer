@@ -39,6 +39,7 @@ public class PathUtils {
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setDialogTitle(title);
         if (type == SelectType.SAVE) {
+            new File(DEFAULT_SAVE).mkdirs();
             fileChooser.setCurrentDirectory(new File(DEFAULT_SAVE));
         } else if (type == SelectType.LOAD) {
             fileChooser.setCurrentDirectory(new File(DEFAULT_LOAD));

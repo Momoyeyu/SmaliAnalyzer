@@ -14,6 +14,7 @@ public class SmaliMethod extends SmaliElement {
 
     protected List<String> parametersList;
     private boolean abstractModifier;
+    private boolean synchronizedModifier;
     private String returnType;
 
     public SmaliMethod(String signature) {
@@ -23,6 +24,8 @@ public class SmaliMethod extends SmaliElement {
     public SmaliMethod(String signature, SmaliClass ownerClass, List<String> body) {
         super(signature);
         this.ownerClass = ownerClass;
+        this.abstractModifier = false;
+        this.synchronizedModifier = false;
         this.body = Objects.requireNonNullElseGet(body, ArrayList::new);
     }
 
@@ -62,6 +65,12 @@ public class SmaliMethod extends SmaliElement {
         if (staticModifier) {
             sb.append("static ");
         }
+        if (finalModifier) {
+            sb.append("final ");
+        }
+        if (synchronizedModifier) {
+            sb.append("synchronizedModifier ");
+        }
         if (abstractModifier) {
             sb.append("abstract ");
         }
@@ -95,5 +104,13 @@ public class SmaliMethod extends SmaliElement {
 
     public void setAbstractModifier(boolean abstractModifier) {
         this.abstractModifier = abstractModifier;
+    }
+
+    public void setSynchronizedModifier(String synchronizedModifier) {
+        this.synchronizedModifier = synchronizedModifier != null;
+    }
+
+    public void setSynchronizedModifier(boolean synchronizedModifier) {
+        this.synchronizedModifier = synchronizedModifier;
     }
 }

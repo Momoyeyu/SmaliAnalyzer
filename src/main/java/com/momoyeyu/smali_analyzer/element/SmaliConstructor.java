@@ -39,6 +39,9 @@ public class SmaliConstructor extends SmaliMethod {
         if (staticModifier) {
             sb.append("static ");
         }
+        if (finalModifier) {
+            sb.append("final ");
+        }
         sb.append(ownerClass.getName()).append("(");
         sb.append(listParameters(parametersList)).append(")");
         return sb.toString();

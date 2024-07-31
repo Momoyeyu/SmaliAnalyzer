@@ -10,18 +10,33 @@ import java.io.FileNotFoundException;
 public class Decompiler {
 
     public static void main(String[] args) {
-        String inputDir = PathUtils.selectPath("Please select the input directory", PathUtils.SelectType.LOAD);
+        // C:\Users\antiy\Desktop\apks\招商银行实例\CMBMobileBank\smali\androidx\appcompat\widget
+        String inputDir = null;
+        inputDir = "C:\\Users\\antiy\\Desktop\\apks\\招商银行实例\\CMBMobileBank\\smali\\androidx\\appcompat\\widget";
+        if (inputDir == null)
+            inputDir = PathUtils.selectPath("Please select the input directory", PathUtils.SelectType.LOAD);
         if (inputDir == null) {
             Logger.saveLogs();
             System.exit(1);
         }
-        String outputDir = PathUtils.selectPath("Please select the output directory", PathUtils.SelectType.SAVE);
+        String outputDir = null;
+//        outputDir = "";
+        if (outputDir == null)
+            outputDir = PathUtils.selectPath("Please select the output directory", PathUtils.SelectType.SAVE);
         outputDir = outputDir.replace("\\", "/");
         if (outputDir.equals(PathUtils.DEFAULT_SAVE.replace("\\", "/"))) {
             File directory = new File(outputDir);
-            deleteDirectory(directory);
+            cleanOutputDir(directory);
         } else {
             outputDir += "/output";
+            if (new File(outputDir).exists()) {
+                int i = 1;
+                while (new File(outputDir + "(" + i +")").exists()) {
+                    i += 1;
+                }
+                outputDir += "(" + i + ")";
+            }
+
         }
         decompile(inputDir, outputDir);
         Logger.saveLogs();
@@ -40,12 +55,12 @@ public class Decompiler {
         project.save(outputDir);
     }
 
-    private static void deleteDirectory(File directory) {
+    private static void cleanOutputDir(File directory) {
         if (directory.isDirectory()) {
             File[] files = directory.listFiles();
             if (files != null) {
                 for (File file : files) {
-                    deleteDirectory(file);
+                    cleanOutputDir(file);
                 }
             }
         }

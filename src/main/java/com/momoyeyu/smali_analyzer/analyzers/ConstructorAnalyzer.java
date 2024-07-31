@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class ConstructorAnalyzer extends MethodAnalyzer {
 
-    private static final Pattern constructorPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?constructor\\s+((<init>)|(<clinit>))\\((.*?)\\)V");
+    private static final Pattern constructorPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((synthetic)\\s+)?constructor\\s+((<init>)|(<clinit>))\\((.*?)\\)V");
 
     /**
      * Testing ConstructorAnalyzer/
@@ -20,25 +20,6 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
     public static void main(String[] args) {
         System.out.println(getSignature(".method public constructor <init>(Landroid/content/ComponentName;JF)V",
                 ".class public final Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;"));
-    }
-
-    /**
-     * Check is the method given a constructor
-     *
-     * @param smaliSignature smali constructor signature
-     * @return true or false
-     */
-    public static boolean isConstructor(String smaliSignature) {
-        return constructorPattern.matcher(smaliSignature).matches();
-    }
-
-    /**
-     * Judge if the given method a constructor.
-     * @param smaliMethod SmaliMethod object
-     * @return boolean
-     */
-    public static boolean isConstructor(SmaliMethod smaliMethod) {
-        return isConstructor(smaliMethod.getSignature());
     }
 
     /**
@@ -53,6 +34,8 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
             Stepper stepper = new Stepper();
             smaliConstructor.setAccessModifier(matcher.group(stepper.step(2))); // access?
             smaliConstructor.setStaticModifier(matcher.group(stepper.step(5))); // static?
+            smaliConstructor.setFinalModifier(matcher.group(stepper.step(2))); // final?
+            stepper.step(2); // synthetic
             smaliConstructor.setInitType(matcher.group(stepper.step(1))); // init type
             smaliConstructor.setParametersList(TypeTranslator.getJavaParameters(matcher.group(stepper.step(3)))); // params?
         } else {
@@ -77,5 +60,24 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
      */
     public static String getSignature(String smaliConstructor, String onwerClass) {
         return getSignature(new SmaliConstructor(smaliConstructor, new SmaliClass(onwerClass)));
+    }
+
+    /**
+     * Check is the method given a constructor
+     *
+     * @param smaliSignature smali constructor signature
+     * @return true or false
+     */
+    public static boolean isConstructor(String smaliSignature) {
+        return constructorPattern.matcher(smaliSignature).matches();
+    }
+
+    /**
+     * Judge if the given method a constructor.
+     * @param smaliMethod SmaliMethod object
+     * @return boolean
+     */
+    public static boolean isConstructor(SmaliMethod smaliMethod) {
+        return isConstructor(smaliMethod.getSignature());
     }
 }
