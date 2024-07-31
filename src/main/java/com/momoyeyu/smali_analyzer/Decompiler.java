@@ -19,6 +19,7 @@ public class Decompiler {
             Logger.saveLogs();
             System.exit(1);
         }
+        Logger.log("[INFO] Input directory: " + inputDir);
         String outputDir = null;
 //        outputDir = "";
         if (outputDir == null)
@@ -36,7 +37,7 @@ public class Decompiler {
                 }
                 outputDir += "(" + i + ")";
             }
-
+        Logger.log("[INFO] Output directory: " + outputDir);
         }
         decompile(inputDir, outputDir);
         Logger.saveLogs();

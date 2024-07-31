@@ -1,5 +1,6 @@
 package com.momoyeyu.smali_analyzer.utils;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,9 +8,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import static com.momoyeyu.smali_analyzer.utils.PathUtils.DEFAULT_LOG;
+
 public class Logger {
 
-    private static final String logDir = "C:\\Users\\antiy\\Desktop\\projects\\SmaliAnalyzer\\res\\data\\log\\";
     private static final boolean debug = false;
 
     private static List<String> logs = new ArrayList<String>();
@@ -30,8 +32,17 @@ public class Logger {
      * @param msg message to log
      */
     public static String log(String msg) {
+        return log(msg, debug);
+    }
+
+    /**
+     * Add a line of log to the Logger.
+     * You may call saveLogs(String path) to save logs in a file.
+     * @param msg message to log
+     */
+    public static String log(String msg, boolean print) {
         logs.add(msg.strip());
-        if (debug)
+        if (print)
             System.out.println(msg.strip());
         return msg;
     }
@@ -50,7 +61,9 @@ public class Logger {
     public static void saveLogs(String outputPath) {
         String dateInfo = new Date().toString();
         if (outputPath == null || outputPath.isBlank()) {
-            outputPath = logDir + dateInfo.replaceAll("[\\s:]", "-") + ".log";
+            if (!new File(DEFAULT_LOG).exists())
+                new File(DEFAULT_LOG).mkdirs();
+            outputPath = DEFAULT_LOG + dateInfo.replaceAll("[\\s:]", "-") + ".log";
         }
         StringBuilder sb = new StringBuilder();
         for (String log : logs) {

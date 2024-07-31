@@ -2,7 +2,6 @@ package com.momoyeyu.smali_analyzer.analyzers;
 
 import com.momoyeyu.smali_analyzer.element.SmaliClass;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
-import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
