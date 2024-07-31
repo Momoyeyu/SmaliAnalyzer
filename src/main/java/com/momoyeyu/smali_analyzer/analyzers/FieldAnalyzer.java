@@ -62,12 +62,19 @@ public class FieldAnalyzer {
             throw new RuntimeException("Unknown field: " + smaliField.getSignature());
         }
         matcher = annotationPattern.matcher(smaliField.getAnnotations());
+        String appendix = "";
         if (matcher.find()) {
             String type = smaliField.getType();
             StringBuilder sb = new StringBuilder();
             sb.append(type.endsWith("[]") ? type.substring(0, type.length() - 2) : type).append("<");
             for (String t : matcher.group(1).split("(\",\\s*\")")) {
-                sb.append(TypeUtils.getTypeFromSmali(t)).append(", ");
+                if (t.equals("[")) {
+                    appendix = "[]";
+                    continue;
+                }
+                if (t.matches("[\\-\\+]\\S*"))
+                    continue;
+                sb.append(TypeUtils.getGenericTypeFromSmali(t)).append(appendix).append(", ");
             }
             sb.delete(sb.length() - 2, sb.length()).append(">").append(type.endsWith("[]") ? "[]" : "");
             smaliField.setType(sb.toString());

@@ -25,9 +25,10 @@ public class TypeUtils {
 //        System.out.println(getObjectPackageFromJava("Landroidx/appcompat/widget/ActivityChooserModel"));
 //        System.out.println(getObjectPackageFromSmali("La")); // it should be null
 //        System.out.println(getObjectNameFromSmali("La")); // it should be null
-        System.out.println(getTypeFromSmali("[Landroidx/appcompat/widget/ActivityChooserModel;"));
-        System.out.println(getTypeFromSmali("[La"));
-        System.out.println(getTypeFromSmali("["));
+        System.out.println(getGenericTypeFromSmali("[Landroidx/appcompat/widget/ActivityChooserModel;"));
+        System.out.println(getGenericTypeFromSmali("[La"));
+        System.out.println(getGenericTypeFromSmali("["));
+        System.out.println(getGenericTypeFromSmali("[Ljava/lang/String;"));
 //        System.out.println(getRoutes("Landroidx/appcompat/widget/ActivityChooserModel"));
 //        System.out.println(getRoutes("Z"));
 //        System.out.println(getRoutes("[Ljava/lang/String"));
@@ -44,11 +45,11 @@ public class TypeUtils {
      * @param smaliType smali type
      * @return corresponding Java type
      */
-    public static String getTypeFromSmali(String smaliType) {
-        if (smaliType.startsWith("["))
-            return getTypeFromSmali(smaliType.substring(1)) + "[]";
-        if (smaliType.isBlank())
-            return "Object";
+    public static String getGenericTypeFromSmali(String smaliType) {
+//        if (smaliType.startsWith("["))
+//            return getGenericTypeFromSmali(smaliType.substring(1)) + "[]";
+//        if (smaliType.isBlank())
+//            return "Object";
         if (isBasicType(smaliType)) {
             return smaliType;
         }
