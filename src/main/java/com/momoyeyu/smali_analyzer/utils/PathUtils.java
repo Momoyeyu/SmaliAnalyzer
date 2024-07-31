@@ -5,10 +5,10 @@ import java.io.File;
 
 public class PathUtils {
 
-    public static final String DEFAULT = PathUtils.getProjectRoot() + File.separator + "res/data";
-    public static final String DEFAULT_LOAD = DEFAULT + "/input";
-    public static final String DEFAULT_SAVE = DEFAULT + "/output";
-    public static final String DEFAULT_LOG = DEFAULT + "/log";
+    public static final String DEFAULT = PathUtils.getProjectRoot() + File.separator + "res\\data";
+    public static final String DEFAULT_LOAD = DEFAULT + "\\input";
+    public static final String DEFAULT_SAVE = DEFAULT + "\\output";
+    public static final String DEFAULT_LOG = DEFAULT + "\\log";
     /**
      * Get relative path from base to path.
      * @param base base directory

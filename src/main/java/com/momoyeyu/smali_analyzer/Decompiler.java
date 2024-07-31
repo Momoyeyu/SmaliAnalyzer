@@ -12,20 +12,20 @@ public class Decompiler {
     public static void main(String[] args) {
         // C:\Users\antiy\Desktop\apks\招商银行实例\CMBMobileBank\smali\androidx\appcompat\widget
         String inputDir = null;
-        inputDir = "C:\\Users\\antiy\\Desktop\\apks\\招商银行实例\\CMBMobileBank\\smali\\androidx\\appcompat\\widget";
+        inputDir = "C:\\Users\\antiy\\Desktop\\apks\\招商银行实例\\CMBMobileBank";
         if (inputDir == null)
             inputDir = PathUtils.selectPath("Please select the input directory", PathUtils.SelectType.LOAD);
         if (inputDir == null) {
             Logger.saveLogs();
             System.exit(1);
         }
-        Logger.log("[INFO] Input directory: " + inputDir);
+        Logger.log("[INFO] Input directory: " + inputDir, true);
         String outputDir = null;
 //        outputDir = "";
         if (outputDir == null)
             outputDir = PathUtils.selectPath("Please select the output directory", PathUtils.SelectType.SAVE);
-        outputDir = outputDir.replace("\\", "/");
-        if (outputDir.equals(PathUtils.DEFAULT_SAVE.replace("\\", "/"))) {
+        outputDir = outputDir.replace("/", "\\");
+        if (outputDir.equals(PathUtils.DEFAULT_SAVE.replace("/", "\\"))) {
             File directory = new File(outputDir);
             cleanOutputDir(directory);
         } else {
@@ -37,8 +37,8 @@ public class Decompiler {
                 }
                 outputDir += "(" + i + ")";
             }
-        Logger.log("[INFO] Output directory: " + outputDir);
         }
+        Logger.log("[INFO] Output directory: " + outputDir, true);
         decompile(inputDir, outputDir);
         Logger.saveLogs();
         System.exit(0);
@@ -49,7 +49,7 @@ public class Decompiler {
         try {
             project.load(inputDir);
         } catch (FileNotFoundException e) {
-            Logger.log("[ERROR] " + e.getMessage());
+            Logger.logException(e.getMessage());
             Logger.saveLogs();
             System.exit(1);
         }

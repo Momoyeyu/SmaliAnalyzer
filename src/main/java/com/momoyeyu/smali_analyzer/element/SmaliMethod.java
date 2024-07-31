@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class SmaliMethod extends SmaliElement {
-    private List<String> body;
+    private final List<String> body;
     protected SmaliClass ownerClass;
 
     protected List<String> parametersList;
@@ -37,7 +37,7 @@ public class SmaliMethod extends SmaliElement {
         try {
             sb.append(this.toJava()).append(" {\n");
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            Logger.logException(e.getMessage());
             return Logger.logAnalysisFailure("method", signature);
         }
         for (String line : this.body) {
@@ -53,7 +53,7 @@ public class SmaliMethod extends SmaliElement {
             try {
                 MethodAnalyzer.analyze(this);
             } catch (Exception e) {
-                e.printStackTrace();
+                Logger.logException(e.getMessage());
                 analyzed = true;
                 return Logger.logAnalysisFailure("method", signature);
             }

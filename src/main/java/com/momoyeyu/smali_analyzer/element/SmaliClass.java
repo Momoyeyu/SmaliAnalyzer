@@ -34,7 +34,11 @@ public class SmaliClass extends SmaliElement {
     @Override
     public String toString() {
         this.toJava();
-        return "package " + TypeTranslator.getObjectPackage(packageName) + ";\n\n" + toStringIndent(0);
+        String pkg = TypeTranslator.getJavaObjectPackage(packageName);
+        if (pkg == null) {
+            return toStringIndent(0);
+        }
+        return "package " + pkg + ";\n\n" + toStringIndent(0);
     }
 
     private String toStringIndent(int indent) {
@@ -66,7 +70,7 @@ public class SmaliClass extends SmaliElement {
                 ClassAnalyzer.analyze(this);
                 analyzed = true;
             } catch (RuntimeException e) {
-                System.err.println(e.getMessage());
+                Logger.logException(e.getMessage());
                 return Logger.logAnalysisFailure("class", signature);
             }
         }

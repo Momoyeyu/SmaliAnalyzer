@@ -25,7 +25,7 @@ public class SmaliConstructor extends SmaliMethod {
                 ConstructorAnalyzer.analyze(this);
                 analyzed = true;
             } catch (RuntimeException e) {
-                e.printStackTrace();
+                Logger.logException(e.getMessage());
                 return Logger.logAnalysisFailure("constructor", signature);
             }
         }

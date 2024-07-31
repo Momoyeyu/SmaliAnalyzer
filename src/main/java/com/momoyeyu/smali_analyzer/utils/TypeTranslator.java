@@ -22,7 +22,8 @@ public class TypeTranslator {
      * @param args user input
      */
     public static void main(String[] args) {
-        System.out.println(getObjectPackage("Landroidx/appcompat/widget/ActivityChooserModel"));
+        System.out.println(getJavaObjectPackage("Landroidx/appcompat/widget/ActivityChooserModel"));
+        System.out.println(getJavaObjectPackage("La"));
         System.out.println(getRoutes("Landroidx/appcompat/widget/ActivityChooserModel"));
         System.out.println(getRoutes("Z"));
         System.out.println(getRoutes("[Ljava/lang/String"));
@@ -47,7 +48,7 @@ public class TypeTranslator {
         try {
             return getJavaObjectName(type);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            Logger.logException(e.getMessage());
             Logger.logAnalysisFailure("type", smaliType);
             return "/* " + smaliType + " */";
         }
@@ -90,13 +91,16 @@ public class TypeTranslator {
         if (javaObjectRoutes == null || javaObjectRoutes.isBlank()) {
             throw new RuntimeException("[ERROR] Invalid type: " + javaObjectRoutes);
         }
-        if (isBasicType(javaObjectRoutes)) {
-            Logger.log("[WARN] " + javaObjectRoutes + " is a basic type, shouldn't call getObjectName()");
-            return javaObjectRoutes;
-        }
+//        if (isBasicType(javaObjectRoutes)) {
+//            Logger.log("[WARN] " + javaObjectRoutes + " is a basic type, shouldn't call getObjectName()");
+//            return javaObjectRoutes;
+//        }
         if (javaObjectRoutes.endsWith("...")) { // deal with varargs type
             String tmp = javaObjectRoutes.substring(0, javaObjectRoutes.length() - 3);
             return javaObjectRoutes.substring(tmp.lastIndexOf('.') + 1);
+        }
+        if (!javaObjectRoutes.contains(".")) {
+            return javaObjectRoutes; // default package
         }
         return javaObjectRoutes.substring(javaObjectRoutes.lastIndexOf(".") + 1);
     }
@@ -108,7 +112,7 @@ public class TypeTranslator {
      */
     private static String getSmaliObjectType(String smaliObjectRoutes) {
         if (smaliObjectRoutes == null) {
-            return "Object";
+            return null;
         }
         if (!smaliObjectRoutes.startsWith("L")) {
             throw new RuntimeException("[ERROR] Invalid Object: " + smaliObjectRoutes);
@@ -121,26 +125,26 @@ public class TypeTranslator {
     }
 
     /**
-     * Return package the smali object belong to.
+     * Return package the Java object belong to.
      * <pre>
      *     getObjectPackage("java.lang.String");
      *     return "java.lang"
      * </pre>
-     * @param objectType a smali object with package and name
+     * @param javaObjectRoutes a Java object with package and name
      * @return package of the object
      */
-    public static String getObjectPackage(String objectType) {
-        if (objectType == null || objectType.isBlank()) {
-            throw new RuntimeException("[ERROR] Invalid type: " + objectType);
+    public static String getJavaObjectPackage(String javaObjectRoutes) {
+        if (javaObjectRoutes == null || javaObjectRoutes.isBlank()) {
+            throw new RuntimeException("[ERROR] Invalid type: " + javaObjectRoutes);
         }
-        if (objectType.startsWith("L")) {
-            objectType = getSmaliObjectType(objectType);
+        if (javaObjectRoutes.startsWith("L")) {
+            Logger.log("[WARN] " + javaObjectRoutes + " is a smali object, shouldn't call getJavaObjectName()", true);
+            javaObjectRoutes = getSmaliObjectType(javaObjectRoutes);
         }
-        if (isBasicType(objectType)) {
-            Logger.log("[WARN] " + objectType + " is a basic type, shouldn't call getObjectName()");
-            return objectType;
+        if (!javaObjectRoutes.contains(".")) {
+            return null;
         }
-        return objectType.substring(0, objectType.lastIndexOf("."));
+        return javaObjectRoutes.substring(0, javaObjectRoutes.lastIndexOf("."));
     }
 
     /**

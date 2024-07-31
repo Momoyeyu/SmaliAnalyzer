@@ -73,7 +73,7 @@ public class SmaliProject {
                     writer.write(line + System.lineSeparator());
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Logger.logException(e.getMessage());
                 Logger.log("[ERROR] IOException occur while decompiling " + smaliFile.getRoutes());
             }
         }

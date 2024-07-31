@@ -47,6 +47,11 @@ public class Logger {
         return msg;
     }
 
+    public static void logException(String msg) {
+        logs.add("[EXCEPTION]:\n" + msg);
+        System.err.println("[EXCEPTION]:\n" + msg);
+    }
+
     /**
      * Save current logs into a file
      */
@@ -63,7 +68,7 @@ public class Logger {
         if (outputPath == null || outputPath.isBlank()) {
             if (!new File(DEFAULT_LOG).exists())
                 new File(DEFAULT_LOG).mkdirs();
-            outputPath = DEFAULT_LOG + dateInfo.replaceAll("[\\s:]", "-") + ".log";
+            outputPath = DEFAULT_LOG + File.separator + dateInfo.replaceAll("[\\s:]", "-") + ".log";
         }
         StringBuilder sb = new StringBuilder();
         for (String log : logs) {
@@ -78,7 +83,7 @@ public class Logger {
             }
             System.out.println("[INFO] Logs save to: " + outputPath);
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.logException(e.getMessage());
         } finally {
             logs.clear();
         }
