@@ -12,18 +12,22 @@ public class Decompiler {
     public static void main(String[] args) {
         // C:\Users\antiy\Desktop\apks\招商银行实例\CMBMobileBank\smali\androidx\appcompat\widget
         String inputDir = null;
-        inputDir = "C:\\Users\\antiy\\Desktop\\apks\\招商银行实例\\CMBMobileBank\\smali_classes2";
+        inputDir = "C:\\Users\\antiy\\Desktop\\apks\\招商银行实例\\CMBMobileBank";
         if (inputDir == null)
             inputDir = PathUtils.selectPath("Please select the input directory", PathUtils.SelectType.LOAD);
         if (inputDir == null) {
-            Logger.saveLogs();
+            System.err.println("User stop decompiling");
             System.exit(1);
         }
         Logger.log("[INFO] Input directory: " + inputDir, true);
         String outputDir = null;
-//        outputDir = "";
+//        outputDir = "C:\Users\antiy\Desktop";
         if (outputDir == null)
             outputDir = PathUtils.selectPath("Please select the output directory", PathUtils.SelectType.SAVE);
+        if (outputDir == null) {
+            System.err.println("User stop decompiling");
+            System.exit(1);
+        }
         outputDir = outputDir.replace("/", "\\");
         if (outputDir.equals(PathUtils.DEFAULT_SAVE.replace("/", "\\"))) {
             File directory = new File(outputDir);

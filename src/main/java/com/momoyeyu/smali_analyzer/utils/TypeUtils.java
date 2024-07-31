@@ -25,10 +25,10 @@ public class TypeUtils {
 //        System.out.println(getObjectPackageFromJava("Landroidx/appcompat/widget/ActivityChooserModel"));
 //        System.out.println(getObjectPackageFromSmali("La")); // it should be null
 //        System.out.println(getObjectNameFromSmali("La")); // it should be null
-        System.out.println(getGenericTypeFromSmali("[Landroidx/appcompat/widget/ActivityChooserModel;"));
-        System.out.println(getGenericTypeFromSmali("[La"));
-        System.out.println(getGenericTypeFromSmali("["));
-        System.out.println(getGenericTypeFromSmali("[Ljava/lang/String;"));
+        System.out.println(getNameFromSmali("[Landroidx/appcompat/widget/ActivityChooserModel;"));
+        System.out.println(getNameFromSmali("[La"));
+        System.out.println(getNameFromSmali("["));
+        System.out.println(getNameFromSmali("[Ljava/lang/String;"));
 //        System.out.println(getRoutes("Landroidx/appcompat/widget/ActivityChooserModel"));
 //        System.out.println(getRoutes("Z"));
 //        System.out.println(getRoutes("[Ljava/lang/String"));
@@ -45,11 +45,12 @@ public class TypeUtils {
      * @param smaliType smali type
      * @return corresponding Java type
      */
-    public static String getGenericTypeFromSmali(String smaliType) {
-//        if (smaliType.startsWith("["))
-//            return getGenericTypeFromSmali(smaliType.substring(1)) + "[]";
-//        if (smaliType.isBlank())
-//            return "Object";
+    public static String getNameFromSmali(String smaliType) {
+        if (smaliType == null || smaliType.isEmpty()) {
+            return null;
+        }
+        if (smaliType.startsWith("["))
+            return getNameFromSmali(smaliType.substring(1)) + "[]";
         if (isBasicType(smaliType)) {
             return smaliType;
         }
@@ -61,31 +62,31 @@ public class TypeUtils {
         }
     }
 
+    public static String getNameFromJava(String javaType) throws IllegalArgumentException {
+        return getObjectNameFromJava(javaType);
+    }
+
     /**
      * Turn smali datatype into corresponding java datatype.
      *
      * @param smaliType the datatype of a smali variable, including basic type and object
      * @return the java type of the input (return only the classname of an object)
      */
-    public static String getRoutes(String smaliType) {
-        boolean isArray = false;
+    public static String getTypeFromSmali(String smaliType) {
         if (smaliType == null || smaliType.isEmpty()) {
             return null;
         }
-        if (smaliType.startsWith("[")) {
-            isArray = true;
-            smaliType = smaliType.substring(1);
+        if (smaliType.startsWith("["))
+            return getTypeFromSmali(smaliType.substring(1)) + "[]";
+        if (isBasicType(smaliType)) {
+            return basicTypeMap.get(smaliType);
         }
-        String type;
-        if (smaliType.startsWith("L")) {
-            type = getObjectRoutesFromSmali(smaliType);
-            return isArray ? type + "[]" : type;
-        } else if (isBasicType(smaliType)){
-            type = basicTypeMap.get(smaliType);
-            return isArray ? type + "[]" : type;
+        try {
+            return getObjectRoutesFromSmali(smaliType);
+        } catch (IllegalArgumentException e) {
+            Logger.logException(e.getMessage());
+            return Logger.logAnalysisFailure("type", smaliType);
         }
-        Logger.log("[WARN] Unknown smali type: " + smaliType);
-        return smaliType;
     }
 
     /**
@@ -96,15 +97,14 @@ public class TypeUtils {
      */
     public static String getObjectNameFromJava(String routes) throws IllegalArgumentException {
         if (routes == null || routes.isBlank()) {
-            throw new RuntimeException("[ERROR] Invalid type: " + routes);
+            throw new IllegalArgumentException("[ERROR] Unknown type: " + routes);
         }
-        if (routes.endsWith("...")) { // deal with varargs type
-            String tmp = routes.substring(0, routes.length() - 3);
-            return routes.substring(tmp.lastIndexOf('.') + 1);
-        }
-        if (!routes.contains(".")) {
-            return routes; // default package
-        }
+        if (routes.endsWith("..."))
+            return getNameFromJava(routes.substring(0, routes.length() - 3)) + "...";
+        if (routes.endsWith("[]"))
+            return getNameFromJava(routes.substring(0, routes.length() - 2)) + "[]";
+        if (!routes.contains("."))
+            return routes;
         return routes.substring(routes.lastIndexOf(".") + 1);
     }
 
@@ -159,7 +159,8 @@ public class TypeUtils {
     }
 
     /**
-     * Turn a line of smali parameters into a list of java parameters
+     * Turn a line of smali parameters into a list of java parameters.
+     * All Java object parameter will have their package with them.
      *
      * @test pass
      * @param parameters a line of smali parameter list string
@@ -167,12 +168,12 @@ public class TypeUtils {
      */
     public static List<String> getJavaParameters(String parameters) {
         List<String> parametersList = new ArrayList<>();
-        if (parameters == null || parameters.isEmpty()) {
+        if (parameters == null || parameters.isBlank()) {
             return parametersList;
         }
         List<String> params = splitParameters(parameters);
         for (String parameter : params) {
-            parametersList.add(getRoutes(parameter.trim()));
+            parametersList.add(getTypeFromSmali(parameter.trim()));
         }
         return parametersList;
     }

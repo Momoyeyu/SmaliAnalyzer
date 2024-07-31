@@ -54,9 +54,9 @@ public class SmaliElement {
         if (parametersList == null || parametersList.isEmpty()) {
             return "";
         }
-        StringBuilder sb = new StringBuilder(TypeUtils.getObjectNameFromJava(parametersList.getFirst()) + " p" + (isStatic ? 0 : 1));
+        StringBuilder sb = new StringBuilder(TypeUtils.getNameFromJava(parametersList.getFirst()) + " p" + (isStatic ? 0 : 1));
         for (int i = 1; i < parametersList.size(); i++) {
-            sb.append(String.format(", %s p%d", TypeUtils.getObjectNameFromJava(parametersList.get(i)), isStatic ? i : i + 1));
+            sb.append(String.format(", %s p%d", TypeUtils.getNameFromJava(parametersList.get(i)), isStatic ? i : i + 1));
         }
         return sb.toString();
     }

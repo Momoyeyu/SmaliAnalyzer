@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 
 public class FieldAnalyzer {
 
-    private static final Pattern fieldPattern = Pattern.compile("\\.field\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((transient)\\s+)?((volatile)\\s+)?((enum)\\s+)?((synthetic)\\s+)?((\\S*):)(\\[)?((\\S+)(\\s+=\\s+(\\S+))?)");
-    private static final Pattern annotationPattern = Pattern.compile("\\.annotation\\s+system\\s+Ldalvik\\/annotation\\/Signature;value\\s*=\\s*\\{\\\"\\S+<\\\",\\\"(\\S+)\\\",\\\">;\\\"\\}\\.end\\s+annotation");
+    private static final Pattern fieldPattern = Pattern.compile("\\.field\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((transient)\\s+)?((volatile)\\s+)?((enum)\\s+)?((synthetic)\\s+)?((\\S*):)((\\S+)(\\s*=\\s*(\\S+))?)");
+    private static final Pattern annotationPattern = Pattern.compile("\\.annotation\\s+system\\s+Ldalvik/annotation/Signature;value\\s*=\\s*\\{\"\\S+<\",\"(\\S+)\",\">;\"\\}\\.end\\s+annotation");
 
     /**
      * Test
@@ -52,11 +52,7 @@ public class FieldAnalyzer {
             stepper.step(2); // enum
             smaliField.setSyntheticModifier(matcher.group(stepper.step(2)) != null); // synthetic?
             smaliField.setName(matcher.group(stepper.step(2)));
-            if (matcher.group(stepper.step(1)) != null) {
-                smaliField.setType(TypeUtils.getRoutes(matcher.group(stepper.step(2))) + "[]");
-            } else {
-                smaliField.setType(TypeUtils.getRoutes(matcher.group(stepper.step(2))));
-            }
+            smaliField.setType(TypeUtils.getTypeFromSmali(matcher.group(stepper.step(2))));
             smaliField.setValue(matcher.group(stepper.step(2)));
         } else {
             throw new RuntimeException("Unknown field: " + smaliField.getSignature());
@@ -74,7 +70,7 @@ public class FieldAnalyzer {
                 }
                 if (t.matches("[\\-\\+]\\S*"))
                     continue;
-                sb.append(TypeUtils.getGenericTypeFromSmali(t)).append(appendix).append(", ");
+                sb.append(TypeUtils.getNameFromSmali(t)).append(appendix).append(", ");
             }
             sb.delete(sb.length() - 2, sb.length()).append(">").append(type.endsWith("[]") ? "[]" : "");
             smaliField.setType(sb.toString());

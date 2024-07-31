@@ -75,7 +75,7 @@ public class SmaliMethod extends SmaliElement {
         if (abstractModifier) {
             sb.append("abstract ");
         }
-        sb.append(TypeUtils.isBasicType(returnType) ? returnType : TypeUtils.getObjectNameFromJava(returnType));
+        sb.append(TypeUtils.getNameFromJava(returnType));
         sb.append(" ").append(name).append("(");
         sb.append(listParameters(parametersList)).append(")");
         return sb.toString();
