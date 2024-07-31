@@ -2,7 +2,7 @@ package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.utils.Logger;
-import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
+import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ public class SmaliMethod extends SmaliElement {
     protected List<String> parametersList;
     private boolean abstractModifier;
     private boolean synchronizedModifier;
+    private boolean nativeModifier;
     private String returnType;
 
     public SmaliMethod(String signature) {
@@ -74,7 +75,7 @@ public class SmaliMethod extends SmaliElement {
         if (abstractModifier) {
             sb.append("abstract ");
         }
-        sb.append(TypeTranslator.isBasicType(returnType) ? returnType : TypeTranslator.getJavaObjectName(returnType));
+        sb.append(TypeUtils.isBasicType(returnType) ? returnType : TypeUtils.getObjectNameFromJava(returnType));
         sb.append(" ").append(name).append("(");
         sb.append(listParameters(parametersList)).append(")");
         return sb.toString();
@@ -96,6 +97,14 @@ public class SmaliMethod extends SmaliElement {
 
     public void setReturnType(String returnType) {
         this.returnType = returnType;
+    }
+
+    public void setNativeModifier(String nativeModifier) {
+        this.nativeModifier = nativeModifier != null;
+    }
+
+    public void setNativeModifier(boolean nativeModifier) {
+        this.nativeModifier = nativeModifier;
     }
 
     public void setAbstractModifier(String abstractModifier) {

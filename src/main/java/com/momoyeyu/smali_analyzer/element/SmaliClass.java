@@ -3,7 +3,7 @@ package com.momoyeyu.smali_analyzer.element;
 import com.momoyeyu.smali_analyzer.analyzers.ClassAnalyzer;
 import com.momoyeyu.smali_analyzer.utils.Formatter;
 import com.momoyeyu.smali_analyzer.utils.Logger;
-import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
+import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class SmaliClass extends SmaliElement {
     private List<SmaliField> smaliFieldList; // add, get
 
     private String packageName;
-    private boolean interfaceModifier;
+    private String classType;
     private boolean abstractModifier;
 
     // constructor
@@ -28,13 +28,14 @@ public class SmaliClass extends SmaliElement {
         this.subClassList = subClassList == null ? new ArrayList<>() : subClassList;
         this.smaliMethodList = methodList == null ? new ArrayList<>() : methodList;
         this.smaliFieldList = fieldList == null ? new ArrayList<>() : fieldList;
+        this.classType = "class";
         this.superClass = null;
     }
 
     @Override
     public String toString() {
         this.toJava();
-        String pkg = TypeTranslator.getJavaObjectPackage(packageName);
+        String pkg = TypeUtils.getObjectPackageFromJava(packageName);
         if (pkg == null) {
             return toStringIndent(0);
         }
@@ -84,11 +85,7 @@ public class SmaliClass extends SmaliElement {
         if (abstractModifier) {
             sb.append("abstract ");
         }
-        if (interfaceModifier) {
-            sb.append("interface ");
-        } else {
-            sb.append("class ");
-        }
+        sb.append(classType).append(" "); // class / interface / enum
         sb.append(name);
         if (superClass != null && !superClass.getName().equals("Object")) {
             sb.append(" extends ");
@@ -133,16 +130,13 @@ public class SmaliClass extends SmaliElement {
         this.packageName = packageName;
     }
 
+    public void setClassType(String classType) {
+        if (classType != null)
+            this.classType = classType;
+    }
+
     public void setAbstractModifier(String abstractModifier) {
         this.abstractModifier = abstractModifier != null;
-    }
-
-    public void setInterfaceModifier(String interfaceModifier) {
-        this.interfaceModifier = interfaceModifier != null;
-    }
-
-    public void setInterfaceModifier(boolean interfaceModifier) {
-        this.interfaceModifier = interfaceModifier;
     }
 
     // adder

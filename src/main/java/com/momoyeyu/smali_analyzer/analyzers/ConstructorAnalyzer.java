@@ -4,14 +4,15 @@ import com.momoyeyu.smali_analyzer.element.SmaliClass;
 import com.momoyeyu.smali_analyzer.element.SmaliConstructor;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
-import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
+import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConstructorAnalyzer extends MethodAnalyzer {
 
-    private static final Pattern constructorPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((synthetic)\\s+)?constructor\\s+((<init>)|(<clinit>))\\((.*?)\\)V");
+    private static final Pattern constructorPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((varargs)\\s+)?((synthetic)\\s+)?constructor\\s+((<init>)|(<clinit>))\\((\\S*?)\\)V");
 
     /**
      * Testing ConstructorAnalyzer/
@@ -35,11 +36,19 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
             smaliConstructor.setAccessModifier(matcher.group(stepper.step(2))); // access?
             smaliConstructor.setStaticModifier(matcher.group(stepper.step(5))); // static?
             smaliConstructor.setFinalModifier(matcher.group(stepper.step(2))); // final?
+            String varargs = matcher.group(stepper.step(2)); // varargs?
             stepper.step(2); // synthetic
             smaliConstructor.setInitType(matcher.group(stepper.step(1))); // init type
-            smaliConstructor.setParametersList(TypeTranslator.getJavaParameters(matcher.group(stepper.step(3)))); // params?
+//            smaliConstructor.setParametersList(TypeTranslator.getJavaParameters(matcher.group(stepper.step(3)))); // params?
+
+            // set parameters
+            List<String> parametersList = TypeUtils.getJavaParameters(matcher.group(stepper.step(3)));
+            if (varargs != null) { // varargs?
+                parametersList.set(parametersList.size() - 1, parametersList.getLast() + "...");
+            }
+            smaliConstructor.setParametersList(parametersList);
         } else {
-            throw new RuntimeException("[WARN] Invalid constructor: " + smaliConstructor.getSignature());
+            throw new RuntimeException("Unknown constructor: " + smaliConstructor.getSignature());
         }
     }
 

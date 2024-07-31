@@ -2,12 +2,14 @@ package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.FieldAnalyzer;
 import com.momoyeyu.smali_analyzer.utils.Logger;
-import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
+import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 public class SmaliField extends SmaliElement {
     private String annotations;
     private String type;
     private Object value;
+    private boolean volatileModifier;
+    private boolean transientModifier;
 
     // constructor
     public SmaliField(String signature) {
@@ -16,6 +18,8 @@ public class SmaliField extends SmaliElement {
 
     public SmaliField(String signature, String annotations) {
         super(signature);
+        this.volatileModifier = false;
+        this.transientModifier = false;
         this.annotations = annotations.strip();
     }
 
@@ -45,7 +49,13 @@ public class SmaliField extends SmaliElement {
         if (finalModifier) {
             sb.append("final ");
         }
-        sb.append(TypeTranslator.isBasicType(type) ? type : TypeTranslator.getJavaObjectName(type)).append(" ");
+        if (volatileModifier) {
+            sb.append("volatile ");
+        }
+        if (transientModifier) {
+            sb.append("transient ");
+        }
+        sb.append(TypeUtils.isBasicType(type) ? type : TypeUtils.getObjectNameFromJava(type)).append(" ");
         sb.append(name);
         if (value != null) {
             sb.append(" = ").append(value);
@@ -61,6 +71,22 @@ public class SmaliField extends SmaliElement {
 
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    public void setTransientModifier(String transientModifier) {
+        this.transientModifier = transientModifier != null;
+    }
+
+    public void setTransientModifier(boolean transientModifier) {
+        this.transientModifier = transientModifier;
+    }
+
+    public void setVolatileModifier(String volatileModifier) {
+        this.volatileModifier = volatileModifier != null;
+    }
+
+    public void setVolatileModifier(boolean volatileModifier) {
+        this.volatileModifier = volatileModifier;
     }
 
     // getter

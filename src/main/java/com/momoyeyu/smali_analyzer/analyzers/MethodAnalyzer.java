@@ -3,7 +3,7 @@ package com.momoyeyu.smali_analyzer.analyzers;
 import com.momoyeyu.smali_analyzer.element.SmaliConstructor;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
-import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
+import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class MethodAnalyzer {
 
-    private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((declared-synchronized)\\s+)?((abstract)\\s+)?((bridge)\\s+)?((synthetic)\\s+)?((varargs)\\s+)?(\\S+)\\((.*?)\\)([a-zA-Z/\\[]++);?");
+    private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((declared-synchronized)\\s+)?((bridge)\\s+)?((varargs)\\s+)?((native)\\s+)?((abstract)\\s+)?((synthetic)\\s+)?(\\S+)\\((.*?)\\)([a-zA-Z/\\[]++);?");
 
     /**
      * Test
@@ -37,19 +37,22 @@ public class MethodAnalyzer {
             smaliMethod.setStaticModifier(matcher.group(stepper.step(5))); // static?
             smaliMethod.setFinalModifier(matcher.group(stepper.step(2))); // final?
             smaliMethod.setSynchronizedModifier(matcher.group(stepper.step(2))); // synchronized?
+            stepper.step(2); // bridge?
+            String varargs = matcher.group(stepper.step(2)); // varargs? It would be handled in later code. Don't do it here.
+            smaliMethod.setNativeModifier(matcher.group(stepper.step(2))); // native?
             smaliMethod.setAbstractModifier(matcher.group(stepper.step(2))); // abstract?
-            smaliMethod.setSyntheticModifier(matcher.group(stepper.step(4)) != null); // synthetic?
-            smaliMethod.setName(matcher.group(stepper.step(3))); // name
-            smaliMethod.setReturnType(TypeTranslator.getRoutes(matcher.group(stepper.step(2)))); // return type
+            smaliMethod.setSyntheticModifier(matcher.group(stepper.step(2)) != null); // synthetic?
+            smaliMethod.setName(matcher.group(stepper.step(1))); // name
+            smaliMethod.setReturnType(TypeUtils.getRoutes(matcher.group(stepper.step(2)))); // return type
 
             // set parameters
-            List<String> parametersList = TypeTranslator.getJavaParameters(matcher.group(stepper.step(-1)));
-            if (matcher.group(stepper.step(-2)) != null) { // varargs?
+            List<String> parametersList = TypeUtils.getJavaParameters(matcher.group(stepper.step(-1)));
+            if (varargs != null) { // varargs?
                 parametersList.set(parametersList.size() - 1, parametersList.getLast() + "...");
             }
             smaliMethod.setParametersList(parametersList);
         } else {
-            throw new RuntimeException("Invalid method signature: " + smaliMethod.getSignature());
+            throw new RuntimeException("Unknown method: " + smaliMethod.getSignature());
         }
     }
 

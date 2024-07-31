@@ -13,6 +13,9 @@ import static com.momoyeyu.smali_analyzer.utils.PathUtils.DEFAULT_LOG;
 public class Logger {
 
     private static final boolean debug = false;
+    private static final boolean trace = false;
+    private static String savePath = null;
+    private static int total = 0;
 
     private static List<String> logs = new ArrayList<String>();
 
@@ -42,50 +45,65 @@ public class Logger {
      */
     public static String log(String msg, boolean print) {
         logs.add(msg.strip());
+        if (logs.size() > 200) {
+            saveLogs();
+        }
         if (print)
             System.out.println(msg.strip());
         return msg;
     }
 
     public static void logException(String msg) {
-        logs.add("[EXCEPTION]:\n" + msg);
-        System.err.println("[EXCEPTION]:\n" + msg);
+        logException(msg, trace);
+    }
+
+    public static void logException(String msg, boolean print) {
+        logs.add("[EXCEPTION] " + msg);
+        if (logs.size() > 200) {
+            saveLogs();
+        }
+        if (print)
+            System.err.println("[EXCEPTION] " + msg);
+    }
+
+    public static int getTotal() {
+        return total;
     }
 
     /**
      * Save current logs into a file
      */
     public static void saveLogs() {
-        saveLogs(null);
+        if (savePath == null) {
+            String dateInfo = new Date().toString();
+            if (!new File(DEFAULT_LOG).exists())
+                new File(DEFAULT_LOG).mkdirs();
+            savePath = DEFAULT_LOG + File.separator + dateInfo.replaceAll("[\\s:]", "-") + ".log";
+            logs.add(0, "[INFO] This log is automatically generated at " + dateInfo + System.lineSeparator());
+        }
+        saveLogs(savePath);
     }
 
     /**
      * Save current logs into a file
      * @param outputPath output file
      */
-    public static void saveLogs(String outputPath) {
-        String dateInfo = new Date().toString();
-        if (outputPath == null || outputPath.isBlank()) {
-            if (!new File(DEFAULT_LOG).exists())
-                new File(DEFAULT_LOG).mkdirs();
-            outputPath = DEFAULT_LOG + File.separator + dateInfo.replaceAll("[\\s:]", "-") + ".log";
-        }
+    private static void saveLogs(String outputPath) {
         StringBuilder sb = new StringBuilder();
         for (String log : logs) {
             sb.append(log).append("\n");
         }
-        try (FileWriter writer = new FileWriter(outputPath)) {
-            writer.write("[INFO] This log is automatically generated at " + dateInfo + System.lineSeparator());
+        try (FileWriter writer = new FileWriter(outputPath, true)) {
             Scanner scanner = new Scanner(sb.toString());
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 writer.write(line + System.lineSeparator());
             }
             System.out.println("[INFO] Logs save to: " + outputPath);
-        } catch (IOException e) {
-            Logger.logException(e.getMessage());
-        } finally {
+            total += logs.size();
             logs.clear();
+        } catch (IOException e) {
+            Logger.logException(e.getMessage(), true);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.utils.Logger;
-import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
+import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class SmaliElement {
     protected boolean analyzed;
 
     public static void main(String[] args) {
-        List<String> parametersList = TypeTranslator.getJavaParameters("Ljava/io/OutputStream;Ljava/lang/String;");
+        List<String> parametersList = TypeUtils.getJavaParameters("Ljava/io/OutputStream;Ljava/lang/String;");
         System.out.println(SmaliElement.listParameters(parametersList, false));
         System.out.println(SmaliElement.listParameters(parametersList, true));
     }
@@ -54,9 +54,9 @@ public class SmaliElement {
         if (parametersList == null || parametersList.isEmpty()) {
             return "";
         }
-        StringBuilder sb = new StringBuilder(TypeTranslator.getJavaObjectName(parametersList.getFirst()) + " p" + (isStatic ? 0 : 1));
+        StringBuilder sb = new StringBuilder(TypeUtils.getObjectNameFromJava(parametersList.getFirst()) + " p" + (isStatic ? 0 : 1));
         for (int i = 1; i < parametersList.size(); i++) {
-            sb.append(String.format(", %s p%d",TypeTranslator.getJavaObjectName(parametersList.get(i)), isStatic ? i : i + 1));
+            sb.append(String.format(", %s p%d", TypeUtils.getObjectNameFromJava(parametersList.get(i)), isStatic ? i : i + 1));
         }
         return sb.toString();
     }

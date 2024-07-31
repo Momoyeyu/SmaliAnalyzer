@@ -2,7 +2,7 @@ package com.momoyeyu.smali_analyzer.utils;
 
 import java.util.*;
 
-public class TypeTranslator {
+public class TypeUtils {
 
     private static final Map<String, String> basicTypeMap = new HashMap<>();
     static {
@@ -22,17 +22,21 @@ public class TypeTranslator {
      * @param args user input
      */
     public static void main(String[] args) {
-        System.out.println(getJavaObjectPackage("Landroidx/appcompat/widget/ActivityChooserModel"));
-        System.out.println(getJavaObjectPackage("La"));
-        System.out.println(getRoutes("Landroidx/appcompat/widget/ActivityChooserModel"));
-        System.out.println(getRoutes("Z"));
-        System.out.println(getRoutes("[Ljava/lang/String"));
-        System.out.println(getRoutes("[B"));
-        System.out.println(getJavaObjectName("java.lang.String[]"));
-        List<String> strings = splitParameters("Landroid/content/ComponentName;J[FB[JZD");
-        for (String string : strings) {
-            System.out.print(string + ",");
-        }
+//        System.out.println(getObjectPackageFromJava("Landroidx/appcompat/widget/ActivityChooserModel"));
+//        System.out.println(getObjectPackageFromSmali("La")); // it should be null
+//        System.out.println(getObjectNameFromSmali("La")); // it should be null
+        System.out.println(getTypeFromSmali("[Landroidx/appcompat/widget/ActivityChooserModel;"));
+        System.out.println(getTypeFromSmali("[La"));
+        System.out.println(getTypeFromSmali("["));
+//        System.out.println(getRoutes("Landroidx/appcompat/widget/ActivityChooserModel"));
+//        System.out.println(getRoutes("Z"));
+//        System.out.println(getRoutes("[Ljava/lang/String"));
+//        System.out.println(getRoutes("[B"));
+//        System.out.println(getObjectNameFromJava("java.lang.String[]"));
+//        List<String> strings = splitParameters("Landroid/content/ComponentName;J[FB[JZD");
+//        for (String string : strings) {
+//            System.out.print(string + ",");
+//        }
     }
 
     /**
@@ -40,17 +44,19 @@ public class TypeTranslator {
      * @param smaliType smali type
      * @return corresponding Java type
      */
-    public static String getType(String smaliType) {
-        String type = getRoutes(smaliType);
-        if (isBasicType(type)) {
-            return type;
+    public static String getTypeFromSmali(String smaliType) {
+        if (smaliType.startsWith("["))
+            return getTypeFromSmali(smaliType.substring(1)) + "[]";
+        if (smaliType.isBlank())
+            return "Object";
+        if (isBasicType(smaliType)) {
+            return smaliType;
         }
         try {
-            return getJavaObjectName(type);
+            return getObjectNameFromSmali(smaliType);
         } catch (IllegalArgumentException e) {
             Logger.logException(e.getMessage());
-            Logger.logAnalysisFailure("type", smaliType);
-            return "/* " + smaliType + " */";
+            return Logger.logAnalysisFailure("type", smaliType);
         }
     }
 
@@ -71,7 +77,7 @@ public class TypeTranslator {
         }
         String type;
         if (smaliType.startsWith("L")) {
-            type = getSmaliObjectType(smaliType);
+            type = getObjectRoutesFromSmali(smaliType);
             return isArray ? type + "[]" : type;
         } else if (isBasicType(smaliType)){
             type = basicTypeMap.get(smaliType);
@@ -83,45 +89,45 @@ public class TypeTranslator {
 
     /**
      * Extract Java object's classname from its routes
-     * @param javaObjectRoutes Java object routes (like "java.lang.String")
+     * @param routes Java object routes (like "java.lang.String")
      * @return the classname of the object
      * @throws RuntimeException let the Logger catch and log invalid object
      */
-    public static String getJavaObjectName(String javaObjectRoutes) throws IllegalArgumentException {
-        if (javaObjectRoutes == null || javaObjectRoutes.isBlank()) {
-            throw new RuntimeException("[ERROR] Invalid type: " + javaObjectRoutes);
+    public static String getObjectNameFromJava(String routes) throws IllegalArgumentException {
+        if (routes == null || routes.isBlank()) {
+            throw new RuntimeException("[ERROR] Invalid type: " + routes);
         }
-//        if (isBasicType(javaObjectRoutes)) {
-//            Logger.log("[WARN] " + javaObjectRoutes + " is a basic type, shouldn't call getObjectName()");
-//            return javaObjectRoutes;
-//        }
-        if (javaObjectRoutes.endsWith("...")) { // deal with varargs type
-            String tmp = javaObjectRoutes.substring(0, javaObjectRoutes.length() - 3);
-            return javaObjectRoutes.substring(tmp.lastIndexOf('.') + 1);
+        if (routes.endsWith("...")) { // deal with varargs type
+            String tmp = routes.substring(0, routes.length() - 3);
+            return routes.substring(tmp.lastIndexOf('.') + 1);
         }
-        if (!javaObjectRoutes.contains(".")) {
-            return javaObjectRoutes; // default package
+        if (!routes.contains(".")) {
+            return routes; // default package
         }
-        return javaObjectRoutes.substring(javaObjectRoutes.lastIndexOf(".") + 1);
+        return routes.substring(routes.lastIndexOf(".") + 1);
+    }
+
+    public static String getObjectNameFromSmali(String smaliType) {
+        return getObjectNameFromJava(getObjectRoutesFromSmali(smaliType));
     }
 
     /**
      * Turn smali routes into Java object name
-     * @param smaliObjectRoutes smali object routes (like "Ljava/lang/String;")
+     * @param object smali object routes (like "Ljava/lang/String;")
      * @return the corresponding Java object type of input smali object
      */
-    private static String getSmaliObjectType(String smaliObjectRoutes) {
-        if (smaliObjectRoutes == null) {
+    private static String getObjectRoutesFromSmali(String object) {
+        if (object == null) {
             return null;
         }
-        if (!smaliObjectRoutes.startsWith("L")) {
-            throw new RuntimeException("[ERROR] Invalid Object: " + smaliObjectRoutes);
+        if (!object.startsWith("L")) {
+            throw new RuntimeException("[ERROR] Invalid Object: " + object);
         }
-        smaliObjectRoutes = smaliObjectRoutes.substring(1).replaceAll("[/$]", ".");
-        if (smaliObjectRoutes.endsWith(";")) {
-            return smaliObjectRoutes.substring(0, smaliObjectRoutes.length() - 1);
+        object = object.substring(1).replaceAll("[/$]", ".");
+        if (object.endsWith(";")) {
+            return object.substring(0, object.length() - 1);
         }
-        return smaliObjectRoutes;
+        return object;
     }
 
     /**
@@ -130,21 +136,25 @@ public class TypeTranslator {
      *     getObjectPackage("java.lang.String");
      *     return "java.lang"
      * </pre>
-     * @param javaObjectRoutes a Java object with package and name
+     * @param routes a Java object with package and name
      * @return package of the object
      */
-    public static String getJavaObjectPackage(String javaObjectRoutes) {
-        if (javaObjectRoutes == null || javaObjectRoutes.isBlank()) {
-            throw new RuntimeException("[ERROR] Invalid type: " + javaObjectRoutes);
+    public static String getObjectPackageFromJava(String routes) {
+        if (routes == null || routes.isBlank()) {
+            throw new RuntimeException("[ERROR] Invalid type: " + routes);
         }
-        if (javaObjectRoutes.startsWith("L")) {
-            Logger.log("[WARN] " + javaObjectRoutes + " is a smali object, shouldn't call getJavaObjectName()", true);
-            javaObjectRoutes = getSmaliObjectType(javaObjectRoutes);
+        if (routes.startsWith("L")) { // is smali object
+            Logger.log("[WARN] " + routes + " is a smali object, shouldn't call getJavaObjectName()", true);
+            routes = getObjectRoutesFromSmali(routes);
         }
-        if (!javaObjectRoutes.contains(".")) {
+        if (!routes.contains(".")) {
             return null;
         }
-        return javaObjectRoutes.substring(0, javaObjectRoutes.lastIndexOf("."));
+        return routes.substring(0, routes.lastIndexOf("."));
+    }
+
+    public static String getObjectPackageFromSmali(String routes) {
+        return getObjectPackageFromJava(getObjectRoutesFromSmali(routes));
     }
 
     /**
@@ -168,7 +178,7 @@ public class TypeTranslator {
 
     /**
      * Return weather a Java type is a basic Java type.
-     * @param type it should be a type that get from the getType() method
+     * @param type it should be a type that get from the getTypeFromSmali() method
      * @return boolean, weather the input type is a Java basic type
      */
     public static boolean isBasicType(String type) {

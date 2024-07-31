@@ -2,14 +2,14 @@ package com.momoyeyu.smali_analyzer.analyzers;
 
 import com.momoyeyu.smali_analyzer.element.SmaliClass;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
-import com.momoyeyu.smali_analyzer.utils.TypeTranslator;
+import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ClassAnalyzer {
 
-    private static final Pattern classPattern = Pattern.compile("\\.((class)|(super))\\s+(((private)|(protected)|(public))\\s+)?((final)\\s+)?((synthetic)\\s+)?((interface)\\s+)?((abstract)\\s+)?((annotation)\\s+)?(L((\\S*)/)?((\\S*?)(\\$(\\S*))?));\\s*");
+    private static final Pattern classPattern = Pattern.compile("\\.((class)|(super))\\s+(((private)|(protected)|(public))\\s+)?((final)\\s+)?((interface)\\s+)?((abstract)\\s+)?((enum)\\s+)?((synthetic)\\s+)?((annotation)\\s+)?(L((\\S*)/)?((\\S*?)(\\$(\\S*))?));\\s*");
 
     /**
      * Testing usage of ClassAnalyzer.
@@ -19,7 +19,7 @@ public class ClassAnalyzer {
         SmaliClass demoClass = new SmaliClass(".class public final abstract Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;");
         System.out.println(getSignature(demoClass));
         System.out.println(getRoutes(new SmaliClass(".class Landroidx/appcompat/widget/ActivityChooserModel;\n")));
-        System.out.println(getRoutes(new SmaliClass(".class public La;")));
+        System.out.println(getRoutes(new SmaliClass(".class public enum La;")));
         System.out.println(getRoutes(new SmaliClass(".class public interface abstract Landroidx/appcompat/widget/ActivityChooserModel$ActivityChooserModelClient;\n")));
     }
 
@@ -34,9 +34,10 @@ public class ClassAnalyzer {
             Stepper stepper = new Stepper();
             smaliClass.setAccessModifier(matcher.group(stepper.step(5)));
             smaliClass.setFinalModifier(matcher.group(stepper.step(5)));
-            stepper.step(2); // synthetic
-            smaliClass.setInterfaceModifier(matcher.group(stepper.step(2)));
+            smaliClass.setClassType(matcher.group(stepper.step(2))); // interface?
             smaliClass.setAbstractModifier(matcher.group(stepper.step(2)));
+            stepper.step(2); // synthetic
+            smaliClass.setClassType(matcher.group(stepper.step(2))); // enum?
             stepper.step(2); // annotation
             String pkg = matcher.group(stepper.step(3)) == null ? "" : matcher.group(stepper.step(0)) + ".";
             smaliClass.setPackageName(pkg.replaceAll("/", ".") + matcher.group(stepper.step(2)));
@@ -46,7 +47,7 @@ public class ClassAnalyzer {
                 smaliClass.setName(matcher.group(stepper.step(-2)));
             }
         } else {
-            throw new RuntimeException("Invalid signature: " + smaliClass.getSignature());
+            throw new RuntimeException("Unknown class: " + smaliClass.getSignature());
         }
     }
 
@@ -83,7 +84,7 @@ public class ClassAnalyzer {
     public static boolean isMainClass(SmaliClass smaliClass) {
         if (!smaliClass.isAnalyzed())
             ClassAnalyzer.analyze(smaliClass);
-        return smaliClass.getName().equals(TypeTranslator.getJavaObjectName(smaliClass.getPackageName()));
+        return smaliClass.getName().equals(TypeUtils.getObjectNameFromJava(smaliClass.getPackageName()));
     }
 
 }
