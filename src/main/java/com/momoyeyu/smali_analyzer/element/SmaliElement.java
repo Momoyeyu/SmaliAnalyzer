@@ -1,5 +1,6 @@
 package com.momoyeyu.smali_analyzer.element;
 
+import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
@@ -19,8 +20,8 @@ public class SmaliElement {
 
     public static void main(String[] args) {
         List<String> parametersList = TypeUtils.getJavaParametersFromSmali("Ljava/io/OutputStream;Ljava/lang/String;");
-        System.out.println(SmaliElement.listParameters(parametersList, false));
-        System.out.println(SmaliElement.listParameters(parametersList, true));
+        System.out.println(MethodAnalyzer.listParameters(parametersList, false));
+        System.out.println(MethodAnalyzer.listParameters(parametersList, true));
     }
 
     public SmaliElement(String signature) {
@@ -40,25 +41,7 @@ public class SmaliElement {
      * @return Java method signature
      */
     public String listParameters(List<String> parametersList) {
-        return listParameters(parametersList, staticModifier);
-    }
-
-    /**
-     * Get parameters list in Java style
-     *
-     * @test pass
-     * @param parametersList a List of java parameters type
-     * @return Java method signature
-     */
-    public static String listParameters(List<String> parametersList, boolean isStatic) {
-        if (parametersList == null || parametersList.isEmpty()) {
-            return "";
-        }
-        StringBuilder sb = new StringBuilder(TypeUtils.getNameFromJava(parametersList.getFirst()) + " p" + (isStatic ? 0 : 1));
-        for (int i = 1; i < parametersList.size(); i++) {
-            sb.append(String.format(", %s p%d", TypeUtils.getNameFromJava(parametersList.get(i)), isStatic ? i : i + 1));
-        }
-        return sb.toString();
+        return MethodAnalyzer.listParameters(parametersList, staticModifier);
     }
 
     @Override

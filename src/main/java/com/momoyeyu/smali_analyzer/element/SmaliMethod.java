@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
+import com.momoyeyu.smali_analyzer.entity.VariablesTable;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
@@ -30,7 +31,9 @@ public class SmaliMethod extends SmaliElement {
         this.body = Objects.requireNonNullElseGet(body, ArrayList::new);
     }
 
-    public List<String> getBody() { return body; }
+    public List<String> getBody() {
+        return body;
+    }
 
     @Override
     public String toString() {
@@ -79,6 +82,11 @@ public class SmaliMethod extends SmaliElement {
         sb.append(" ").append(name).append("(");
         sb.append(listParameters(parametersList)).append(")");
         return sb.toString();
+    }
+
+    private String analyzeBody() {
+        VariablesTable variablesTable = new VariablesTable(this);
+        return null;
     }
 
     // getter

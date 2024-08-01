@@ -5,6 +5,7 @@ import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,5 +81,35 @@ public class MethodAnalyzer {
      */
     public static String getSignature(String smaliMethod) {
         return getSignature(new SmaliMethod(smaliMethod));
+    }
+
+    /**
+     * Get parameters list in Java style
+     *
+     * @test pass
+     * @param parametersList a List of java parameters type
+     * @return Java method signature
+     */
+    public static String listParameters(List<String> parametersList, boolean isStatic) {
+        if (parametersList == null || parametersList.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int idx = 0; idx < parametersList.size(); idx++) {
+            sb.append(String.format("%s p%d, ", TypeUtils.getNameFromJava(parametersList.get(idx)), isStatic ? idx : idx + 1));
+        }
+        return sb.delete(sb.length() - 2, sb.length()).toString();
+    }
+
+    public static String listParameters(List<String> parametersList, boolean isStatic, List<String> arguments) {
+        if (parametersList == null || parametersList.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int idx = 0; idx < parametersList.size(); idx++) {
+            sb.append(TypeUtils.getNameFromJava(parametersList.get(idx))).append(" ");
+            sb.append(arguments.get(isStatic ? idx : idx + 1)).append(", ");
+        }
+        return sb.delete(sb.length() - 2, sb.length()).toString();
     }
 }

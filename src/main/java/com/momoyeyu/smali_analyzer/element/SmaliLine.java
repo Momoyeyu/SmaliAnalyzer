@@ -4,9 +4,9 @@ import java.util.List;
 
 public class SmaliLine {
 
-    private final List<String> instructions;
+    private final List<SmaliInstruction> instructions;
 
-    public SmaliLine(final List<String> lines) {
+    public SmaliLine(List<SmaliInstruction> lines) {
         this.instructions = lines;
     }
 
