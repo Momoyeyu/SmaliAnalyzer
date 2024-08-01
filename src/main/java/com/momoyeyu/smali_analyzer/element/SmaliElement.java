@@ -18,7 +18,7 @@ public class SmaliElement {
     protected boolean analyzed;
 
     public static void main(String[] args) {
-        List<String> parametersList = TypeUtils.getJavaParameters("Ljava/io/OutputStream;Ljava/lang/String;");
+        List<String> parametersList = TypeUtils.getJavaParametersFromSmali("Ljava/io/OutputStream;Ljava/lang/String;");
         System.out.println(SmaliElement.listParameters(parametersList, false));
         System.out.println(SmaliElement.listParameters(parametersList, true));
     }

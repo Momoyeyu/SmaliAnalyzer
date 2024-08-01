@@ -36,7 +36,7 @@ public class SmaliClass extends SmaliElement {
     public String toString() {
         this.toJava();
         String pkg = TypeUtils.getObjectPackageFromJava(packageName);
-        if (pkg == null) {
+        if (pkg.equals("default")) {
             return toStringIndent(0);
         }
         return "package " + pkg + ";\n\n" + toStringIndent(0);

@@ -55,7 +55,7 @@ public class SmaliField extends SmaliElement {
         if (transientModifier) {
             sb.append("transient ");
         }
-        sb.append(TypeUtils.isBasicType(type) ? type : TypeUtils.getObjectNameFromJava(type)).append(" ");
+        sb.append(TypeUtils.getNameFromJava(type)).append(" ");
         sb.append(name);
         if (value != null) {
             sb.append(" = ").append(value);

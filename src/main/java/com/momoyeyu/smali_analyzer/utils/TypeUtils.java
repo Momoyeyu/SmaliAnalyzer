@@ -25,6 +25,7 @@ public class TypeUtils {
 //        System.out.println(getObjectPackageFromJava("Landroidx/appcompat/widget/ActivityChooserModel"));
 //        System.out.println(getObjectPackageFromSmali("La")); // it should be null
 //        System.out.println(getObjectNameFromSmali("La")); // it should be null
+        System.out.println(isSmaliBasicType("B"));
         System.out.println(getNameFromSmali("[Landroidx/appcompat/widget/ActivityChooserModel;"));
         System.out.println(getNameFromSmali("[La"));
         System.out.println(getNameFromSmali("["));
@@ -41,9 +42,10 @@ public class TypeUtils {
     }
 
     /**
-     * Translate smali type into Java type
-     * @param smaliType smali type
-     * @return corresponding Java type
+     * Get Java Type's name from a smali type.
+     * A 'Java Type's name' mean its name without package.
+     * @param smaliType smali type, including basic type and object
+     * @return corresponding Java type's name
      */
     public static String getNameFromSmali(String smaliType) {
         if (smaliType == null || smaliType.isEmpty()) {
@@ -53,7 +55,7 @@ public class TypeUtils {
             return getNameFromSmali(smaliType.substring(0, smaliType.length() - 1));
         if (smaliType.startsWith("["))
             return getNameFromSmali(smaliType.substring(1)) + "[]";
-        if (isBasicType(smaliType)) {
+        if (isSmaliBasicType(smaliType)) {
             return smaliType;
         }
         try {
@@ -65,15 +67,26 @@ public class TypeUtils {
         }
     }
 
+    /** Get Java type's name from a Java Type
+     *
+     * @param javaType a Java type mean a basic type or an object with its package
+     * @return the name of the Java type (the one that don't contain package)
+     * @throws IllegalArgumentException Invalid or Unknown Java object input
+     */
     public static String getNameFromJava(String javaType) throws IllegalArgumentException {
+        if (isJavaBasicType(javaType)) {
+            return javaType;
+        }
         return getObjectNameFromJava(javaType);
     }
 
     /**
-     * Turn smali datatype into corresponding java datatype.
+     * Get Java type from a smali type.
+     * A Java {@code type} mean Java's basic type or Java object <b>with its package ahead.</b>
+     * The key difference from {@code name} is that 'name' don't have package, but {@code type} have.
      *
      * @param smaliType the datatype of a smali variable, including basic type and object
-     * @return the java type of the input (return only the classname of an object)
+     * @return corresponding Java type
      */
     public static String getTypeFromSmali(String smaliType) {
         if (smaliType == null || smaliType.isEmpty()) {
@@ -81,7 +94,7 @@ public class TypeUtils {
         }
         if (smaliType.startsWith("["))
             return getTypeFromSmali(smaliType.substring(1)) + "[]";
-        if (isBasicType(smaliType)) {
+        if (isSmaliBasicType(smaliType)) {
             return basicTypeMap.get(smaliType);
         }
         try {
@@ -93,10 +106,12 @@ public class TypeUtils {
     }
 
     /**
-     * Extract Java object's classname from its routes
+     * Extract Java object's {@code classname} from its {@code routes}.
+     * {@code classname} mean the object {@code name} without its package.
+     *
      * @param routes Java object routes (like "java.lang.String")
      * @return the classname of the object
-     * @throws RuntimeException let the Logger catch and log invalid object
+     * @throws IllegalArgumentException let the Logger catch and log the object information
      */
     public static String getObjectNameFromJava(String routes) throws IllegalArgumentException {
         if (routes == null || routes.isBlank()) {
@@ -111,14 +126,29 @@ public class TypeUtils {
         return routes.substring(routes.lastIndexOf(".") + 1);
     }
 
-    public static String getObjectNameFromSmali(String smaliType) {
+    /**
+     * Extract Java object's {@code classname} from its smali definition.
+     * {@code classname} mean the object {@code name} without its package.
+     *
+     * @param smaliType smali object routes (like "Ljava/lang/String")
+     * @return the classname of the smali object
+     * @throws RuntimeException let the Logger catch and log the object information
+     */
+    public static String getObjectNameFromSmali(String smaliType)  throws IllegalArgumentException {
         return getObjectNameFromJava(getObjectRoutesFromSmali(smaliType));
     }
 
     /**
-     * Turn smali routes into Java object name
+     * Return Java {@code routes} from smali signature.
+     * This method is used for locating {@code package}.
+     * The <b>difference</b></b> between {@code routes}
+     * and {@code type} is that {@code routes} mean
+     * {@code package + filename} whereas {@code type}
+     * mean {@code package + classname}.
+     *
      * @param object smali object routes (like "Ljava/lang/String;")
      * @return the corresponding Java object type of input smali object
+     * @throws RuntimeException let the Logger catch and log the object information
      */
     private static String getObjectRoutesFromSmali(String object) {
         if (object == null) {
@@ -135,13 +165,12 @@ public class TypeUtils {
     }
 
     /**
-     * Return package the Java object belong to.
+     * Extract package from Java routes or type.
      * <pre>
-     *     getObjectPackage("java.lang.String");
-     *     return "java.lang"
+     * {@code getObjectPackage("java.lang.String"); // java.lang}
      * </pre>
-     * @param routes a Java object with package and name
-     * @return package of the object
+     * @param routes Java routes
+     * @return package of the routes, or {@code default} if not explicit package
      */
     public static String getObjectPackageFromJava(String routes) {
         if (routes == null || routes.isBlank()) {
@@ -151,30 +180,41 @@ public class TypeUtils {
             Logger.log("[WARN] " + routes + " is a smali object, shouldn't call getJavaObjectName()", true);
             routes = getObjectRoutesFromSmali(routes);
         }
-        if (!routes.contains(".")) {
-            return null;
+        if (!routes.contains(".")) { // default package
+            return "default";
         }
         return routes.substring(0, routes.lastIndexOf("."));
     }
 
-    public static String getObjectPackageFromSmali(String routes) {
-        return getObjectPackageFromJava(getObjectRoutesFromSmali(routes));
+    /**
+     * Extract package from smali object.
+     * <pre>
+     * {@code getObjectPackage("Ljava/lang/String;"); // java.lang}
+     * </pre>
+     * @param object a smali object
+     * @return package of the object
+     */
+    public static String getObjectPackageFromSmali(String object) {
+        return getObjectPackageFromJava(getObjectRoutesFromSmali(object));
     }
 
     /**
-     * Turn a line of smali parameters into a list of java parameters.
-     * All Java object parameter will have their package with them.
+     * Turn smali parameters {@code String} into
+     * Java parameters {@code List}.
+     * <p>
+     * All Java parameter will remain their type,
+     * which mean object package will remain.
      *
      * @test pass
      * @param parameters a line of smali parameter list string
      * @return a list of java type parameters
      */
-    public static List<String> getJavaParameters(String parameters) {
+    public static List<String> getJavaParametersFromSmali(String parameters) {
         List<String> parametersList = new ArrayList<>();
         if (parameters == null || parameters.isBlank()) {
             return parametersList;
         }
-        List<String> params = splitParameters(parameters);
+        List<String> params = splitSmaliParameters(parameters);
         for (String parameter : params) {
             parametersList.add(getTypeFromSmali(parameter.trim()));
         }
@@ -182,20 +222,29 @@ public class TypeUtils {
     }
 
     /**
-     * Return weather a Java type is a basic Java type.
-     * @param type it should be a type that get from the getTypeFromSmali() method
-     * @return boolean, weather the input type is a Java basic type
+     * Return weather a smali type is a basic type.
+     * @param type smali type
+     * @return boolean
      */
-    public static boolean isBasicType(String type) {
-        return basicTypeMap.get(type) != null;
+    public static boolean isSmaliBasicType(String type) {
+        return basicTypeMap.containsKey(type);
     }
 
     /**
-     * A state machine that split smali parameters
-     * @param parameters smali parameters String
-     * @return Java parameters List
+     * Return weather a Java type is a basic type.
+     * @param type Java type
+     * @return boolean
      */
-    public static List<String> splitParameters(String parameters) {
+    public static boolean isJavaBasicType(String type) {
+        return basicTypeMap.containsValue(type);
+    }
+
+    /**
+     * Split smali parameters {@code String} into a {@code List} of parameter
+     * @param parameters smali parameters String
+     * @return smali parameters List
+     */
+    public static List<String> splitSmaliParameters(String parameters) {
         List<String> parametersList = new LinkedList<>();
         int state = 0;
         int objIdx;
@@ -228,7 +277,7 @@ public class TypeUtils {
                         }
                         parametersList.add("[" + parameters.substring(objIdx, i));
                     } else { // is an array of basic type
-                        parametersList.add("[" + String.valueOf(c));
+                        parametersList.add("[" + c);
                     }
                     state = 0;
                     break;

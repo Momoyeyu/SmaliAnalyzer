@@ -46,7 +46,7 @@ public class MethodAnalyzer {
             smaliMethod.setReturnType(TypeUtils.getTypeFromSmali(matcher.group(stepper.step(2)))); // return type
 
             // set parameters
-            List<String> parametersList = TypeUtils.getJavaParameters(matcher.group(stepper.step(-1)));
+            List<String> parametersList = TypeUtils.getJavaParametersFromSmali(matcher.group(stepper.step(-1)));
             if (varargs != null) { // varargs?
                 parametersList.set(parametersList.size() - 1, parametersList.getLast() + "...");
             }

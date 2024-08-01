@@ -42,7 +42,7 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
 //            smaliConstructor.setParametersList(TypeTranslator.getJavaParameters(matcher.group(stepper.step(3)))); // params?
 
             // set parameters
-            List<String> parametersList = TypeUtils.getJavaParameters(matcher.group(stepper.step(3)));
+            List<String> parametersList = TypeUtils.getJavaParametersFromSmali(matcher.group(stepper.step(3)));
             if (varargs != null) { // varargs?
                 parametersList.set(parametersList.size() - 1, parametersList.getLast() + "...");
             }

@@ -109,7 +109,7 @@ public class FieldAnalyzer {
                 sb.append(analyzeAnnotations(innerType, innerGeneric)).append(appendix).append(", ");
                 appendix = "";
             } else { // normal
-                if (t.matches("[\\-\\+]\\S*"))
+                if (t.matches("[\\-+]\\S*"))
                     continue;
                 sb.append(TypeUtils.getNameFromSmali(t)).append(appendix).append(", ");
                 appendix = "";
