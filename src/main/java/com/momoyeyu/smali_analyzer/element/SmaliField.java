@@ -36,7 +36,7 @@ public class SmaliField extends SmaliElement {
                 analyzed = true;
             } catch (RuntimeException e) {
                 Logger.logException(e.getMessage());
-                return Logger.logAnalysisFailure("field", signature);
+                return Logger.logAnalysisFailure("field", signature + "\n" + annotations);
             }
         }
         StringBuilder sb = new StringBuilder();

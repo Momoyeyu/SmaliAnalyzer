@@ -49,6 +49,8 @@ public class TypeUtils {
         if (smaliType == null || smaliType.isEmpty()) {
             return null;
         }
+        if (smaliType.endsWith(";"))
+            return getNameFromSmali(smaliType.substring(0, smaliType.length() - 1));
         if (smaliType.startsWith("["))
             return getNameFromSmali(smaliType.substring(1)) + "[]";
         if (isBasicType(smaliType)) {
@@ -58,7 +60,8 @@ public class TypeUtils {
             return getObjectNameFromSmali(smaliType);
         } catch (IllegalArgumentException e) {
             Logger.logException(e.getMessage());
-            return Logger.logAnalysisFailure("type", smaliType);
+            Logger.logAnalysisFailure("type", smaliType);
+            return smaliType;
         }
     }
 
@@ -97,7 +100,7 @@ public class TypeUtils {
      */
     public static String getObjectNameFromJava(String routes) throws IllegalArgumentException {
         if (routes == null || routes.isBlank()) {
-            throw new IllegalArgumentException("[ERROR] Unknown type: " + routes);
+            throw new IllegalArgumentException("Unknown type: " + routes);
         }
         if (routes.endsWith("..."))
             return getNameFromJava(routes.substring(0, routes.length() - 3)) + "...";
@@ -122,7 +125,7 @@ public class TypeUtils {
             return null;
         }
         if (!object.startsWith("L")) {
-            throw new RuntimeException("[ERROR] Invalid Object: " + object);
+            throw new RuntimeException("Unknown Object: " + object);
         }
         object = object.substring(1).replaceAll("[/$]", ".");
         if (object.endsWith(";")) {
@@ -142,7 +145,7 @@ public class TypeUtils {
      */
     public static String getObjectPackageFromJava(String routes) {
         if (routes == null || routes.isBlank()) {
-            throw new RuntimeException("[ERROR] Invalid type: " + routes);
+            throw new RuntimeException("Unknown type: " + routes);
         }
         if (routes.startsWith("L")) { // is smali object
             Logger.log("[WARN] " + routes + " is a smali object, shouldn't call getJavaObjectName()", true);
