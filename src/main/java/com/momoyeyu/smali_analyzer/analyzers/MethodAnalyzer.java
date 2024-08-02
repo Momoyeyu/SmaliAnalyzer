@@ -100,14 +100,14 @@ public class MethodAnalyzer {
         return sb.delete(sb.length() - 2, sb.length()).toString();
     }
 
-    public static String listParameters(List<String> parametersList, boolean isStatic, List<String> arguments) {
-        if (parametersList == null || parametersList.isEmpty()) {
+    public static String listArguments(List<String> arguments, boolean isStatic) {
+        if (arguments == null || arguments.isEmpty()) {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        for (int idx = 0; idx < parametersList.size(); idx++) {
-            sb.append(TypeUtils.getNameFromJava(parametersList.get(idx))).append(" ");
-            sb.append(arguments.get(isStatic ? idx : idx + 1)).append(", ");
+        int offset = isStatic ? 0 : 1;
+        for (int idx = offset; idx < arguments.size(); idx++) {
+            sb.append(arguments.get(idx)).append(", ");
         }
         return sb.delete(sb.length() - 2, sb.length()).toString();
     }

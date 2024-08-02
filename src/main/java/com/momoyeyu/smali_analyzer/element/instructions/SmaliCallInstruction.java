@@ -61,14 +61,12 @@ public class SmaliCallInstruction extends SmaliInstruction {
         StringBuilder builder = new StringBuilder();
         if (isStatic) {
 //            builder.append(TypeUtils.getNameFromJava(returnType)).append(" result = ");
-            builder.append(TypeUtils.getNameFromJava(callee)).append(".");
-            builder.append(methodName).append("(");
-            builder.append(MethodAnalyzer.listParameters(parameters, isStatic, arguments)).append(")");
+            builder.append(TypeUtils.getNameFromJava(callee));
         } else {
-            builder.append(arguments.getFirst()).append(".");
-            builder.append(methodName).append("(");
-            builder.append(MethodAnalyzer.listParameters(parameters, isStatic, arguments)).append(")");
+            builder.append(arguments.getFirst());
         }
+        builder.append(".").append(methodName).append("(");
+        builder.append(MethodAnalyzer.listArguments(arguments, isStatic)).append(")");
         return builder.toString();
     }
 
