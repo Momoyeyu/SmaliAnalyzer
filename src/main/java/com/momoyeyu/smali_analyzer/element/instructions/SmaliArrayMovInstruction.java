@@ -46,7 +46,7 @@ public class SmaliArrayMovInstruction extends SmaliInstruction {
     @Override
     public String toString() {
         if (!analyzed) {
-            return super.toString();
+            return analysisFail("array mov");
         }
         StringBuilder sb = new StringBuilder();
         if (operation.substring(1).startsWith("put")) {
@@ -57,5 +57,11 @@ public class SmaliArrayMovInstruction extends SmaliInstruction {
             sb.append(arrayRegister).append("[").append(indexRegister).append("]");
         }
         return sb.toString();
+    }
+
+    public static boolean isArrayMovInstruction(String instruction) {
+        if (instruction == null)
+            return false;
+        return arrayMovPattern.matcher(instruction).matches();
     }
 }

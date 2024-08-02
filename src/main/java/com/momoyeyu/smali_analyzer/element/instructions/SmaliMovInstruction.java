@@ -54,7 +54,7 @@ public class SmaliMovInstruction extends SmaliInstruction {
     @Override
     public String toString() {
         if (!analyzed) {
-            return super.toString();
+            return analysisFail("mov");
         }
         StringBuilder sb = new StringBuilder();
         if (operation.substring(1).startsWith("put")) {
@@ -77,6 +77,8 @@ public class SmaliMovInstruction extends SmaliInstruction {
     }
 
     public static boolean isMovInstruction(String instruction) {
+        if (instruction == null)
+            return false;
         return movPattern.matcher(instruction).matches();
     }
 

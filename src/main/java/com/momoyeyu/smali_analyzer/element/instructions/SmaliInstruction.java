@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.utils.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +30,11 @@ public class SmaliInstruction {
     @Override
     public String toString() {
         return signature;
+    }
+
+    protected String analysisFail(String type) {
+        Logger.logAnalysisFailure(type, signature);
+        return toString();
     }
 
 }

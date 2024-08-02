@@ -56,7 +56,7 @@ public class SmaliCallInstruction extends SmaliInstruction {
     @Override
     public String toString() {
         if (!analyzed) {
-            return super.toString();
+            return analysisFail("call");
         }
         StringBuilder builder = new StringBuilder();
         if (isStatic) {
