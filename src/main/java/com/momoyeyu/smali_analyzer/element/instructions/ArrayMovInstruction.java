@@ -35,9 +35,9 @@ public class ArrayMovInstruction extends Instruction {
             Stepper stp = new Stepper();
             operation = "a" + matcher.group(stp.step(1));
             operation += matcher.group(stp.step(3)) == null ? "" : matcher.group(stp.step(0));
-            valueRegister = matcher.group(stp.step(2));
-            arrayRegister = matcher.group(stp.step(1));
-            indexRegister = matcher.group(stp.step(1));
+            valueRegister = getRegistersList(matcher.group(stp.step(2))).getFirst();
+            arrayRegister = getRegistersList(matcher.group(stp.step(1))).getFirst();
+            indexRegister = getRegistersList(matcher.group(stp.step(1))).getFirst();
             super.analyze();
         }
     }

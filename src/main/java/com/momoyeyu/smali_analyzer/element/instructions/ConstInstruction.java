@@ -13,7 +13,6 @@ public class ConstInstruction extends Instruction {
 
     private String constType;
     private String constSize;
-    private String register;
     private String value;
 
     public static void main(String[] args) {
@@ -47,7 +46,7 @@ public class ConstInstruction extends Instruction {
             Stepper stp = new Stepper();
             constType = matcher.group(stp.step(2));
             constSize = matcher.group(stp.step(2));
-            register = matcher.group(stp.step(1));
+            registers = getRegistersList(matcher.group(stp.step(1)));
             value = matcher.group(stp.step(1));
             super.analyze();
         }
@@ -58,7 +57,7 @@ public class ConstInstruction extends Instruction {
         if (!analyzed)
             return analysisFail("const");
         StringBuilder sb = new StringBuilder();
-        sb.append(register).append(" = ");
+        sb.append(registers.getFirst()).append(" = ");
         if (constType != null && constType.equals("class")) {
             sb.append(TypeUtils.getNameFromSmali(value)).append(".class");
         } else {

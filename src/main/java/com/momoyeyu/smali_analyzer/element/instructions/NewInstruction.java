@@ -4,7 +4,6 @@ import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +11,6 @@ public class NewInstruction extends Instruction {
 
     private static final Pattern newPattern = Pattern.compile("new(-(\\S+))?\\s+(.+),\\s*(\\S+);?");
 
-    private List<String> registers;
     private String newType;
 
     public static void main(String[] args) {

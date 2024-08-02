@@ -1,7 +1,6 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
-import com.momoyeyu.smali_analyzer.utils.Stepper;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,8 +8,6 @@ import java.util.regex.Pattern;
 public class ResultInstruction extends Instruction {
 
     private static final Pattern resultPattern = Pattern.compile("^move-result(-object)?\\s+(\\S+)");
-
-    private String register;
 
     public static void main(String[] args) {
         System.out.println(new ResultInstruction("move-result-object v1"));
@@ -32,7 +29,7 @@ public class ResultInstruction extends Instruction {
         Matcher matcher = resultPattern.matcher(signature);
         if (matcher.matches()) {
             operation = "move-result" + (matcher.group(1) == null ? "" : matcher.group(1));
-            register = matcher.group(2);
+            registers = getRegistersList(matcher.group(2));
             super.analyze();
         }
     }
@@ -42,7 +39,7 @@ public class ResultInstruction extends Instruction {
         if (!analyzed)
             return analysisFail("move-result");
         StringBuilder sb = new StringBuilder();
-        sb.append(register).append(" =");
+        sb.append(registers.getFirst()).append(" =");
         return sb.toString();
     }
 

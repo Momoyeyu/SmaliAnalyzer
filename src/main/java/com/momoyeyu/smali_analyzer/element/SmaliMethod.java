@@ -7,7 +7,6 @@ import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class SmaliMethod extends SmaliElement {
     private final List<Instruction> body;
@@ -44,6 +43,8 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new NewInstruction(instruction, this));
             } else if (ResultInstruction.isResultInstruction(instruction)) {
                 body.add(new ResultInstruction(instruction, this));
+            } else if (ReturnInstruction.isReturnInstruction(instruction)) {
+                body.add(new ReturnInstruction(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }

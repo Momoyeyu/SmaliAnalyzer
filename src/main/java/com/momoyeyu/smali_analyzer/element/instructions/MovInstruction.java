@@ -4,7 +4,6 @@ import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +13,6 @@ public class MovInstruction extends Instruction {
     private static final Pattern sMovPattern = Pattern.compile("^s((put)|(get))(-(\\S+))?\\s+(\\S+),\\s*(\\S+)->(\\S+):(\\S+);?");
     private static final Pattern movPattern = Pattern.compile("^((i)|(s))((put)|(get))(-(\\S+))?\\s+(.+),\\s*(\\S+)->(\\S+):(\\S+);?");
 
-    private List<String> registers;
     private String object;
     private String property;
     private String propertyType;

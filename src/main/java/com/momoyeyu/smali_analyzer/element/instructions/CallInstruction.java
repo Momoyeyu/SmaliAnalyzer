@@ -16,7 +16,6 @@ public class CallInstruction extends Instruction {
 
     private String callee;
     private String methodName;
-    private List<String> arguments;
     private List<String> parameters;
     private String returnType;
     private boolean isStatic;
@@ -45,7 +44,7 @@ public class CallInstruction extends Instruction {
             Stepper stepper = new Stepper();
             operation = "invoke-" + matcher.group(stepper.step(1));
             isStatic = matcher.group(stepper.step(0)).equals("static");
-            arguments = getRegistersList(matcher.group(stepper.step(1)));
+            registers = getRegistersList(matcher.group(stepper.step(1)));
             callee = TypeUtils.getTypeFromSmali(matcher.group(stepper.step(1)));
             methodName = matcher.group(stepper.step(1));
             parameters = TypeUtils.getJavaParametersFromSmali(matcher.group(stepper.step(1)));
@@ -66,11 +65,11 @@ public class CallInstruction extends Instruction {
             if (isStatic) {
                 sb.append(TypeUtils.getNameFromJava(callee));
             } else {
-                sb.append(arguments.getFirst());
+                sb.append(registers.getFirst());
             }
             sb.append(".").append(methodName);
         }
-        sb.append("(").append(MethodAnalyzer.listArguments(arguments, isStatic)).append(")");
+        sb.append("(").append(MethodAnalyzer.listArguments(registers, isStatic)).append(")");
         return sb.toString();
     }
 
