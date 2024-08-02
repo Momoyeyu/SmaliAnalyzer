@@ -109,6 +109,6 @@ public class MethodAnalyzer {
         for (int idx = offset; idx < arguments.size(); idx++) {
             sb.append(arguments.get(idx)).append(", ");
         }
-        return sb.delete(sb.length() - 2, sb.length()).toString();
+        return sb.delete(Math.max(sb.length() - 2, 0), sb.length()).toString();
     }
 }

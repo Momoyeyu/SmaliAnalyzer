@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
+import com.momoyeyu.smali_analyzer.element.instructions.*;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class SmaliMethod extends SmaliElement {
-    private final List<String> body;
+    private final List<Instruction> body;
     protected SmaliClass ownerClass;
 
     protected List<String> parametersList;
@@ -22,16 +23,31 @@ public class SmaliMethod extends SmaliElement {
         this(signature, null, new ArrayList<>());
     }
 
-    public SmaliMethod(String signature, SmaliClass ownerClass, List<String> body) {
+    public SmaliMethod(String signature, SmaliClass ownerClass, List<String> instructions) {
         super(signature);
         this.ownerClass = ownerClass;
         this.abstractModifier = false;
         this.synchronizedModifier = false;
-        this.body = Objects.requireNonNullElseGet(body, ArrayList::new);
-    }
-
-    public List<String> getBody() {
-        return body;
+        this.body = new ArrayList<>();
+        for (String instruction : instructions) {
+            if (ArrayMovInstruction.isArrayMovInstruction(instruction)) {
+                body.add(new ArrayMovInstruction(instruction, this));
+            } else if (CallInstruction.isCallInstruction(instruction)) {
+                body.add(new CallInstruction(instruction, this));
+            } else if (ConditionInstruction.isConditionInstruction(instruction)) {
+                body.add(new ConditionInstruction(instruction, this));
+            } else if (ConstInstruction.isConstInstruction(instruction)) {
+                body.add(new ConstInstruction(instruction, this));
+            } else if (MovInstruction.isMovInstruction(instruction)) {
+                body.add(new MovInstruction(instruction, this));
+            } else if (NewInstruction.isNewInstruction(instruction)) {
+                body.add(new NewInstruction(instruction, this));
+            } else if (ResultInstruction.isResultInstruction(instruction)) {
+                body.add(new ResultInstruction(instruction, this));
+            } else {
+                body.add(new Instruction(instruction, this));
+            }
+        }
     }
 
     @Override
@@ -43,8 +59,8 @@ public class SmaliMethod extends SmaliElement {
             Logger.logException(e.getMessage());
             return Logger.logAnalysisFailure("method", signature);
         }
-        for (String line : this.body) {
-            sb.append("\t").append(line).append("\n");
+        for (Instruction instruction : this.body) {
+            sb.append("\t").append(instruction).append("\n");
         }
         sb.append("}\n");
         return sb.toString();

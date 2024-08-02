@@ -96,19 +96,19 @@ public class FileAnalyzer {
                 }
                 if (line.startsWith(".method")) {
                     String signature = line;
-                    List<String> body = new ArrayList<>();
+                    List<String> instructions = new ArrayList<>();
                     // read the whole method
                     while (scanner.hasNextLine()) {
                         line = scanner.nextLine().strip();
                         if (line.isBlank()) continue;
-                        body.add(line);
+                        instructions.add(line);
                         if (line.startsWith(".end method")) break;
                     }
                     // add method to the current class
                     if (ConstructorAnalyzer.isConstructor(signature)) {
-                        currentSmaliClass.addSmaliMethod(new SmaliConstructor(signature, currentSmaliClass, body));
+                        currentSmaliClass.addSmaliMethod(new SmaliConstructor(signature, currentSmaliClass, instructions));
                     } else {
-                        currentSmaliClass.addSmaliMethod(new SmaliMethod(signature, currentSmaliClass, body));
+                        currentSmaliClass.addSmaliMethod(new SmaliMethod(signature, currentSmaliClass, instructions));
                     }
                 }
                 if (line.startsWith(".field")) {

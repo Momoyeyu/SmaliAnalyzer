@@ -61,30 +61,19 @@ public class ConditionInstruction extends Instruction {
             return super.toString();
         StringBuilder sb = new StringBuilder();
         sb.append("if (");
-        if (condition.equals("eq")) {
-            sb.append(registers.getFirst()).append(" == ").append(registers.getLast());
-        } else if (condition.equals("ne")) {
-            sb.append(registers.getFirst()).append(" != ").append(registers.getLast());
-        } else if (condition.equals("lt")) {
-            sb.append(registers.getFirst()).append(" < ").append(registers.getLast());
-        } else if (condition.equals("le")) {
-            sb.append(registers.getFirst()).append(" <= ").append(registers.getLast());
-        } else if (condition.equals("gt")) {
-            sb.append(registers.getFirst()).append(" > ").append(registers.getLast());
-        } else if (condition.equals("ge")) {
-            sb.append(registers.getFirst()).append(" >= ").append(registers.getLast());
-        } else if (condition.equals("eqz")) {
-            sb.append(registers.getFirst()).append(" == 0");
-        } else if (condition.equals("nez")) {
-            sb.append(registers.getFirst()).append(" != 0");
-        } else if (condition.equals("ltz")) {
-            sb.append(registers.getFirst()).append(" < 0");
-        } else if (condition.equals("lez")) {
-            sb.append(registers.getFirst()).append(" <= 0");
-        } else if (condition.equals("gtz")) {
-            sb.append(registers.getFirst()).append(" > 0");
-        } else if (condition.equals("gez")) {
-            sb.append(registers.getFirst()).append(" >= 0");
+        switch (condition) {
+            case "eq" -> sb.append(registers.getFirst()).append(" == ").append(registers.getLast());
+            case "ne" -> sb.append(registers.getFirst()).append(" != ").append(registers.getLast());
+            case "lt" -> sb.append(registers.getFirst()).append(" < ").append(registers.getLast());
+            case "le" -> sb.append(registers.getFirst()).append(" <= ").append(registers.getLast());
+            case "gt" -> sb.append(registers.getFirst()).append(" > ").append(registers.getLast());
+            case "ge" -> sb.append(registers.getFirst()).append(" >= ").append(registers.getLast());
+            case "eqz" -> sb.append(registers.getFirst()).append(" == 0");
+            case "nez" -> sb.append(registers.getFirst()).append(" != 0");
+            case "ltz" -> sb.append(registers.getFirst()).append(" < 0");
+            case "lez" -> sb.append(registers.getFirst()).append(" <= 0");
+            case "gtz" -> sb.append(registers.getFirst()).append(" > 0");
+            case "gez" -> sb.append(registers.getFirst()).append(" >= 0");
         }
         sb.append(")");
         return sb.toString();
