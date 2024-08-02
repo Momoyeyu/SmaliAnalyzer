@@ -1,6 +1,5 @@
 package com.momoyeyu.smali_analyzer.entity;
 
-import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.HashMap;
@@ -8,23 +7,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class VariablesTable {
+public class MethodStack {
     private static final Pattern variablePattern = Pattern.compile("\\.((locals)|(registers))\\s+(\\d+)\\s*");
     private static final Pattern constPattern = Pattern.compile("const-(\\S+)\\s+(\\S+),\\s+(\\S+)\\s*");
 
     private final Map<String, Variable> table = new HashMap<>();
 
-    public VariablesTable(SmaliMethod smaliMethod) {
-        for (String insturction : smaliMethod.getBody()) {
-            if (insturction.startsWith(".line")) {
-                break;
-            }
-            safeStoreVariable(insturction);
-        }
-        int i = smaliMethod.isStaticModifier() ? 0 : 1;
-        for (String parameter : smaliMethod.getParametersList()) {
-            table.put(String.format("p" + i), new Variable(parameter, null));
-        }
+    public MethodStack() {
+
     }
 
     private boolean safeStoreVariable(String instruction) {
@@ -58,29 +48,5 @@ public class VariablesTable {
         return table.get(register).getValue();
     }
 
-    public static class Variable {
-        private String type;
-        private String value;
 
-        public Variable(String type, String value) {
-            this.type = type;
-            this.value = value;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
 }

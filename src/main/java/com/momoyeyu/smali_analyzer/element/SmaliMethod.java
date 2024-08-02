@@ -1,7 +1,6 @@
 package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
-import com.momoyeyu.smali_analyzer.entity.VariablesTable;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
@@ -85,7 +84,7 @@ public class SmaliMethod extends SmaliElement {
     }
 
     private String analyzeBody() {
-        VariablesTable variablesTable = new VariablesTable(this);
+
         return null;
     }
 
