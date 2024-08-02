@@ -58,7 +58,7 @@ public class ConditionInstruction extends Instruction {
     @Override
     public String toString() {
         if (!analyzed)
-            return super.toString();
+            return analysisFail("condition");
         StringBuilder sb = new StringBuilder();
         sb.append("if (");
         switch (condition) {

@@ -40,7 +40,7 @@ public class ResultInstruction extends Instruction {
     @Override
     public String toString() {
         if (!analyzed)
-            return super.toString();
+            return analysisFail("move-result");
         StringBuilder sb = new StringBuilder();
         sb.append(register).append(" =");
         return sb.toString();

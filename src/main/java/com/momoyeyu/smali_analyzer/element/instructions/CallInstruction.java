@@ -24,6 +24,7 @@ public class CallInstruction extends Instruction {
     public static void main(String[] args) {
         System.out.println(new CallInstruction("invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"));
         System.out.println(new CallInstruction("invoke-static {p2}, Ljava/util/Collections;->sort(Ljava/util/List;)V"));
+        System.out.println(new CallInstruction("invoke-direct {p0, p1, p2, p3, p4}, Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;-><init>(Landroid/content/ComponentName;JF)V"));
     }
 
     // testing
@@ -58,16 +59,19 @@ public class CallInstruction extends Instruction {
         if (!analyzed) {
             return analysisFail("call");
         }
-        StringBuilder builder = new StringBuilder();
-        if (isStatic) {
-//            builder.append(TypeUtils.getNameFromJava(returnType)).append(" result = ");
-            builder.append(TypeUtils.getNameFromJava(callee));
+        StringBuilder sb = new StringBuilder();
+        if (operation.equals("invoke-direct")) {
+            sb.append("new ").append(TypeUtils.getNameFromJava(callee));
         } else {
-            builder.append(arguments.getFirst());
+            if (isStatic) {
+                sb.append(TypeUtils.getNameFromJava(callee));
+            } else {
+                sb.append(arguments.getFirst());
+            }
+            sb.append(".").append(methodName);
         }
-        builder.append(".").append(methodName).append("(");
-        builder.append(MethodAnalyzer.listArguments(arguments, isStatic)).append(")");
-        return builder.toString();
+        sb.append("(").append(MethodAnalyzer.listArguments(arguments, isStatic)).append(")");
+        return sb.toString();
     }
 
     public String getReturnType() {

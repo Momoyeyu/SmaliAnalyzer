@@ -56,7 +56,7 @@ public class ConstInstruction extends Instruction {
     @Override
     public String toString() {
         if (!analyzed)
-            return super.toString();
+            return analysisFail("const");
         StringBuilder sb = new StringBuilder();
         sb.append(register).append(" = ");
         if (constType != null && constType.equals("class")) {
