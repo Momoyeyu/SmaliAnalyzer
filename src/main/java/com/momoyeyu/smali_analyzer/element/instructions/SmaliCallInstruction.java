@@ -1,6 +1,7 @@
-package com.momoyeyu.smali_analyzer.element;
+package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
+import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
@@ -10,10 +11,12 @@ import java.util.regex.Pattern;
 
 public class SmaliCallInstruction extends SmaliInstruction {
 
-    private static final Pattern callPattern = Pattern.compile("invoke-(\\S+)\\s+\\{(.*?)},\\s*(\\S+)->(\\S+)\\((\\S*)\\)(\\S+);?");
+    private static final Pattern callPattern = Pattern.compile("^invoke-(\\S+)\\s+\\{(.*?)},\\s*(\\S+)->(\\S+)\\((\\S*)\\)(\\S+);?");
+    private static final Pattern returnPattern = Pattern.compile("^return-");
 
     private String callee;
     private String methodName;
+    private List<String> arguments;
     private List<String> parameters;
     private String returnType;
     private boolean isStatic;
@@ -23,19 +26,25 @@ public class SmaliCallInstruction extends SmaliInstruction {
         System.out.println(new SmaliCallInstruction("invoke-static {p2}, Ljava/util/Collections;->sort(Ljava/util/List;)V"));
     }
 
-    public SmaliCallInstruction(String instruction) {
-        super(instruction);
+    // testing
+    private SmaliCallInstruction(String instruction) {
+        this(instruction, null);
+    }
+
+    public SmaliCallInstruction(String instruction, SmaliMethod smaliMethod) {
+        super(instruction, smaliMethod);
         isStatic = false;
+        this.analyze();
     }
 
     @Override
     protected void analyze() {
         Matcher matcher = callPattern.matcher(signature);
-        if (matcher.find()) {
+        if (matcher.matches()) {
             Stepper stepper = new Stepper();
             operation = "invoke-" + matcher.group(stepper.step(1));
             isStatic = matcher.group(stepper.step(0)).equals("static");
-            registers = getRegistersList(matcher.group(stepper.step(1)));
+            arguments = getRegistersList(matcher.group(stepper.step(1)));
             callee = TypeUtils.getTypeFromSmali(matcher.group(stepper.step(1)));
             methodName = matcher.group(stepper.step(1));
             parameters = TypeUtils.getJavaParametersFromSmali(matcher.group(stepper.step(1)));
@@ -51,13 +60,24 @@ public class SmaliCallInstruction extends SmaliInstruction {
 //            builder.append(TypeUtils.getNameFromJava(returnType)).append(" result = ");
             builder.append(TypeUtils.getNameFromJava(callee)).append(".");
             builder.append(methodName).append("(");
-            builder.append(MethodAnalyzer.listParameters(parameters, isStatic, registers)).append(")");
+            builder.append(MethodAnalyzer.listParameters(parameters, isStatic, arguments)).append(")");
         } else {
-            builder.append(registers.getFirst()).append(".");
+            builder.append(arguments.getFirst()).append(".");
             builder.append(methodName).append("(");
-            builder.append(MethodAnalyzer.listParameters(parameters, isStatic, registers)).append(")");
+            builder.append(MethodAnalyzer.listParameters(parameters, isStatic, arguments)).append(")");
         }
         return builder.toString();
+    }
+
+    public String getReturnType() {
+        return returnType;
+    }
+
+    public static boolean isCallInstruction(String instruction) {
+        if (instruction == null) {
+            return false;
+        }
+        return instruction.startsWith("invoke-");
     }
 
 }
