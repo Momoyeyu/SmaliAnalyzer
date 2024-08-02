@@ -66,4 +66,11 @@ public class ConstInstruction extends Instruction {
         }
         return sb.toString();
     }
+
+    public static boolean isConstInstruction(String instruction) {
+        if (instruction == null) {
+            return false;
+        }
+        return constPattern.matcher(instruction).matches();
+    }
 }
