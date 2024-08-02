@@ -3,11 +3,10 @@ package com.momoyeyu.smali_analyzer.element.instructions;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SmaliArrayMovInstruction extends SmaliInstruction {
+public class ArrayMovInstruction extends Instruction {
 
     private static final Pattern arrayMovPattern = Pattern.compile("^a((put)|(get))(-(\\S+))?\\s+(\\S+),\\s*(\\S+),\\s*(\\S+)\\s*");
 
@@ -16,15 +15,15 @@ public class SmaliArrayMovInstruction extends SmaliInstruction {
     private String indexRegister;
 
     public static void main(String[] args) {
-        System.out.println(new SmaliArrayMovInstruction("aput-object v4, v3, v0"));
-        System.out.println(new SmaliArrayMovInstruction("aget-object v4, p1, v3"));
+        System.out.println(new ArrayMovInstruction("aput-object v4, v3, v0"));
+        System.out.println(new ArrayMovInstruction("aget-object v4, p1, v3"));
     }
 
-    private SmaliArrayMovInstruction(String instruction) {
+    private ArrayMovInstruction(String instruction) {
         this(instruction, null);
     }
 
-    public SmaliArrayMovInstruction(String instruction, SmaliMethod parentMethod) {
+    public ArrayMovInstruction(String instruction, SmaliMethod parentMethod) {
         super(instruction, parentMethod);
         this.analyze();
     }

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SmaliNewInstruction extends SmaliInstruction {
+public class NewInstruction extends Instruction {
 
     private static final Pattern newPattern = Pattern.compile("new(-(\\S+))?\\s+(.+),\\s*(\\S+);?");
 
@@ -16,16 +16,16 @@ public class SmaliNewInstruction extends SmaliInstruction {
     private String newType;
 
     public static void main(String[] args) {
-        System.out.println(new SmaliNewInstruction("new-instance v4, Ljava/util/ArrayList;"));
-        System.out.println(new SmaliNewInstruction("new-array v3, v3, [Ljava/lang/Object;"));
+        System.out.println(new NewInstruction("new-instance v4, Ljava/util/ArrayList;"));
+        System.out.println(new NewInstruction("new-array v3, v3, [Ljava/lang/Object;"));
     }
 
     // test
-    private SmaliNewInstruction(String instruction) {
+    private NewInstruction(String instruction) {
         this(instruction, null);
     }
 
-    public SmaliNewInstruction(String instruction, SmaliMethod parentMethod) {
+    public NewInstruction(String instruction, SmaliMethod parentMethod) {
         super(instruction, parentMethod);
         this.analyze();
     }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SmaliCallInstruction extends SmaliInstruction {
+public class CallInstruction extends Instruction {
 
     private static final Pattern callPattern = Pattern.compile("^invoke-(\\S+)\\s+\\{(.*?)},\\s*(\\S+)->(\\S+)\\((\\S*)\\)(\\S+);?");
     private static final Pattern returnPattern = Pattern.compile("^return-");
@@ -22,16 +22,16 @@ public class SmaliCallInstruction extends SmaliInstruction {
     private boolean isStatic;
 
     public static void main(String[] args) {
-        System.out.println(new SmaliCallInstruction("invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"));
-        System.out.println(new SmaliCallInstruction("invoke-static {p2}, Ljava/util/Collections;->sort(Ljava/util/List;)V"));
+        System.out.println(new CallInstruction("invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"));
+        System.out.println(new CallInstruction("invoke-static {p2}, Ljava/util/Collections;->sort(Ljava/util/List;)V"));
     }
 
     // testing
-    private SmaliCallInstruction(String instruction) {
+    private CallInstruction(String instruction) {
         this(instruction, null);
     }
 
-    public SmaliCallInstruction(String instruction, SmaliMethod smaliMethod) {
+    public CallInstruction(String instruction, SmaliMethod smaliMethod) {
         super(instruction, smaliMethod);
         isStatic = false;
         this.analyze();

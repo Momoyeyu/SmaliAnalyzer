@@ -4,12 +4,11 @@ import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SmaliMovInstruction extends SmaliInstruction {
+public class MovInstruction extends Instruction {
 
     private static final Pattern iMovPattern = Pattern.compile("^i((put)|(get))(-(\\S+))?\\s+(\\S+),\\s*(\\S+),\\s*(\\S+)->(\\S+):(\\S+);?");
     private static final Pattern sMovPattern = Pattern.compile("^s((put)|(get))(-(\\S+))?\\s+(\\S+),\\s*(\\S+)->(\\S+):(\\S+);?");
@@ -21,17 +20,17 @@ public class SmaliMovInstruction extends SmaliInstruction {
     private String propertyType;
 
     public static void main(String[] args) {
-        System.out.println(new SmaliMovInstruction("iput v3, v2, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;->weight:F"));
+        System.out.println(new MovInstruction("iput v3, v2, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;->weight:F"));
         System.out.println();
 
     }
 
     // testing
-    private SmaliMovInstruction(String instruction) {
+    private MovInstruction(String instruction) {
         this(instruction, null);
     }
 
-    public SmaliMovInstruction(String instruction, SmaliMethod smaliMethod) {
+    public MovInstruction(String instruction, SmaliMethod smaliMethod) {
         super(instruction, smaliMethod);
         this.analyze();
     }
