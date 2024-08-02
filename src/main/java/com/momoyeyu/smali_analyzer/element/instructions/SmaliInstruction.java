@@ -10,14 +10,16 @@ public class SmaliInstruction {
     protected String signature;
     protected String operation;
     protected SmaliMethod parentMethod;
+    protected boolean analyzed;
 
     protected void analyze() {
-        return;
+        analyzed = true;
     }
 
     public SmaliInstruction(String instruction, SmaliMethod parentMethod) {
         signature = instruction;
         parentMethod = parentMethod;
+        analyzed = false;
     }
 
     protected static List<String> getRegistersList(String registers) {
@@ -26,7 +28,7 @@ public class SmaliInstruction {
 
     @Override
     public String toString() {
-        return null;
+        return signature;
     }
 
 }

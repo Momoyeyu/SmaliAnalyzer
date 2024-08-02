@@ -49,12 +49,15 @@ public class SmaliCallInstruction extends SmaliInstruction {
             methodName = matcher.group(stepper.step(1));
             parameters = TypeUtils.getJavaParametersFromSmali(matcher.group(stepper.step(1)));
             returnType = TypeUtils.getTypeFromSmali(matcher.group(stepper.step(1)));
+            super.analyze();
         }
     }
 
     @Override
     public String toString() {
-        this.analyze();
+        if (!analyzed) {
+            return super.toString();
+        }
         StringBuilder builder = new StringBuilder();
         if (isStatic) {
 //            builder.append(TypeUtils.getNameFromJava(returnType)).append(" result = ");

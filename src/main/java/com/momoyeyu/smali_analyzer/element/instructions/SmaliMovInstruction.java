@@ -47,11 +47,15 @@ public class SmaliMovInstruction extends SmaliInstruction {
             object = TypeUtils.getTypeFromSmali(matcher.group(stp.step(1)));
             property = matcher.group(stp.step(1));
             propertyType = TypeUtils.getTypeFromSmali(matcher.group(stp.step(1)));
+            super.analyze();
         }
     }
 
     @Override
     public String toString() {
+        if (!analyzed) {
+            return super.toString();
+        }
         StringBuilder sb = new StringBuilder();
         if (operation.substring(1).startsWith("put")) {
             if (operation.startsWith("i")) {
