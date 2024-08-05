@@ -26,27 +26,6 @@ public class SmaliLine {
         this.status = INSTRUCTION_TYPE.DEFAULT;
     }
 
-    @Override
-    public String toString() {
-        String ret = "";
-        for (Instruction instruction : instructions) {
-            if (equalType(instruction.TYPE(), INSTRUCTION_TYPE.CONST,
-                    INSTRUCTION_TYPE.NEW, INSTRUCTION_TYPE.MOV)) {
-                instruction.store();
-                status = INSTRUCTION_TYPE.DEFAULT;
-            } else if (equalType(instruction.TYPE(), INSTRUCTION_TYPE.INVOKE_DIRECT)) {
-                ret = instruction.toString(); // new xxx
-                status = INSTRUCTION_TYPE.INVOKE;
-            } else if (equalType(instruction.TYPE(), INSTRUCTION_TYPE.RESULT)) {
-                if (status == INSTRUCTION_TYPE.INVOKE) {
-
-                }
-            }
-        }
-
-        return null;
-    }
-
     private boolean equalType(INSTRUCTION_TYPE type, INSTRUCTION_TYPE... otherType) {
         for (INSTRUCTION_TYPE instructionType : otherType) {
             if (type.equals(instructionType)) {

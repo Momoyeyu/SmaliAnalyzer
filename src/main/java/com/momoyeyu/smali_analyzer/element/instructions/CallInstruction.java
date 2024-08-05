@@ -53,19 +53,10 @@ public class CallInstruction extends Instruction {
     }
 
     @Override
-    public void store() {
+    public void updateTable() {
         if (parentMethod != null) {
             registers.replaceAll(domain -> parentMethod.getStack().getValue(domain));
         }
-    }
-
-    @Override
-    public INSTRUCTION_TYPE TYPE() {
-        if (operation.equals("invoke-direct"))
-            return INSTRUCTION_TYPE.INVOKE_DIRECT;
-        if (operation.equals("invoke-static"))
-            return INSTRUCTION_TYPE.INVOKE_STATIC;
-        return INSTRUCTION_TYPE.INVOKE;
     }
 
     @Override

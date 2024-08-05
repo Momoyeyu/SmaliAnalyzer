@@ -41,7 +41,7 @@ public class NewInstruction extends Instruction {
     }
 
     @Override
-    public void store() {
+    public void updateTable() {
         if (parentMethod != null) {
             if (operation.equals("new-array")) {
                 parentMethod.getStack().storeVariable(
