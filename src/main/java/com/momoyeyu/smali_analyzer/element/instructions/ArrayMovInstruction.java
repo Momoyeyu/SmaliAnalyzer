@@ -43,6 +43,11 @@ public class ArrayMovInstruction extends Instruction {
     }
 
     @Override
+    public INSTRUCTION_TYPE TYPE() {
+        return INSTRUCTION_TYPE.MOV;
+    }
+
+    @Override
     public void store() {
         if (parentMethod != null) {
             parentMethod.getStack().storeVariable(arrayRegister, indexRegister, valueRegister, "array");

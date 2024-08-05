@@ -47,7 +47,7 @@ public class MovInstruction extends Instruction {
     }
 
     @Override
-    protected void store() {
+    public void store() {
         if (operation.substring(1).equals("put") && parentMethod != null) {
             parentMethod.getStack().storeVariable(registers.getLast(), property, registers.getFirst(), "data");
         }

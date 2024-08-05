@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 public class CallInstruction extends Instruction {
 
     private static final Pattern callPattern = Pattern.compile("^invoke-(\\S+)\\s+\\{(.*?)},\\s*(\\S+)->(\\S+)\\((\\S*)\\)(\\S+);?");
-    private static final Pattern returnPattern = Pattern.compile("^return-");
 
     private String callee;
     private String methodName;
@@ -58,6 +57,15 @@ public class CallInstruction extends Instruction {
         if (parentMethod != null) {
             registers.replaceAll(domain -> parentMethod.getStack().getValue(domain));
         }
+    }
+
+    @Override
+    public INSTRUCTION_TYPE TYPE() {
+        if (operation.equals("invoke-direct"))
+            return INSTRUCTION_TYPE.INVOKE_DIRECT;
+        if (operation.equals("invoke-static"))
+            return INSTRUCTION_TYPE.INVOKE_STATIC;
+        return INSTRUCTION_TYPE.INVOKE;
     }
 
     @Override

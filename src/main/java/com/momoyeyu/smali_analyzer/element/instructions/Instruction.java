@@ -32,8 +32,10 @@ public class Instruction {
         return thisRegister(Arrays.stream(registers.split("(,\\s*)")).toList());
     }
 
-    protected void store() {
+    public void store() {}
 
+    public INSTRUCTION_TYPE TYPE() {
+        return INSTRUCTION_TYPE.DEFAULT;
     }
 
     @Override
