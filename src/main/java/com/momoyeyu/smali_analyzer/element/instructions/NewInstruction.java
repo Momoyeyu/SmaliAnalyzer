@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class NewInstruction extends Instruction {
 
-    private static final Pattern newPattern = Pattern.compile("new(-(\\S+))?\\s+(.+),\\s*(\\S+);?");
+    private static final Pattern newPattern = Pattern.compile("new-(\\S+)\\s+(.+),\\s*(\\S+);?");
 
     private String newType;
 
@@ -33,10 +33,21 @@ public class NewInstruction extends Instruction {
         Matcher matcher = newPattern.matcher(signature);
         if (matcher.find()) {
             Stepper stp = new Stepper();
-            operation = "new" + (matcher.group(stp.step(1)) == null ? "" : matcher.group(stp.step(0)));
-            registers = getRegistersList(matcher.group(stp.step(2)));
+            operation = "new-" + (matcher.group(stp.step(1)) == null ? "" : matcher.group(stp.step(0)));
+            registers = getRegistersList(matcher.group(stp.step(1)));
             newType = TypeUtils.getTypeFromSmali(matcher.group(stp.step(1)));
             super.analyze();
+        }
+    }
+
+    @Override
+    protected void store() {
+        if (parentMethod != null) {
+            if (operation.equals("new-array")) {
+                parentMethod.getStack().storeVariable(
+                        registers.getFirst(), null,
+                        null , newType);
+            }
         }
     }
 
@@ -46,7 +57,15 @@ public class NewInstruction extends Instruction {
             return analysisFail("new");
         StringBuilder sb = new StringBuilder();
         sb.append(TypeUtils.getNameFromJava(newType)).append(" ").append(registers.getFirst());
-
+        if (operation.equals("new-array")) {
+            sb.append(" = new ").append(TypeUtils.getNameFromJava(newType)).delete(sb.length() - 2, sb.length()).append("[");
+            if (parentMethod != null) {
+                sb.append(parentMethod.getStack().getValue(registers.getLast()));
+            } else {
+                sb.append(registers.getLast());
+            }
+            sb.append("]");
+        }
         return sb.toString();
     }
 

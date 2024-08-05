@@ -43,6 +43,13 @@ public class ArrayMovInstruction extends Instruction {
     }
 
     @Override
+    public void store() {
+        if (parentMethod != null) {
+            parentMethod.getStack().storeVariable(arrayRegister, indexRegister, valueRegister, "array");
+        }
+    }
+
+    @Override
     public String toString() {
         if (!analyzed) {
             return analysisFail("array mov");

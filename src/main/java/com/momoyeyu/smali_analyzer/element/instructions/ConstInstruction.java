@@ -48,10 +48,17 @@ public class ConstInstruction extends Instruction {
             constSize = matcher.group(stp.step(2));
             registers = getRegistersList(matcher.group(stp.step(1)));
             value = matcher.group(stp.step(1));
+            if (constType != null && constType.equals("class")) {
+                value = TypeUtils.getTypeFromSmali(value);
+            }
             super.analyze();
-//            if (parentMethod != null)
-                parentMethod.storeVariable(registers.getFirst(), null, value, constType);
         }
+    }
+
+    @Override
+    protected void store() {
+        if (parentMethod != null)
+            parentMethod.getStack().storeVariable(registers.getFirst(), null, value, constType);
     }
 
     @Override
@@ -61,7 +68,7 @@ public class ConstInstruction extends Instruction {
         StringBuilder sb = new StringBuilder();
         sb.append(registers.getFirst()).append(" = ");
         if (constType != null && constType.equals("class")) {
-            sb.append(TypeUtils.getNameFromSmali(value)).append(".class");
+            sb.append(TypeUtils.getNameFromJava(value)).append(".class");
         } else {
             sb.append(value);
         }

@@ -54,6 +54,13 @@ public class CallInstruction extends Instruction {
     }
 
     @Override
+    public void store() {
+        if (parentMethod != null) {
+            registers.replaceAll(domain -> parentMethod.getStack().getValue(domain));
+        }
+    }
+
+    @Override
     public String toString() {
         if (!analyzed) {
             return analysisFail("call");

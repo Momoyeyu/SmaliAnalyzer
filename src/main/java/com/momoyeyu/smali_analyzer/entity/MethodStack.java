@@ -1,22 +1,29 @@
 package com.momoyeyu.smali_analyzer.entity;
 
+import com.momoyeyu.smali_analyzer.utils.Logger;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MethodStack {
-    private static final Pattern registerPattern = Pattern.compile("(\\S+?)(\\.(\\S+))?");
+    private static final Pattern registerPattern = Pattern.compile("([A-Za-z]([0-9A-Za-z]+?)?)(\\.(\\S+))?");
 
     private final Map<String, Variable> table = new HashMap<>();
+    private int varCounter;
 
-    public MethodStack() {}
+    public MethodStack() {
+        varCounter = 0;
+    }
 
     public void storeVariable(String register, String property, String value, String type) {
         assert register != null;
         String trueValue = getTrueValue(value);
         if (!inStack(register)) {
-            table.put(register, new Variable(type, trueValue));
+            table.put(register, new Variable(trueValue));
             return;
         }
         if (property != null) {
@@ -43,17 +50,32 @@ public class MethodStack {
         return value;
     }
 
-    public String getValue(String domain) {
+    public String getValue(String domain) throws IllegalArgumentException{
         Matcher matcher = registerPattern.matcher(domain);
         if (matcher.matches()) {
             Variable variable = table.get(matcher.group(1));
-            if (variable != null) {
-                String property = matcher.group(3);
-                if (property != null) {
-                    return variable.getProperty(property);
-                }
-                return variable.getValue();
+            try {
+                return Objects.requireNonNullElse(getValue(variable, matcher.group(3)), domain);
+            } catch (NullPointerException e) {
+                Logger.log("[WARN] access wild register domain: " + domain);
+                Logger.log(Arrays.toString(e.getStackTrace()));
+                return domain;
             }
+        }
+        Logger.log("[ERROR] unknown domain: " + domain);
+        return domain;
+    }
+
+    private String getValue(Variable variable, String domain) throws NullPointerException {
+        if (variable == null) {
+            throw new NullPointerException();
+        }
+        if (domain == null) {
+            return variable.getValue();
+        }
+        Matcher matcher = registerPattern.matcher(domain);
+        if (matcher.matches()) {
+            return getValue(variable.getProperty(matcher.group(1)), matcher.group(3));
         }
         return null;
     }

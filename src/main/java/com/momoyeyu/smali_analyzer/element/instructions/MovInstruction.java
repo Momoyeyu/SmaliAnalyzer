@@ -43,9 +43,13 @@ public class MovInstruction extends Instruction {
             property = matcher.group(stp.step(1));
             propertyType = TypeUtils.getTypeFromSmali(matcher.group(stp.step(1)));
             super.analyze();
-            if (operation.substring(1).equals("put") && parentMethod != null) {
-                parentMethod.storeVariable(registers.getLast(), property, registers.getFirst(), "data");
-            }
+        }
+    }
+
+    @Override
+    protected void store() {
+        if (operation.substring(1).equals("put") && parentMethod != null) {
+            parentMethod.getStack().storeVariable(registers.getLast(), property, registers.getFirst(), "data");
         }
     }
 

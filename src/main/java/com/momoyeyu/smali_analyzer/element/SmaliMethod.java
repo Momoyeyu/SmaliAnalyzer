@@ -122,15 +122,18 @@ public class SmaliMethod extends SmaliElement {
     }
 
     // setter
-    public void storeVariable(String domain, String value, String type) {
-        stack.storeVariable(domain, value, type);
-    }
-
-    public void storeVariable(String register, String property, String value, String type) {
-        stack.storeVariable(register, property, value, type);
+    public MethodStack getStack() {
+        return stack;
     }
 
     public void setParametersList(List<String> parametersList) {
+        int i = isStaticModifier() ? 0 : 1;
+        for (String parameter : parametersList) {
+            this.stack.storeVariable("p" + i, null, "arg_" + i , parameter);
+        }
+        if (!isStaticModifier()) {
+            this.stack.storeVariable("this", null, null, ownerClass.getClassType());
+        }
         this.parametersList = parametersList;
     }
 

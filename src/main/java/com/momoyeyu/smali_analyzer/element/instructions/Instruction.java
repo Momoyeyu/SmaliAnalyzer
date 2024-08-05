@@ -32,6 +32,10 @@ public class Instruction {
         return thisRegister(Arrays.stream(registers.split("(,\\s*)")).toList());
     }
 
+    protected void store() {
+
+    }
+
     @Override
     public String toString() {
         return signature;
