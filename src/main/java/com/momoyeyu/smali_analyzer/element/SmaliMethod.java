@@ -2,6 +2,7 @@ package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.element.instructions.*;
+import com.momoyeyu.smali_analyzer.entity.MethodStack;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
@@ -9,12 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SmaliMethod extends SmaliElement {
-    private final List<Instruction> body;
+    protected final List<Instruction> body;
     protected SmaliClass ownerClass;
+    protected MethodStack stack;
 
     protected List<String> parametersList;
-    private boolean abstractModifier;
-    private boolean synchronizedModifier;
+    protected boolean abstractModifier;
+    protected boolean synchronizedModifier;
     private boolean nativeModifier;
     private String returnType;
 
@@ -28,6 +30,7 @@ public class SmaliMethod extends SmaliElement {
         this.abstractModifier = false;
         this.synchronizedModifier = false;
         this.body = new ArrayList<>();
+        this.stack = new MethodStack();
         for (String instruction : instructions) {
             if (ArrayMovInstruction.isArrayMovInstruction(instruction)) {
                 body.add(new ArrayMovInstruction(instruction, this));
@@ -55,11 +58,15 @@ public class SmaliMethod extends SmaliElement {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         try {
-            sb.append(this.toJava()).append(" {\n");
+            sb.append(this.toJava());
         } catch (RuntimeException e) {
             Logger.logException(e.getMessage());
             return Logger.logAnalysisFailure("method", signature);
         }
+        if (ownerClass.getClassType().equals("interface") && this.body.isEmpty()) {
+            return sb.append(";").toString();
+        }
+        sb.append(" {\n");
         for (Instruction instruction : this.body) {
             sb.append("\t").append(instruction).append("\n");
         }
@@ -115,6 +122,14 @@ public class SmaliMethod extends SmaliElement {
     }
 
     // setter
+    public void storeVariable(String domain, String value, String type) {
+        stack.storeVariable(domain, value, type);
+    }
+
+    public void storeVariable(String register, String property, String value, String type) {
+        stack.storeVariable(register, property, value, type);
+    }
+
     public void setParametersList(List<String> parametersList) {
         this.parametersList = parametersList;
     }

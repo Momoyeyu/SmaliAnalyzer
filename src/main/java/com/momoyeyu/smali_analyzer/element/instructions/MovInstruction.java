@@ -9,8 +9,6 @@ import java.util.regex.Pattern;
 
 public class MovInstruction extends Instruction {
 
-    private static final Pattern iMovPattern = Pattern.compile("^i((put)|(get))(-(\\S+))?\\s+(\\S+),\\s*(\\S+),\\s*(\\S+)->(\\S+):(\\S+);?");
-    private static final Pattern sMovPattern = Pattern.compile("^s((put)|(get))(-(\\S+))?\\s+(\\S+),\\s*(\\S+)->(\\S+):(\\S+);?");
     private static final Pattern movPattern = Pattern.compile("^((i)|(s))((put)|(get))(-(\\S+))?\\s+(.+),\\s*(\\S+)->(\\S+):(\\S+);?");
 
     private String object;
@@ -19,8 +17,8 @@ public class MovInstruction extends Instruction {
 
     public static void main(String[] args) {
         System.out.println(new MovInstruction("iput v3, v2, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;->weight:F"));
+        System.out.println(new MovInstruction("iget-object v2, p0, Landroidx/appcompat/widget/ActivityChooserModel;->mIntent:Landroid/content/Intent;"));
         System.out.println();
-
     }
 
     // testing
@@ -45,6 +43,9 @@ public class MovInstruction extends Instruction {
             property = matcher.group(stp.step(1));
             propertyType = TypeUtils.getTypeFromSmali(matcher.group(stp.step(1)));
             super.analyze();
+            if (operation.substring(1).equals("put") && parentMethod != null) {
+                parentMethod.storeVariable(registers.getLast(), property, registers.getFirst(), "data");
+            }
         }
     }
 

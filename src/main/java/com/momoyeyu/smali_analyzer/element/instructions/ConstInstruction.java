@@ -49,6 +49,8 @@ public class ConstInstruction extends Instruction {
             registers = getRegistersList(matcher.group(stp.step(1)));
             value = matcher.group(stp.step(1));
             super.analyze();
+//            if (parentMethod != null)
+                parentMethod.storeVariable(registers.getFirst(), null, value, constType);
         }
     }
 

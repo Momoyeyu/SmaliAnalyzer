@@ -107,6 +107,10 @@ public class SmaliClass extends SmaliElement {
         return this.name;
     }
 
+    public String getClassType() {
+        return classType;
+    }
+
     // setter
     /**
      * Set the super class.
