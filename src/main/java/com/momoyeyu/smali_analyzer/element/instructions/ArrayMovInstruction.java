@@ -60,6 +60,11 @@ public class ArrayMovInstruction extends Instruction {
     }
 
     @Override
+    public INSTRUCTION_TYPE getTYPE() {
+        return INSTRUCTION_TYPE.MOV_ARRAY;
+    }
+
+    @Override
     public String toString() {
         if (!analyzed) {
             return analysisFail("array mov");

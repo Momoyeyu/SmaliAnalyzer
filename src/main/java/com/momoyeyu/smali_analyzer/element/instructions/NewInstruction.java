@@ -52,6 +52,15 @@ public class NewInstruction extends Instruction {
     }
 
     @Override
+    public INSTRUCTION_TYPE getTYPE() {
+        return switch (operation) {
+            case "new-array" -> INSTRUCTION_TYPE.NEW_ARRAY;
+            case "new-instance" -> INSTRUCTION_TYPE.NEW_INSTANCE;
+            default -> INSTRUCTION_TYPE.NEW;
+        };
+    }
+
+    @Override
     public String toString() {
         if (!analyzed)
             return analysisFail("new");

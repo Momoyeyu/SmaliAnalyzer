@@ -35,6 +35,11 @@ public class ResultInstruction extends Instruction {
     }
 
     @Override
+    public INSTRUCTION_TYPE getTYPE() {
+        return INSTRUCTION_TYPE.RESULT;
+    }
+
+    @Override
     public String toString() {
         if (!analyzed)
             return analysisFail("move-result");

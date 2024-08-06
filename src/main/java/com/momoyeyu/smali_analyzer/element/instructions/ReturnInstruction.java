@@ -37,6 +37,14 @@ public class ReturnInstruction extends Instruction {
     }
 
     @Override
+    public INSTRUCTION_TYPE getTYPE() {
+        if (returnType.equals("void") || returnType.equals("java.lang.Void")) {
+            return INSTRUCTION_TYPE.RETURN_VOID;
+        }
+        return INSTRUCTION_TYPE.RETURN;
+    }
+
+    @Override
     public String toString() {
         if (!analyzed) {
             return analysisFail("return");

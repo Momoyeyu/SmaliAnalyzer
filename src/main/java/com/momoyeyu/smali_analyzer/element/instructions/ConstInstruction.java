@@ -4,6 +4,7 @@ import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,7 +45,7 @@ public class ConstInstruction extends Instruction {
         Matcher matcher = constPattern.matcher(signature);
         if (matcher.find()) {
             Stepper stp = new Stepper();
-            constType = matcher.group(stp.step(2));
+            constType = Objects.requireNonNullElse(matcher.group(stp.step(2)), "");
             constSize = matcher.group(stp.step(2));
             registers = getRegistersList(matcher.group(stp.step(1)));
             value = matcher.group(stp.step(1));
@@ -59,6 +60,15 @@ public class ConstInstruction extends Instruction {
     public void updateTable() {
         if (parentMethod != null)
             parentMethod.registerTable.storeVariable(registers.getFirst(), null, value, constType);
+    }
+
+    @Override
+    public INSTRUCTION_TYPE getTYPE() {
+        return switch (constType) {
+            case "string" -> INSTRUCTION_TYPE.CONST_STRING;
+            case "class" -> INSTRUCTION_TYPE.CONST_CLASS;
+            default -> INSTRUCTION_TYPE.CONST;
+        };
     }
 
     @Override

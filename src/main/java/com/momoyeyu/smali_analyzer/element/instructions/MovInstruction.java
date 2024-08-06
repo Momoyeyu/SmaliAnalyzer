@@ -54,6 +54,11 @@ public class MovInstruction extends Instruction {
     }
 
     @Override
+    public INSTRUCTION_TYPE getTYPE() {
+        return INSTRUCTION_TYPE.MOV;
+    }
+
+    @Override
     public String toString() {
         if (!analyzed) {
             return analysisFail("mov");

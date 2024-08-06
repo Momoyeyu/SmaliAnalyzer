@@ -40,6 +40,10 @@ public class Instruction {
         return signature;
     }
 
+    public INSTRUCTION_TYPE getTYPE() {
+        return INSTRUCTION_TYPE.DEFAULT;
+    }
+
     protected String analysisFail(String type) {
         Logger.logAnalysisFailure(type, signature);
         return toString();

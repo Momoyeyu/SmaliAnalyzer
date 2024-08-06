@@ -60,6 +60,18 @@ public class CallInstruction extends Instruction {
     }
 
     @Override
+    public INSTRUCTION_TYPE getTYPE() {
+        return switch (operation) {
+            case "invoke-direct" -> INSTRUCTION_TYPE.INVOKE_DIRECT;
+            case "invoke-virtual" -> INSTRUCTION_TYPE.INVOKE_VIRTUAL;
+            case "invoke-static" -> INSTRUCTION_TYPE.INVOKE_STATIC;
+            case "invoke-super" -> INSTRUCTION_TYPE.INVOKE_SUPER;
+            case "invoke-interface" -> INSTRUCTION_TYPE.INVOKE_INTERFACE;
+            default -> INSTRUCTION_TYPE.INVOKE;
+        };
+    }
+
+    @Override
     public String toString() {
         if (!analyzed) {
             return analysisFail("call");

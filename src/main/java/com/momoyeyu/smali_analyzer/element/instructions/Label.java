@@ -39,6 +39,15 @@ public class Label extends Instruction {
     }
 
     @Override
+    public INSTRUCTION_TYPE getTYPE() {
+        return switch (label.substring(1, Math.min(5, label.length()))) {
+            case "goto" -> INSTRUCTION_TYPE.LABEL_GOTO;
+            case "cond" -> INSTRUCTION_TYPE.LABEL_CONDITION;
+            default -> INSTRUCTION_TYPE.LABEL;
+        };
+    }
+
+    @Override
     public String toString() {
         return label;
     }
