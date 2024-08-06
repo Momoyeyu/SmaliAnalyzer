@@ -58,6 +58,8 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new GotoInstruction(instruction, this));
             } else if (Tag.isTag(instruction)) {
                 body.add(new Tag(instruction, this));
+            } else if (CatchInstruction.isCatchInstruction(instruction)) {
+                body.add(new CatchInstruction(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }
