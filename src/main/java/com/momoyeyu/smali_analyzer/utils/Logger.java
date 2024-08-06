@@ -107,4 +107,17 @@ public class Logger {
         }
     }
 
+    public static void logMulti(Object[] msgs) {
+        logMulti(msgs, debug);
+    }
+
+    public static void logMulti(Object[] msgs, boolean print) {
+        StringBuilder sb = new StringBuilder();
+        for (Object msg : msgs) {
+            sb.append('\t').append(msg.toString()).append(System.lineSeparator());
+        }
+        log(sb.toString(), print);
+    }
+
+
 }

@@ -58,7 +58,7 @@ public class RegisterTable {
                 return Objects.requireNonNullElse(getValue(variable, matcher.group(3)), domain);
             } catch (NullPointerException e) {
                 Logger.log("[WARN] access wild register domain: " + domain);
-                Logger.log(Arrays.toString(e.getStackTrace()));
+                Logger.logMulti(e.getStackTrace());
                 return domain;
             }
         }
