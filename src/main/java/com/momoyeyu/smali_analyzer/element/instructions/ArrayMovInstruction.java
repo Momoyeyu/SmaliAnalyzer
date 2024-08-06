@@ -9,11 +9,7 @@ import java.util.regex.Pattern;
 
 public class ArrayMovInstruction extends Instruction {
 
-    private static final Pattern arrayMovPattern = Pattern.compile("^a((put)|(get))(-(\\S+))?\\s+(\\S+),\\s*(\\S+),\\s*(\\S+)\\s*");
-
-    private String valueRegister;
-    private String arrayRegister;
-    private String indexRegister;
+    private static final Pattern arrayMovPattern = Pattern.compile("^a((put)|(get))(-(\\S+))?\\s+((\\S+),\\s*(\\S+),\\s*(\\S+))\\s*");
 
     public static void main(String[] args) {
         System.out.println(new ArrayMovInstruction("aput-object v4, v3, v0"));
@@ -36,9 +32,7 @@ public class ArrayMovInstruction extends Instruction {
             Stepper stp = new Stepper();
             operation = "a" + matcher.group(stp.step(1));
             operation += matcher.group(stp.step(3)) == null ? "" : matcher.group(stp.step(0));
-            valueRegister = getRegistersList(matcher.group(stp.step(2))).getFirst();
-            arrayRegister = getRegistersList(matcher.group(stp.step(1))).getFirst();
-            indexRegister = getRegistersList(matcher.group(stp.step(1))).getFirst();
+            registers = getRegistersList(matcher.group(stp.step(2)));
             super.analyze();
         }
     }
@@ -47,10 +41,10 @@ public class ArrayMovInstruction extends Instruction {
     public void updateTable() {
         if (parentMethod != null) {
             RegisterTable stack = parentMethod.registerTable;
-            arrayRegister = stack.getValue(arrayRegister);
-            indexRegister = stack.getValue(indexRegister);
-            valueRegister = stack.getValue(valueRegister);
-            if (operation.substring(1).startsWith("put")) {
+            String valueRegister = stack.getValue(registers.get(0));
+            String arrayRegister = stack.getValue(registers.get(1));
+            String indexRegister = stack.getValue(registers.get(2));
+            if (operation.startsWith("aput")) {
                 stack.storeVariable(arrayRegister, indexRegister, valueRegister, "array");
             } else {
                 stack.storeVariable(valueRegister, null,
@@ -75,7 +69,10 @@ public class ArrayMovInstruction extends Instruction {
             return analysisFail("array mov");
         }
         StringBuilder sb = new StringBuilder();
-        if (operation.substring(1).startsWith("put")) {
+        String valueRegister = registers.get(0);
+        String arrayRegister = registers.get(1);
+        String indexRegister = registers.get(2);
+        if (operation.startsWith("aput")) {
             sb.append(arrayRegister).append("[").append(indexRegister).append("]");
             sb.append(" = ").append(valueRegister);
         } else {
