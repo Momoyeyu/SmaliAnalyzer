@@ -45,6 +45,7 @@ public class Logger {
      */
     public static String log(String msg, boolean print) {
         logs.add(msg.strip());
+        total += 1;
         if (logs.size() > 200) {
             saveLogs();
         }
@@ -59,6 +60,7 @@ public class Logger {
 
     public static void logException(String msg, boolean print) {
         logs.add("[EXCEPTION] " + msg);
+        total += 1;
         if (logs.size() > 200) {
             saveLogs();
         }
