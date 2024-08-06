@@ -35,6 +35,11 @@ public class ResultInstruction extends Instruction {
     }
 
     @Override
+    public INSTRUCTION_TYPE getTrueTYPE() {
+        return INSTRUCTION_TYPE.RESULT;
+    }
+
+    @Override
     public INSTRUCTION_TYPE getTYPE() {
         return INSTRUCTION_TYPE.RESULT;
     }

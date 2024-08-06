@@ -61,7 +61,7 @@ public class CallInstruction extends Instruction {
     }
 
     @Override
-    public INSTRUCTION_TYPE getTYPE() {
+    public INSTRUCTION_TYPE getTrueTYPE() {
         return switch (operation) {
             case "invoke-direct" -> INSTRUCTION_TYPE.INVOKE_DIRECT;
             case "invoke-virtual" -> INSTRUCTION_TYPE.INVOKE_VIRTUAL;
@@ -70,6 +70,11 @@ public class CallInstruction extends Instruction {
             case "invoke-interface" -> INSTRUCTION_TYPE.INVOKE_INTERFACE;
             default -> INSTRUCTION_TYPE.INVOKE;
         };
+    }
+
+    @Override
+    public INSTRUCTION_TYPE getTYPE() {
+        return INSTRUCTION_TYPE.INVOKE;
     }
 
     @Override

@@ -60,6 +60,11 @@ public class ArrayMovInstruction extends Instruction {
     }
 
     @Override
+    public INSTRUCTION_TYPE getTrueTYPE() {
+        return INSTRUCTION_TYPE.MOV_ARRAY;
+    }
+
+    @Override
     public INSTRUCTION_TYPE getTYPE() {
         return INSTRUCTION_TYPE.MOV_ARRAY;
     }

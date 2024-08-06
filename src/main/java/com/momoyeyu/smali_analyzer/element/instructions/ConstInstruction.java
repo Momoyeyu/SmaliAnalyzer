@@ -63,12 +63,17 @@ public class ConstInstruction extends Instruction {
     }
 
     @Override
-    public INSTRUCTION_TYPE getTYPE() {
+    public INSTRUCTION_TYPE getTrueTYPE() {
         return switch (constType) {
             case "string" -> INSTRUCTION_TYPE.CONST_STRING;
             case "class" -> INSTRUCTION_TYPE.CONST_CLASS;
             default -> INSTRUCTION_TYPE.CONST;
         };
+    }
+
+    @Override
+    public INSTRUCTION_TYPE getTYPE() {
+        return INSTRUCTION_TYPE.CONST;
     }
 
     @Override

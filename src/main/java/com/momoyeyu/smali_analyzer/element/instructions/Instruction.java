@@ -40,6 +40,10 @@ public class Instruction {
         return "// " + signature;
     }
 
+    public INSTRUCTION_TYPE getTrueTYPE() {
+        return getTYPE();
+    }
+
     public INSTRUCTION_TYPE getTYPE() {
         return INSTRUCTION_TYPE.DEFAULT;
     }
@@ -63,6 +67,15 @@ public class Instruction {
             thisRegisters.add(register.equals("p0") ? "this" : register);
         }
         return thisRegisters;
+    }
+
+    public static boolean equalType(INSTRUCTION_TYPE type, INSTRUCTION_TYPE... otherType) {
+        for (INSTRUCTION_TYPE instructionType : otherType) {
+            if (type.equals(instructionType)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

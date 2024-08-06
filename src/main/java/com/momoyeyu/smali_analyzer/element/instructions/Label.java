@@ -34,12 +34,17 @@ public class Label extends Instruction {
     }
 
     @Override
+    public INSTRUCTION_TYPE getTYPE() {
+        return INSTRUCTION_TYPE.LABEL;
+    }
+
+    @Override
     public void updateTable() {
         parentMethod.labelTable.addLabel(label);
     }
 
     @Override
-    public INSTRUCTION_TYPE getTYPE() {
+    public INSTRUCTION_TYPE getTrueTYPE() {
         return switch (label.substring(1, Math.min(5, label.length()))) {
             case "goto" -> INSTRUCTION_TYPE.LABEL_GOTO;
             case "cond" -> INSTRUCTION_TYPE.LABEL_CONDITION;

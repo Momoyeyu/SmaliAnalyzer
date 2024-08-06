@@ -56,6 +56,11 @@ public class ConditionInstruction extends Instruction {
     }
 
     @Override
+    public INSTRUCTION_TYPE getTrueTYPE() {
+        return INSTRUCTION_TYPE.CONDITION;
+    }
+
+    @Override
     public INSTRUCTION_TYPE getTYPE() {
         return INSTRUCTION_TYPE.CONDITION;
     }
