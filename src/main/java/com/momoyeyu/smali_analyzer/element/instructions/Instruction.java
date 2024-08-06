@@ -6,6 +6,7 @@ import com.momoyeyu.smali_analyzer.utils.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Instruction {
 
@@ -20,7 +21,7 @@ public class Instruction {
     }
 
     public Instruction(String instruction, SmaliMethod parentMethod) {
-        signature = instruction;
+        signature = Objects.requireNonNullElse(instruction, "");
         this.parentMethod = parentMethod;
         analyzed = false;
     }

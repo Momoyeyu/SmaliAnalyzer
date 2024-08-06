@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Variable {
+    private String name;
+    private String type;
     private String value;
     private Map<String, Variable> properties;
 

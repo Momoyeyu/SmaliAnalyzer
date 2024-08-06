@@ -58,7 +58,7 @@ public class ConstInstruction extends Instruction {
     @Override
     public void updateTable() {
         if (parentMethod != null)
-            parentMethod.getStack().storeVariable(registers.getFirst(), null, value, constType);
+            parentMethod.registerTable.storeVariable(registers.getFirst(), null, value, constType);
     }
 
     @Override

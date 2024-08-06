@@ -44,7 +44,7 @@ public class NewInstruction extends Instruction {
     public void updateTable() {
         if (parentMethod != null) {
             if (operation.equals("new-array")) {
-                parentMethod.getStack().storeVariable(
+                parentMethod.registerTable.storeVariable(
                         registers.getFirst(), null,
                         null , newType);
             }
@@ -60,7 +60,7 @@ public class NewInstruction extends Instruction {
         if (operation.equals("new-array")) {
             sb.append(" = new ").append(TypeUtils.getNameFromJava(newType)).delete(sb.length() - 2, sb.length()).append("[");
             if (parentMethod != null) {
-                sb.append(parentMethod.getStack().getValue(registers.getLast()));
+                sb.append(parentMethod.registerTable.getValue(registers.getLast()));
             } else {
                 sb.append(registers.getLast());
             }

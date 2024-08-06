@@ -9,13 +9,13 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MethodStack {
+public class RegisterTable {
     private static final Pattern registerPattern = Pattern.compile("([A-Za-z]([0-9A-Za-z]+?)?)(\\.(\\S+))?");
 
     private final Map<String, Variable> table = new HashMap<>();
     private int varCounter;
 
-    public MethodStack() {
+    public RegisterTable() {
         varCounter = 0;
     }
 

@@ -1,7 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
-import com.momoyeyu.smali_analyzer.entity.MethodStack;
+import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 
 import java.util.regex.Matcher;
@@ -45,8 +45,8 @@ public class ArrayMovInstruction extends Instruction {
 
     @Override
     public void updateTable() {
-        MethodStack stack = parentMethod.getStack();
         if (parentMethod != null) {
+            RegisterTable stack = parentMethod.registerTable;
             arrayRegister = stack.getValue(arrayRegister);
             indexRegister = stack.getValue(indexRegister);
             valueRegister = stack.getValue(valueRegister);

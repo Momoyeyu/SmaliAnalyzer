@@ -55,7 +55,7 @@ public class CallInstruction extends Instruction {
     @Override
     public void updateTable() {
         if (parentMethod != null) {
-            registers.replaceAll(domain -> parentMethod.getStack().getValue(domain));
+            registers.replaceAll(domain -> parentMethod.registerTable.getValue(domain));
         }
     }
 

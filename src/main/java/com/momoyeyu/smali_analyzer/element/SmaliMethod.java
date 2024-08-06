@@ -2,7 +2,8 @@ package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.element.instructions.*;
-import com.momoyeyu.smali_analyzer.entity.MethodStack;
+import com.momoyeyu.smali_analyzer.entity.LabelTable;
+import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
@@ -12,7 +13,9 @@ import java.util.List;
 public class SmaliMethod extends SmaliElement {
     protected final List<Instruction> body;
     protected SmaliClass ownerClass;
-    protected MethodStack stack;
+
+    public final RegisterTable registerTable = new RegisterTable();;
+    public final LabelTable labelTable = new LabelTable(this);
 
     protected List<String> parametersList;
     protected boolean abstractModifier;
@@ -30,7 +33,6 @@ public class SmaliMethod extends SmaliElement {
         this.abstractModifier = false;
         this.synchronizedModifier = false;
         this.body = new ArrayList<>();
-        this.stack = new MethodStack();
         for (String instruction : instructions) {
             if (ArrayMovInstruction.isArrayMovInstruction(instruction)) {
                 body.add(new ArrayMovInstruction(instruction, this));
@@ -48,6 +50,8 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new ResultInstruction(instruction, this));
             } else if (ReturnInstruction.isReturnInstruction(instruction)) {
                 body.add(new ReturnInstruction(instruction, this));
+            } else if (Label.isLabel(instruction)) {
+                body.add(new Label(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }
@@ -107,11 +111,6 @@ public class SmaliMethod extends SmaliElement {
         return sb.toString();
     }
 
-    private String analyzeBody() {
-
-        return null;
-    }
-
     // getter
     /**
      * Return a list of method's parameters (type only)
@@ -122,17 +121,13 @@ public class SmaliMethod extends SmaliElement {
     }
 
     // setter
-    public MethodStack getStack() {
-        return stack;
-    }
-
     public void setParametersList(List<String> parametersList) {
         int i = isStaticModifier() ? 0 : 1;
         for (String parameter : parametersList) {
-            this.stack.storeVariable("p" + i, null, "arg_" + i , parameter);
+            this.registerTable.storeVariable("p" + i, null, "arg_" + i , parameter);
         }
         if (!isStaticModifier()) {
-            this.stack.storeVariable("this", null, null, ownerClass.getClassType());
+            this.registerTable.storeVariable("this", null, null, ownerClass.getClassType());
         }
         this.parametersList = parametersList;
     }

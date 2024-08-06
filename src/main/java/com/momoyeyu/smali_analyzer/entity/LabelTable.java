@@ -11,8 +11,9 @@ public class LabelTable {
     private Map<String, Label> labels;
     private SmaliMethod parentMethod;
 
-    public LabelTable() {
-        labels = new HashMap<String, Label>();
+    public LabelTable(SmaliMethod smaliMethod) {
+        labels = new HashMap<>();
+        parentMethod = smaliMethod;
     }
 
     public Label getLabel(String label) {
@@ -21,7 +22,7 @@ public class LabelTable {
 
     public void addLabel(String label) {
         if (!labels.containsKey(label))
-            labels.put(label, new Label(label));
+            labels.put(label, new Label(label, parentMethod));
     }
 
 }
