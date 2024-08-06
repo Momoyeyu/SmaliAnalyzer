@@ -25,13 +25,4 @@ public class SmaliLine {
         this.instructions = lines;
         this.status = INSTRUCTION_TYPE.DEFAULT;
     }
-
-    private boolean equalType(INSTRUCTION_TYPE type, INSTRUCTION_TYPE... otherType) {
-        for (INSTRUCTION_TYPE instructionType : otherType) {
-            if (type.equals(instructionType)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

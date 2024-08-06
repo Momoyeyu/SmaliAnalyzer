@@ -4,11 +4,13 @@ import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.element.instructions.*;
 import com.momoyeyu.smali_analyzer.entity.LabelTable;
 import com.momoyeyu.smali_analyzer.entity.RegisterTable;
+import com.momoyeyu.smali_analyzer.utils.Formatter;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class SmaliMethod extends SmaliElement {
     protected final List<Instruction> body;
@@ -36,8 +38,8 @@ public class SmaliMethod extends SmaliElement {
         for (String instruction : instructions) {
             if (ArrayMovInstruction.isArrayMovInstruction(instruction)) {
                 body.add(new ArrayMovInstruction(instruction, this));
-            } else if (CallInstruction.isCallInstruction(instruction)) {
-                body.add(new CallInstruction(instruction, this));
+            } else if (InvokeInstruction.isCallInstruction(instruction)) {
+                body.add(new InvokeInstruction(instruction, this));
             } else if (ConditionInstruction.isConditionInstruction(instruction)) {
                 body.add(new ConditionInstruction(instruction, this));
             } else if (ConstInstruction.isConstInstruction(instruction)) {
@@ -71,8 +73,47 @@ public class SmaliMethod extends SmaliElement {
             return sb.append(";").toString();
         }
         sb.append(" {\n");
+        INSTRUCTION_TYPE lastSubType = INSTRUCTION_TYPE.DEFAULT;
+        INSTRUCTION_TYPE lastType = INSTRUCTION_TYPE.DEFAULT;
+        Stack<Instruction> stack = new Stack<>();
         for (Instruction instruction : this.body) {
-            sb.append("\t").append(instruction).append(";\n");
+            INSTRUCTION_TYPE subType = instruction.getSubType();
+            INSTRUCTION_TYPE type = instruction.getType();
+            if (subType == INSTRUCTION_TYPE.INVOKE_DIRECT) {
+                if (lastSubType == INSTRUCTION_TYPE.NEW_INSTANCE) {
+                    sb.append("\t").append(stack.pop()).append(" ");
+                    String instance = instruction.toString();
+                    sb.append(instance.substring(instance.indexOf('='))).append(";\n");
+                } else {
+                    stack.push(instruction);
+                    lastType = type;
+                    lastSubType = subType;
+                    continue;
+                }
+            } else if (type == INSTRUCTION_TYPE.INVOKE) {
+                if (!instruction.toString().contains("=")) {
+                    sb.append("\t").append(instruction).append(";\n");
+                } else {
+                    stack.push(instruction);
+                    lastType = type;
+                    lastSubType = subType;
+                    continue;
+                }
+            } else if (subType == INSTRUCTION_TYPE.NEW_INSTANCE) {
+                stack.push(instruction);
+                lastType = type;
+                lastSubType = subType;
+                continue;
+            } else if (subType == INSTRUCTION_TYPE.RESULT && lastType == INSTRUCTION_TYPE.INVOKE) {
+                sb.append("\t").append(Formatter.replacePattern(
+                        stack.pop().toString(),
+                        "(.*?) ret = (.*)",
+                        "$1 " + instruction + " $2")).append(";\n");
+            } else { //  if (Instruction.equalType(type, INSTRUCTION_TYPE.DEFAULT, INSTRUCTION_TYPE.NEW_ARRAY, ...))
+                sb.append("\t").append(instruction).append(";\n");
+            }
+            lastSubType = INSTRUCTION_TYPE.DEFAULT;
+            lastType = INSTRUCTION_TYPE.DEFAULT;
         }
         sb.append("}\n");
         return sb.toString();

@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class ConditionInstruction extends Instruction {
 
-    private static final Pattern conditionPattern = Pattern.compile("if-(\\S+)\\s+(.*),\\s*:cond_(\\S+)");
+    private static final Pattern conditionPattern = Pattern.compile("if-(\\S+)\\s+(.*),\\s*(:cond_(\\S+))");
 
     private String condition;
     private List<String> registers;
@@ -85,7 +85,8 @@ public class ConditionInstruction extends Instruction {
             case "gtz" -> sb.append(registers.getFirst()).append(" > 0");
             case "gez" -> sb.append(registers.getFirst()).append(" >= 0");
         }
-        sb.append(")");
+        sb.append(") goto ");
+        sb.append(conditionLabel);
         return sb.toString();
     }
 
