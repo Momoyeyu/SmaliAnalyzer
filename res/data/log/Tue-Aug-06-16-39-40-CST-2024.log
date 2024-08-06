@@ -1,0 +1,210 @@
+[INFO] This log is automatically generated at Tue Aug 06 16:39:40 CST 2024
+
+[INFO] Input directory: C:\Users\antiy\Desktop\projects\SmaliAnalyzer\res\data\input
+[INFO] Output directory: C:\Users\antiy\Desktop\projects\SmaliAnalyzer\res\data\output
+[INFO] Finished Decompiling Project: C:\Users\antiy\Desktop\projects\SmaliAnalyzer\res\data\input
+[INFO] Total input files: 1
+[WARN] instruction using default toString(): or-int/2addr v0, v1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): check-cast v2, Landroidx/appcompat/widget/ActivityChooserModel;
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception p0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_19} :catchall_17
+[WARN] instruction using default toString(): throw p0
+[WARN] instruction using default toString(): check-cast v3, Landroid/content/pm/ResolveInfo;
+[WARN] instruction using default toString(): add-int/lit8 v1, v1, 0x1
+[WARN] access wild register domain: v3
+com.momoyeyu.smali_analyzer.entity.RegisterTable.getValue(RegisterTable.java:71)
+	com.momoyeyu.smali_analyzer.entity.RegisterTable.getValue(RegisterTable.java:58)
+	com.momoyeyu.smali_analyzer.element.instructions.NewInstruction.toString(NewInstruction.java:77)
+	java.base/java.lang.String.valueOf(String.java:4507)
+	java.base/java.lang.StringBuilder.append(StringBuilder.java:173)
+	com.momoyeyu.smali_analyzer.element.SmaliMethod.toString(SmaliMethod.java:117)
+	com.momoyeyu.smali_analyzer.element.SmaliClass.toStringIndent(SmaliClass.java:53)
+	com.momoyeyu.smali_analyzer.element.SmaliClass.toString(SmaliClass.java:42)
+	com.momoyeyu.smali_analyzer.element.SmaliFile.toString(SmaliFile.java:54)
+	com.momoyeyu.smali_analyzer.element.SmaliProject.save(SmaliProject.java:70)
+	com.momoyeyu.smali_analyzer.Decompiler.decompile(Decompiler.java:61)
+	com.momoyeyu.smali_analyzer.Decompiler.main(Decompiler.java:46)
+[WARN] instruction using default toString(): throw v0
+[WARN] instruction using default toString(): sub-int/2addr v0, v1
+[WARN] instruction using default toString(): check-cast v3, Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;
+[WARN] instruction using default toString(): add-int/lit8 v2, v2, 0x1
+[WARN] instruction using default toString(): .catch Ljava/io/FileNotFoundException; {:try_start_2 .. :try_end_a} :catch_b4
+[WARN] instruction using default toString(): .catch Lorg/xmlpull/v1/XmlPullParserException; {:try_start_a .. :try_end_34} :catch_9a
+[WARN] instruction using default toString(): .catch Ljava/io/IOException; {:try_start_a .. :try_end_34} :catch_87
+[WARN] instruction using default toString(): .catchall {:try_start_a .. :try_end_34} :catchall_85
+[WARN] instruction using default toString(): .catch Ljava/io/IOException; {:try_start_38 .. :try_end_3b} :catch_ad
+[WARN] instruction using default toString(): goto/16 :goto_ad
+[WARN] instruction using default toString(): throw v2
+[WARN] instruction using default toString(): throw v2
+[WARN] instruction using default toString(): .catch Lorg/xmlpull/v1/XmlPullParserException; {:try_start_44 .. :try_end_85} :catch_9a
+[WARN] instruction using default toString(): .catch Ljava/io/IOException; {:try_start_44 .. :try_end_85} :catch_87
+[WARN] instruction using default toString(): .catchall {:try_start_44 .. :try_end_85} :catchall_85
+[WARN] instruction using default toString(): move-exception v0
+[WARN] instruction using default toString(): .catchall {:try_start_87 .. :try_end_aa} :catchall_85
+[WARN] instruction using default toString(): .catch Ljava/io/IOException; {:try_start_b0 .. :try_end_b3} :catch_b3
+[WARN] instruction using default toString(): throw v0
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): check-cast p1, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception p1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_51} :catchall_4f
+[WARN] instruction using default toString(): throw p1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): check-cast p1, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception p1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_14} :catchall_12
+[WARN] instruction using default toString(): throw p1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception v1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_10} :catchall_e
+[WARN] instruction using default toString(): throw v1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): check-cast v4, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): add-int/lit8 v3, v3, 0x1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception p1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_23} :catchall_21
+[WARN] instruction using default toString(): throw p1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): check-cast v1, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception v1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_20} :catchall_1e
+[WARN] instruction using default toString(): throw v1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception v1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_9} :catchall_7
+[WARN] instruction using default toString(): throw v1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception v1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_10} :catchall_e
+[WARN] instruction using default toString(): throw v1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception v1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_9} :catchall_7
+[WARN] instruction using default toString(): throw v1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception p1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_18} :catchall_16
+[WARN] instruction using default toString(): throw p1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): check-cast p1, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;
+[WARN] instruction using default toString(): check-cast v1, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;
+[WARN] instruction using default toString(): sub-float/2addr v1, v2
+[WARN] instruction using default toString(): add-float/2addr v1, v2
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception p1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_41} :catchall_3f
+[WARN] instruction using default toString(): throw p1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception p1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_1b} :catchall_19
+[WARN] instruction using default toString(): throw p1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception p1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_15} :catchall_13
+[WARN] instruction using default toString(): throw p1
+[WARN] instruction using default toString(): monitor-enter v0
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): move-exception p1
+[WARN] instruction using default toString(): monitor-exit v0
+[WARN] instruction using default toString(): .catchall {:try_start_3 .. :try_end_9} :catchall_7
+[WARN] instruction using default toString(): throw p1
+[WARN] instruction using default toString(): sub-int/2addr p1, v0
+[WARN] instruction using default toString(): check-cast p1, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;
+[WARN] instruction using default toString(): check-cast p1, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;
+[WARN] instruction using default toString(): add-int/lit8 v0, v0, 0x1f
+[WARN] instruction using default toString(): float-to-double v2, v2
+[WARN] instruction using default toString(): .annotation system Ldalvik/annotation/Signature;
+[WARN] instruction using default toString(): value = {
+[WARN] instruction using default toString(): "(",
+[WARN] instruction using default toString(): "Landroid/content/Intent;",
+[WARN] instruction using default toString(): "Ljava/util/List<",
+[WARN] instruction using default toString(): "Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;",
+[WARN] instruction using default toString(): ">;",
+[WARN] instruction using default toString(): "Ljava/util/List<",
+[WARN] instruction using default toString(): "Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;",
+[WARN] instruction using default toString(): ">;)V"
+[WARN] instruction using default toString(): }
+[WARN] instruction using default toString(): .end annotation
+[WARN] instruction using default toString(): .annotation system Ldalvik/annotation/Signature;
+[WARN] instruction using default toString(): value = {
+[WARN] instruction using default toString(): "(",
+[WARN] instruction using default toString(): "Landroid/content/Intent;",
+[WARN] instruction using default toString(): "Ljava/util/List<",
+[WARN] instruction using default toString(): "Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;",
+[WARN] instruction using default toString(): ">;",
+[WARN] instruction using default toString(): "Ljava/util/List<",
+[WARN] instruction using default toString(): "Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;",
+[WARN] instruction using default toString(): ">;)V"
+[WARN] instruction using default toString(): }
+[WARN] instruction using default toString(): .end annotation
+[WARN] instruction using default toString(): check-cast v2, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;
+[WARN] instruction using default toString(): add-int/lit8 v1, v1, 0x1
+[WARN] instruction using default toString(): add-int/lit8 v0, v0, -0x1
+[WARN] instruction using default toString(): check-cast v2, Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;
+[WARN] instruction using default toString(): check-cast v3, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;
+[WARN] instruction using default toString(): mul-float v2, v2, v1
+[WARN] instruction using default toString(): add-float/2addr v4, v2
+[WARN] instruction using default toString(): mul-float v1, v1, v2
+[WARN] instruction using default toString(): add-int/lit8 v0, v0, -0x1
+[WARN] instruction using default toString(): check-cast p1, Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;
+[WARN] instruction using default toString(): cmp-long v6, v2, v4
+[WARN] instruction using default toString(): add-int/2addr v0, v1
+[WARN] instruction using default toString(): mul-int/lit8 v0, v0, 0x1f
+[WARN] instruction using default toString(): ushr-long v4, v2, v4
+[WARN] instruction using default toString(): xor-long/2addr v2, v4
+[WARN] instruction using default toString(): long-to-int v3, v2
+[WARN] instruction using default toString(): add-int/2addr v0, v3
+[WARN] instruction using default toString(): mul-int/lit8 v0, v0, 0x1f
+[WARN] instruction using default toString(): add-int/2addr v0, v1
+[WARN] instruction using default toString(): float-to-double v2, v2
+[WARN] instruction using default toString(): check-cast v4, Ljava/util/List;
+[WARN] instruction using default toString(): check-cast p1, Ljava/lang/String;
+[WARN] instruction using default toString(): .catch Ljava/io/FileNotFoundException; {:try_start_11 .. :try_end_19} :catch_d0
+[WARN] instruction using default toString(): check-cast v10, Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;
+[WARN] instruction using default toString(): add-int/lit8 v9, v9, 0x1
+[WARN] instruction using default toString(): .catch Ljava/lang/IllegalArgumentException; {:try_start_1d .. :try_end_68} :catch_aa
+[WARN] instruction using default toString(): .catch Ljava/lang/IllegalStateException; {:try_start_1d .. :try_end_68} :catch_8f
+[WARN] instruction using default toString(): .catch Ljava/io/IOException; {:try_start_1d .. :try_end_68} :catch_74
+[WARN] instruction using default toString(): .catchall {:try_start_1d .. :try_end_68} :catchall_72
+[WARN] instruction using default toString(): .catch Ljava/io/IOException; {:try_start_6e .. :try_end_71} :catch_c5
+[WARN] instruction using default toString(): move-exception v0
+[WARN] instruction using default toString(): .catchall {:try_start_74 .. :try_end_88} :catchall_72
+[WARN] instruction using default toString(): .catchall {:try_start_8f .. :try_end_a3} :catchall_72
+[WARN] instruction using default toString(): .catchall {:try_start_aa .. :try_end_be} :catchall_72
+[WARN] instruction using default toString(): .catch Ljava/io/IOException; {:try_start_cc .. :try_end_cf} :catch_cf
+[WARN] instruction using default toString(): throw v0
+[INFO] Total output files: 1
+[INFO] Result save at: C:\Users\antiy\Desktop\projects\SmaliAnalyzer\res\data\output
+[INFO] Total logs: 0
