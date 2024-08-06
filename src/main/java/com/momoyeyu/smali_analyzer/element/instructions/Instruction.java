@@ -51,7 +51,7 @@ public class Instruction {
 
     protected String analysisFail(String type) {
         Logger.logAnalysisFailure(type, signature);
-        return toString();
+        return "// " + signature;
     }
 
     // getter
