@@ -37,7 +37,7 @@ public class Instruction {
 
     @Override
     public String toString() {
-        return signature;
+        return "// " + signature;
     }
 
     public INSTRUCTION_TYPE getTYPE() {

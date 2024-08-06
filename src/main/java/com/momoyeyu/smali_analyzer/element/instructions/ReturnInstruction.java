@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,7 +39,7 @@ public class ReturnInstruction extends Instruction {
 
     @Override
     public INSTRUCTION_TYPE getTYPE() {
-        if (returnType.equals("void") || returnType.equals("java.lang.Void")) {
+        if (TypeUtils.isVoid(returnType)) {
             return INSTRUCTION_TYPE.RETURN_VOID;
         }
         return INSTRUCTION_TYPE.RETURN;
@@ -49,7 +50,7 @@ public class ReturnInstruction extends Instruction {
         if (!analyzed) {
             return analysisFail("return");
         }
-        if (returnType.equals("void")) {
+        if (TypeUtils.isVoid(returnType)) {
             return "return";
         }
         return "return " + registers.getFirst();

@@ -287,4 +287,11 @@ public class TypeUtils {
         return parametersList;
     }
 
+    public static boolean isVoid(String type) {
+        if (type == null || type.isBlank()) {
+            return false;
+        }
+        return type.equals("void") || type.equals("java.lang.Void");
+    }
+
 }

@@ -76,6 +76,11 @@ public class ConstInstruction extends Instruction {
         if (!analyzed)
             return analysisFail("const");
         StringBuilder sb = new StringBuilder();
+        sb.append(switch (constType) {
+            default -> "";
+            case "class" -> "final Class<?> ";
+            case "string" -> "final String ";
+        });
         sb.append(registers.getFirst()).append(" = ");
         if (constType != null && constType.equals("class")) {
             sb.append(TypeUtils.getNameFromJava(value)).append(".class");

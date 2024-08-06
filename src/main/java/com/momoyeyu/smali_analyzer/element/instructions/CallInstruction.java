@@ -6,6 +6,7 @@ import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,8 +78,15 @@ public class CallInstruction extends Instruction {
             return analysisFail("call");
         }
         StringBuilder sb = new StringBuilder();
+        if (!TypeUtils.isVoid(returnType)) {
+            String rt = TypeUtils.getNameFromJava(returnType);
+//            sb.append(rt).append(" _").append(rt.toLowerCase()).append(" = ");
+            sb.append(rt).append(" ret = ");
+        }
         if (operation.equals("invoke-direct")) {
-            sb.append("new ").append(TypeUtils.getNameFromJava(callee));
+            String name = TypeUtils.getNameFromJava(callee);
+            sb.append(name).append(" ret = ");
+            sb.append("new ").append(name);
         } else {
             if (isStatic) {
                 sb.append(TypeUtils.getNameFromJava(callee));

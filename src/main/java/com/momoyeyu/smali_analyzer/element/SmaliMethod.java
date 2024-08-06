@@ -72,7 +72,7 @@ public class SmaliMethod extends SmaliElement {
         }
         sb.append(" {\n");
         for (Instruction instruction : this.body) {
-            sb.append("\t").append(instruction).append("\n");
+            sb.append("\t").append(instruction).append(";\n");
         }
         sb.append("}\n");
         return sb.toString();

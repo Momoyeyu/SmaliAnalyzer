@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegisterTable {
-    private static final Pattern registerPattern = Pattern.compile("([A-Za-z]([0-9A-Za-z]+?)?)(\\.(\\S+))?");
+    private static final Pattern registerPattern = Pattern.compile("([A-Za-z_]([0-9A-Za-z_]+?)?)(\\.(\\S+))?");
 
     private final Map<String, Variable> table = new HashMap<>();
     private int varCounter;

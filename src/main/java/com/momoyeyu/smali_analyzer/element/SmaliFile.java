@@ -1,7 +1,6 @@
 package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.ClassAnalyzer;
-import com.momoyeyu.smali_analyzer.utils.ImportPackageList;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 
 import java.util.Stack;
@@ -10,7 +9,6 @@ public class SmaliFile {
     private final String routes;
     private SmaliClass mainClass;
     private final Stack<SmaliClass> classStack = new Stack<>();
-    private final ImportPackageList importPackageList = new ImportPackageList();;
 
     public SmaliFile(String routes) {
         this.routes = routes;
@@ -54,10 +52,5 @@ public class SmaliFile {
         }
         arrangeFile();
         return mainClass.toString();
-    }
-
-    // import
-    public ImportPackageList getImportPackageList() {
-        return importPackageList;
     }
 }
