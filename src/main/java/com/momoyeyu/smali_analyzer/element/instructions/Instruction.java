@@ -40,11 +40,11 @@ public class Instruction {
         return "// " + signature;
     }
 
-    public INSTRUCTION_TYPE getTrueTYPE() {
-        return getTYPE();
+    public INSTRUCTION_TYPE getSubType() {
+        return getType();
     }
 
-    public INSTRUCTION_TYPE getTYPE() {
+    public INSTRUCTION_TYPE getType() {
         return INSTRUCTION_TYPE.DEFAULT;
     }
 

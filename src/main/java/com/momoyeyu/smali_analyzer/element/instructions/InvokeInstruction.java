@@ -6,11 +6,10 @@ import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CallInstruction extends Instruction {
+public class InvokeInstruction extends Instruction {
 
     private static final Pattern callPattern = Pattern.compile("^invoke-(\\S+)\\s+\\{(.*?)},\\s*(\\S+)->(\\S+)\\((\\S*)\\)(\\S+);?");
 
@@ -21,17 +20,17 @@ public class CallInstruction extends Instruction {
     private boolean isStatic;
 
     public static void main(String[] args) {
-        System.out.println(new CallInstruction("invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"));
-        System.out.println(new CallInstruction("invoke-static {p2}, Ljava/util/Collections;->sort(Ljava/util/List;)V"));
-        System.out.println(new CallInstruction("invoke-direct {p0, p1, p2, p3, p4}, Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;-><init>(Landroid/content/ComponentName;JF)V"));
+        System.out.println(new InvokeInstruction("invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"));
+        System.out.println(new InvokeInstruction("invoke-static {p2}, Ljava/util/Collections;->sort(Ljava/util/List;)V"));
+        System.out.println(new InvokeInstruction("invoke-direct {p0, p1, p2, p3, p4}, Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;-><init>(Landroid/content/ComponentName;JF)V"));
     }
 
     // testing
-    private CallInstruction(String instruction) {
+    private InvokeInstruction(String instruction) {
         this(instruction, null);
     }
 
-    public CallInstruction(String instruction, SmaliMethod smaliMethod) {
+    public InvokeInstruction(String instruction, SmaliMethod smaliMethod) {
         super(instruction, smaliMethod);
         isStatic = false;
         this.analyze();
@@ -61,7 +60,7 @@ public class CallInstruction extends Instruction {
     }
 
     @Override
-    public INSTRUCTION_TYPE getTrueTYPE() {
+    public INSTRUCTION_TYPE getSubType() {
         return switch (operation) {
             case "invoke-direct" -> INSTRUCTION_TYPE.INVOKE_DIRECT;
             case "invoke-virtual" -> INSTRUCTION_TYPE.INVOKE_VIRTUAL;
@@ -73,7 +72,7 @@ public class CallInstruction extends Instruction {
     }
 
     @Override
-    public INSTRUCTION_TYPE getTYPE() {
+    public INSTRUCTION_TYPE getType() {
         return INSTRUCTION_TYPE.INVOKE;
     }
 

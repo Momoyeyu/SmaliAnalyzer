@@ -63,7 +63,7 @@ public class ConstInstruction extends Instruction {
     }
 
     @Override
-    public INSTRUCTION_TYPE getTrueTYPE() {
+    public INSTRUCTION_TYPE getSubType() {
         return switch (constType) {
             case "string" -> INSTRUCTION_TYPE.CONST_STRING;
             case "class" -> INSTRUCTION_TYPE.CONST_CLASS;
@@ -72,7 +72,7 @@ public class ConstInstruction extends Instruction {
     }
 
     @Override
-    public INSTRUCTION_TYPE getTYPE() {
+    public INSTRUCTION_TYPE getType() {
         return INSTRUCTION_TYPE.CONST;
     }
 

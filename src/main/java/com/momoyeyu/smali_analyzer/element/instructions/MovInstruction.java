@@ -54,12 +54,12 @@ public class MovInstruction extends Instruction {
     }
 
     @Override
-    public INSTRUCTION_TYPE getTrueTYPE() {
+    public INSTRUCTION_TYPE getSubType() {
         return INSTRUCTION_TYPE.MOV;
     }
 
     @Override
-    public INSTRUCTION_TYPE getTYPE() {
+    public INSTRUCTION_TYPE getType() {
         return INSTRUCTION_TYPE.MOV;
     }
 

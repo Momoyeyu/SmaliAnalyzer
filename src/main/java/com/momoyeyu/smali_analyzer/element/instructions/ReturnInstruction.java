@@ -38,7 +38,7 @@ public class ReturnInstruction extends Instruction {
     }
 
     @Override
-    public INSTRUCTION_TYPE getTrueTYPE() {
+    public INSTRUCTION_TYPE getSubType() {
         if (TypeUtils.isVoid(returnType)) {
             return INSTRUCTION_TYPE.RETURN_VOID;
         }
@@ -46,7 +46,7 @@ public class ReturnInstruction extends Instruction {
     }
 
     @Override
-    public INSTRUCTION_TYPE getTYPE() {
+    public INSTRUCTION_TYPE getType() {
         return INSTRUCTION_TYPE.RETURN;
     }
 

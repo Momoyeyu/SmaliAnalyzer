@@ -52,7 +52,7 @@ public class NewInstruction extends Instruction {
     }
 
     @Override
-    public INSTRUCTION_TYPE getTrueTYPE() {
+    public INSTRUCTION_TYPE getSubType() {
         return switch (operation) {
             case "new-array" -> INSTRUCTION_TYPE.NEW_ARRAY;
             case "new-instance" -> INSTRUCTION_TYPE.NEW_INSTANCE;
@@ -61,7 +61,7 @@ public class NewInstruction extends Instruction {
     }
 
     @Override
-    public INSTRUCTION_TYPE getTYPE() {
+    public INSTRUCTION_TYPE getType() {
         return INSTRUCTION_TYPE.NEW;
     }
 
