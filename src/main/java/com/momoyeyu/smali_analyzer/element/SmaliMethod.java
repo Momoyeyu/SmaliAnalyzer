@@ -54,6 +54,10 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new ReturnInstruction(instruction, this));
             } else if (Label.isLabel(instruction)) {
                 body.add(new Label(instruction, this));
+            } else if (GotoInstruction.isGoto(instruction)) {
+                body.add(new GotoInstruction(instruction, this));
+            } else if (Tag.isTag(instruction)) {
+                body.add(new Tag(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }
