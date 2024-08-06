@@ -54,6 +54,8 @@ public class Label extends Instruction {
 
     @Override
     public String toString() {
+        if (!analyzed)
+            return analysisFail("label");
         return label;
     }
 

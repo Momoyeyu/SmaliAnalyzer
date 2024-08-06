@@ -94,4 +94,9 @@ public class MovInstruction extends Instruction {
         return movPattern.matcher(instruction).matches();
     }
 
+    // getter
+    public String getPropertyType() {
+        return propertyType;
+    }
+
 }

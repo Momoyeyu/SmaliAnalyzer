@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class ResultInstruction extends Instruction {
 
-    private static final Pattern resultPattern = Pattern.compile("^move-result(-object)?\\s+(\\S+)");
+    private static final Pattern resultPattern = Pattern.compile("^move-result(\\S+)?\\s+(\\S+)");
 
     public static void main(String[] args) {
         System.out.println(new ResultInstruction("move-result-object v1"));
