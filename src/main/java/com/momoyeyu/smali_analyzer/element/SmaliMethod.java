@@ -36,8 +36,8 @@ public class SmaliMethod extends SmaliElement {
         this.synchronizedModifier = false;
         this.body = new ArrayList<>();
         for (String instruction : instructions) {
-            if (ArrayMovInstruction.isArrayMovInstruction(instruction)) {
-                body.add(new ArrayMovInstruction(instruction, this));
+            if (MovArrayInstruction.isArrayMovInstruction(instruction)) {
+                body.add(new MovArrayInstruction(instruction, this));
             } else if (InvokeInstruction.isCallInstruction(instruction)) {
                 body.add(new InvokeInstruction(instruction, this));
             } else if (ConditionInstruction.isConditionInstruction(instruction)) {

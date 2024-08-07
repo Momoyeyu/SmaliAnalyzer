@@ -7,20 +7,20 @@ import com.momoyeyu.smali_analyzer.utils.Stepper;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ArrayMovInstruction extends Instruction {
+public class MovArrayInstruction extends Instruction {
 
     private static final Pattern arrayMovPattern = Pattern.compile("^a((put)|(get))(-(\\S+))?\\s+((\\S+),\\s*(\\S+),\\s*(\\S+))\\s*");
 
     public static void main(String[] args) {
-        System.out.println(new ArrayMovInstruction("aput-object v4, v3, v0"));
-        System.out.println(new ArrayMovInstruction("aget-object v4, p1, v3"));
+        System.out.println(new MovArrayInstruction("aput-object v4, v3, v0"));
+        System.out.println(new MovArrayInstruction("aget-object v4, p1, v3"));
     }
 
-    private ArrayMovInstruction(String instruction) {
+    private MovArrayInstruction(String instruction) {
         this(instruction, null);
     }
 
-    public ArrayMovInstruction(String instruction, SmaliMethod parentMethod) {
+    public MovArrayInstruction(String instruction, SmaliMethod parentMethod) {
         super(instruction, parentMethod);
         this.analyze();
     }
