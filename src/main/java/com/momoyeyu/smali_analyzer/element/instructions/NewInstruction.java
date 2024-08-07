@@ -62,11 +62,7 @@ public class NewInstruction extends Instruction {
         sb.append(TypeUtils.getNameFromJava(newType)).append(" ").append(registers.getFirst());
         if (operation.equals("new-array")) {
             sb.append(" = new ").append(TypeUtils.getNameFromJava(newType)).delete(sb.length() - 2, sb.length()).append("[");
-            if (parentMethod != null) {
-                sb.append(parentMethod.registerTable.getValue(registers.getLast()));
-            } else {
-                sb.append(registers.getLast());
-            }
+            sb.append(registers.getLast());
             sb.append("]");
         }
         return sb.toString();

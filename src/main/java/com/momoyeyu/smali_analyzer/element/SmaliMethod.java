@@ -16,7 +16,6 @@ public class SmaliMethod extends SmaliElement {
     protected final List<Instruction> body;
     protected SmaliClass ownerClass;
 
-    public final RegisterMap registerTable = new RegisterMap(this);;
     public final LabelTable labelTable = new LabelTable(this);
 
     protected List<String> parametersList;
