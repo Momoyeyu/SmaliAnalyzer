@@ -12,6 +12,12 @@ import static com.momoyeyu.smali_analyzer.utils.PathUtils.DEFAULT_LOG;
 
 public class Logger {
 
+    /**
+     * Switch of the Logger.
+     * Decide weather save logs or not.
+     */
+    private static final boolean SWITCH = true;
+
     private static final boolean debug = false;
     private static final boolean trace = false;
     private static String savePath = null;
@@ -76,6 +82,11 @@ public class Logger {
      * Save current logs into a file
      */
     public static void saveLogs() {
+        if (!SWITCH) {
+            System.out.println("[WARN] Logger is OFF, logs were not saved. " +
+                    "You may turn it on by setting Logger.SWITCH to true.");
+            return; // switch off
+        }
         if (savePath == null) {
             if (!new File(DEFAULT_LOG).exists())
                 new File(DEFAULT_LOG).mkdirs();
