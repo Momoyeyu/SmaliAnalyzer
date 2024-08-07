@@ -96,19 +96,35 @@ public class FileAnalyzer {
                 }
                 if (line.startsWith(".method")) {
                     String signature = line;
+                    String annotation = null;
                     List<String> instructions = new ArrayList<>();
                     // read the whole method
                     while (scanner.hasNextLine()) {
                         line = scanner.nextLine().strip();
                         if (line.isBlank()) continue;
-                        instructions.add(line);
+                        if (line.startsWith(".annotation")) {
+                            StringBuilder sb = new StringBuilder(line);
+                            while (scanner.hasNextLine()) {
+                                line = scanner.nextLine().strip();
+                                sb.append(line);
+                                if (line.startsWith(".end annotation")) {
+                                    annotation = sb.toString();
+                                    break;
+                                }
+                            }
+                        } else
+                            instructions.add(line);
                         if (line.startsWith(".end method")) break;
                     }
                     // add method to the current class
                     if (ConstructorAnalyzer.isConstructor(signature)) {
-                        currentSmaliClass.addSmaliMethod(new SmaliConstructor(signature, currentSmaliClass, instructions));
+                        SmaliConstructor constructor = new SmaliConstructor(signature, currentSmaliClass, instructions);
+                        constructor.setAnnotation(annotation);
+                        currentSmaliClass.addSmaliMethod(constructor);
                     } else {
-                        currentSmaliClass.addSmaliMethod(new SmaliMethod(signature, currentSmaliClass, instructions));
+                        SmaliMethod method = new SmaliMethod(signature, currentSmaliClass, instructions);
+                        method.setAnnotation(annotation);
+                        currentSmaliClass.addSmaliMethod(method);
                     }
                 }
                 if (line.startsWith(".field")) {

@@ -82,7 +82,7 @@ public class SmaliMethod extends SmaliElement {
             Logger.logException(e.getMessage());
             return Logger.logAnalysisFailure("method", signature);
         }
-        if (ownerClass.getClassType().equals("interface") && this.body.isEmpty()) {
+        if ((ownerClass != null && ownerClass.getClassType().equals("interface") && this.body.isEmpty()) || nativeModifier) {
             return sb.append(";").toString();
         }
         sb.append(" {\n");
@@ -122,6 +122,8 @@ public class SmaliMethod extends SmaliElement {
                         stack.pop().toString(),
                         "(.*?) ret = (.*)",
                         "$1 " + instruction + " $2")).append(";\n");
+            } else if (Instruction.equalType(type, INSTRUCTION_TYPE.DEFAULT, INSTRUCTION_TYPE.TAG)) {
+                sb.append("\t").append(instruction).append("\n");
             } else { //  if (Instruction.equalType(type, INSTRUCTION_TYPE.DEFAULT, INSTRUCTION_TYPE.NEW_ARRAY, ...))
                 sb.append("\t").append(instruction).append(";\n");
             }
@@ -144,21 +146,18 @@ public class SmaliMethod extends SmaliElement {
             }
         }
         StringBuilder sb = new StringBuilder();
-        if (accessModifier.equals("default")) {
+        if (!accessModifier.equals("default"))
             sb.append(accessModifier).append(" ");
-        }
-        if (staticModifier) {
+        if (staticModifier)
             sb.append("static ");
-        }
-        if (finalModifier) {
+        if (finalModifier)
             sb.append("final ");
-        }
-        if (synchronizedModifier) {
+        if (nativeModifier)
+            sb.append("native ");
+        if (synchronizedModifier)
             sb.append("synchronizedModifier ");
-        }
-        if (abstractModifier) {
+        if (abstractModifier)
             sb.append("abstract ");
-        }
         sb.append(TypeUtils.getNameFromJava(returnType));
         sb.append(" ").append(name).append("(");
         sb.append(listParameters(parametersList)).append(")");
@@ -185,7 +184,7 @@ public class SmaliMethod extends SmaliElement {
             this.registerTable.storeVariable("p" + i, null, "arg_" + i , parameter);
         }
         if (!isStaticModifier()) {
-            this.registerTable.storeVariable("this", null, null, ownerClass.getClassType());
+            this.registerTable.storeVariable("this", null, null, null);
         }
         this.parametersList = parametersList;
     }

@@ -34,6 +34,7 @@ public class FieldAnalyzer {
         SmaliField smaliField = new SmaliField(
                 ".field final producers:Ljava/util/concurrent/atomic/AtomicReference;",
                 ".annotation system Ldalvik/annotation/Signature;value = {\"Ljava/util/concurrent/atomic/AtomicReference<\",\"[\",\"Lrx/internal/operators/OperatorReplay$InnerProducer;\",\">;\"}.end annotation");
+
         System.out.println(getSignature(smaliField));
         analyze(smaliField);
         System.out.println(getSignature(smaliField));
@@ -74,7 +75,7 @@ public class FieldAnalyzer {
         }
     }
 
-    private static String analyzeAnnotations(String type, List<String> generic) {
+    public static String analyzeAnnotations(String type, List<String> generic) {
         StringBuilder sb = new StringBuilder();
         if (type.endsWith("[]"))
             return analyzeAnnotations(type.substring(0, type.length() - 2) , generic) + "[]";

@@ -5,12 +5,14 @@ import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MethodAnalyzer {
-
+    private static final Pattern annotationPattern = Pattern.compile("^\\.annotation\\s+system\\s+Ldalvik\\/annotation\\/Signature;value\\s*=\\s*\\{\"\\(\",\"(\\S+)\\)(\\S+)\"\\}\\.end\\s+annotation");
     private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?(((declared-synchronized)|(synchronized))\\s+)?((bridge)\\s+)?((varargs)\\s+)?((native)\\s+)?((abstract)\\s+)?((synthetic)\\s+)?(\\S+)\\((.*?)\\)([a-zA-Z/\\[]++);?");
 
     /**
@@ -18,6 +20,9 @@ public class MethodAnalyzer {
      * @param args user input
      */
     public static void main(String[] args) {
+        SmaliMethod smaliMethod = new SmaliMethod(".method public sort(Landroid/content/Intent;Ljava/util/List;Ljava/util/List;)V");
+        smaliMethod.setAnnotation(".annotation system Ldalvik/annotation/Signature;value = {\"(\",\"Landroid/content/Intent;\",\"Ljava/util/List<\",\"Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;\",\">;\",\"Ljava/util/List<\",\"Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;\",\">;)V\"}.end annotation");
+        System.out.println(smaliMethod.toJava());
         System.out.println(getSignature(".method public varargs doInBackground([Ljava/lang/Object;)Ljava/lang/Void;"));
         System.out.println(getSignature(".method public abstract setActivityChooserModel(Landroidx/appcompat/widget/ActivityChooserModel;)V;"));
         System.out.println(getSignature(".method public static get(Landroid/content/Context;Ljava/lang/String;I)Landroidx/appcompat/widget/ActivityChooserModel;"));
@@ -54,6 +59,42 @@ public class MethodAnalyzer {
         } else {
             throw new RuntimeException("Unknown method: " + smaliMethod.getSignature());
         }
+        String annotation = smaliMethod.getAnnotation();
+        if (annotation == null)
+            return;
+        matcher = annotationPattern.matcher(annotation);
+        if (matcher.find()) {
+            List<String> generic = Arrays.stream(matcher.group(1).split("(\",\\s*\")")).toList();
+            List<String> params = smaliMethod.getParametersList();
+            smaliMethod.setParametersList(analyzeAnnotations(params, generic));
+        }
+        smaliMethod.setAnnotation(null);
+    }
+
+    private static List<String> analyzeAnnotations(List<String> params, List<String> genericParams) {
+        List<String> result = new ArrayList<>();
+        int i = 0;
+        for (String type : params) {
+            String tmp = genericParams.get(i++);
+            if (tmp.endsWith("<")) {
+                List<String> generic = new ArrayList<>();
+                int count = 0;
+                while (true) {
+                    tmp = genericParams.get(i++);
+                    if (tmp.endsWith("<"))
+                        count++;
+                    if (tmp.equals(">;")) {
+                        if (count == 0) break;
+                        count--;
+                    }
+                    generic.add(tmp);
+                } // end while
+                result.add(FieldAnalyzer.analyzeAnnotations(type, generic));
+            } else {
+                result.add(type);
+            }
+        }
+        return result;
     }
 
     /**
