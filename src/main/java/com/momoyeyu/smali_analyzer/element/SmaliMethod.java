@@ -60,6 +60,10 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new Tag(instruction, this));
             } else if (CatchInstruction.isCatchInstruction(instruction)) {
                 body.add(new CatchInstruction(instruction, this));
+            } else if (ThrowInstruction.isThrowInstruction(instruction)) {
+                body.add(new ThrowInstruction(instruction, this));
+            } else if (SynchronizedInstruction.isSynchronizedInstruction(instruction)) {
+                body.add(new SynchronizedInstruction(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }
