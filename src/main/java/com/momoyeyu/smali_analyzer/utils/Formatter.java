@@ -5,6 +5,12 @@ import java.util.regex.Pattern;
 
 public class Formatter {
 
+    /**
+     * Add {@code indent} number of {@code \t} before each line of {@code str}.
+     * @param str String with multiple lines
+     * @param indent the number of indentation to add before {@code str}
+     * @return {@code str} with {@code indent} before
+     */
     public static String addIndent(String str, int indent) {
         String[] lines = str.split("\n");
         StringBuilder sb = new StringBuilder();
@@ -41,6 +47,16 @@ public class Formatter {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         return matcher.replaceAll(replacement);
+    }
+
+    /**
+     * Remove space and comment from smali source.
+     * @param line a line of smali source code
+     * @return smali instruction without space and comment
+     */
+    public static String getInstruction(String line) {
+        line = line.strip();
+        return line.substring(0, Math.max(line.indexOf('#'), line.length())).strip();
     }
 
 }

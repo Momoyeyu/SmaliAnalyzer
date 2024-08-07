@@ -37,7 +37,7 @@ public class Instruction {
 
     @Override
     public String toString() {
-        Logger.log("[WARN] instruction using default toString(): " + signature);
+        Logger.log("[TODO] unknown instruction: " + signature);
         return "// " + signature;
     }
 

@@ -2,6 +2,7 @@ package com.momoyeyu.smali_analyzer.analyzers;
 
 import com.momoyeyu.smali_analyzer.element.*;
 import com.momoyeyu.smali_analyzer.repository.ClassRepository;
+import com.momoyeyu.smali_analyzer.utils.Formatter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -64,12 +65,12 @@ public class FileAnalyzer {
         try {
             scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().strip();
+                String line = Formatter.getInstruction(scanner.nextLine());
                 if (lastFlag != null && lastFlag.equals(".field") && curSmaliField != null) {
                     if (line.startsWith(".annotation")) {
                         curSmaliField.addAnnotation(line);
                         while (scanner.hasNextLine()) {
-                            line = scanner.nextLine().strip();
+                            line = Formatter.getInstruction(scanner.nextLine());
                             curSmaliField.addAnnotation(line);
                             if (line.startsWith(".end annotation")) break;
                         }
@@ -85,7 +86,7 @@ public class FileAnalyzer {
                     }
                     smaliFile.addClass(currentSmaliClass);
                     ClassRepository.addClass(currentSmaliClass);
-                    line = scanner.nextLine().strip();
+                    line = Formatter.getInstruction(scanner.nextLine());
                     if (line.startsWith(".super")) {
                         try {
                             currentSmaliClass.setSuperClass(ClassRepository.getClass(line));
@@ -100,12 +101,12 @@ public class FileAnalyzer {
                     List<String> instructions = new ArrayList<>();
                     // read the whole method
                     while (scanner.hasNextLine()) {
-                        line = scanner.nextLine().strip();
+                        line = Formatter.getInstruction(scanner.nextLine());
                         if (line.isBlank()) continue;
                         if (line.startsWith(".annotation")) {
                             StringBuilder sb = new StringBuilder(line);
                             while (scanner.hasNextLine()) {
-                                line = scanner.nextLine().strip();
+                                line = Formatter.getInstruction(scanner.nextLine());
                                 sb.append(line);
                                 if (line.startsWith(".end annotation")) {
                                     annotation = sb.toString();

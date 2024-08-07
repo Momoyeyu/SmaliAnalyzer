@@ -77,11 +77,14 @@ public class Logger {
      */
     public static void saveLogs() {
         if (savePath == null) {
-            String dateInfo = new Date().toString();
             if (!new File(DEFAULT_LOG).exists())
                 new File(DEFAULT_LOG).mkdirs();
-            savePath = DEFAULT_LOG + File.separator + dateInfo.replaceAll("[\\s:]", "-") + ".log";
-            logs.add(0, "[INFO] This log is automatically generated at " + dateInfo + System.lineSeparator());
+            String default_log = DEFAULT_LOG + File.separator + DateUtils.getLocalDate();
+            Date date = new Date();
+            if (!new File(default_log).exists())
+                new File(default_log).mkdirs();
+            savePath = default_log + File.separator + date.toString().replaceAll("[\\s:]", "-") + ".log";
+            logs.add(0, "[INFO] This log is automatically generated at " + date + System.lineSeparator());
         }
         saveLogs(savePath);
     }
