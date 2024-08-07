@@ -23,6 +23,7 @@ public class SmaliMethod extends SmaliElement {
     protected boolean abstractModifier;
     protected boolean synchronizedModifier;
     private boolean nativeModifier;
+    private String annotation;
     private String returnType;
 
     public SmaliMethod(String signature) {
@@ -64,6 +65,8 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new ThrowInstruction(instruction, this));
             } else if (SynchronizedInstruction.isSynchronizedInstruction(instruction)) {
                 body.add(new SynchronizedInstruction(instruction, this));
+            } else if (ExceptionInstruction.isExceptionInstruction(instruction)) {
+                body.add(new ExceptionInstruction(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }
@@ -171,6 +174,10 @@ public class SmaliMethod extends SmaliElement {
         return parametersList;
     }
 
+    public String getAnnotation() {
+        return annotation;
+    }
+
     // setter
     public void setParametersList(List<String> parametersList) {
         int i = isStaticModifier() ? 0 : 1;
@@ -209,5 +216,9 @@ public class SmaliMethod extends SmaliElement {
 
     public void setSynchronizedModifier(boolean synchronizedModifier) {
         this.synchronizedModifier = synchronizedModifier;
+    }
+
+    public void setAnnotation(String annotation) {
+        this.annotation = annotation;
     }
 }

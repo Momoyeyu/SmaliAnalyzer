@@ -41,6 +41,16 @@ public class SynchronizedInstruction extends Instruction {
         return "} // end synchronized";
     }
 
+    @Override
+    public INSTRUCTION_TYPE getType() {
+        return INSTRUCTION_TYPE.SYNCHRONIZED;
+    }
+
+    @Override
+    public INSTRUCTION_TYPE getSubType() {
+        return INSTRUCTION_TYPE.SYNCHRONIZED;
+    }
+
     public static boolean isSynchronizedInstruction(String instruction) {
         if (instruction == null)
             return false;

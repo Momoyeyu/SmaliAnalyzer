@@ -36,6 +36,16 @@ public class ThrowInstruction extends Instruction {
         return operation + " " + registers.getFirst();
     }
 
+    @Override
+    public INSTRUCTION_TYPE getType() {
+        return INSTRUCTION_TYPE.THROW;
+    }
+
+    @Override
+    public INSTRUCTION_TYPE getSubType() {
+        return INSTRUCTION_TYPE.THROW;
+    }
+
     public static boolean isThrowInstruction(String instruction) {
         if (instruction == null)
             return false;
