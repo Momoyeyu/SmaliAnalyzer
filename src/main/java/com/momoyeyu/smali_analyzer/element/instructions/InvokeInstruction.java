@@ -53,13 +53,6 @@ public class InvokeInstruction extends Instruction {
     }
 
     @Override
-    public void updateTable() {
-        if (parentMethod != null) {
-            registers.replaceAll(domain -> parentMethod.registerTable.getValue(domain));
-        }
-    }
-
-    @Override
     public INSTRUCTION_TYPE getSubType() {
         return switch (operation) {
             case "invoke-direct" -> INSTRUCTION_TYPE.INVOKE_DIRECT;

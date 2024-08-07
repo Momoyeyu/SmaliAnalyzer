@@ -28,7 +28,7 @@ public class Tag extends Instruction{
     public String toString() {
         if (!analyzed)
             return analysisFail("tag");
-        return "// ." + tag;
+        return "// " + signature;
     }
 
     @Override

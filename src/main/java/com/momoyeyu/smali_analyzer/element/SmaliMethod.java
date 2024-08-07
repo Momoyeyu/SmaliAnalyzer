@@ -3,7 +3,7 @@ package com.momoyeyu.smali_analyzer.element;
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.element.instructions.*;
 import com.momoyeyu.smali_analyzer.entity.LabelTable;
-import com.momoyeyu.smali_analyzer.entity.RegisterTable;
+import com.momoyeyu.smali_analyzer.entity.RegisterMap;
 import com.momoyeyu.smali_analyzer.utils.Formatter;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
@@ -16,7 +16,7 @@ public class SmaliMethod extends SmaliElement {
     protected final List<Instruction> body;
     protected SmaliClass ownerClass;
 
-    public final RegisterTable registerTable = new RegisterTable();;
+    public final RegisterMap registerTable = new RegisterMap(this);;
     public final LabelTable labelTable = new LabelTable(this);
 
     protected List<String> parametersList;
@@ -180,12 +180,12 @@ public class SmaliMethod extends SmaliElement {
     // setter
     public void setParametersList(List<String> parametersList) {
         int i = isStaticModifier() ? 0 : 1;
-        for (String parameter : parametersList) {
-            this.registerTable.storeVariable("p" + i, null, "arg_" + i , parameter);
-        }
-        if (!isStaticModifier()) {
-            this.registerTable.storeVariable("this", null, null, null);
-        }
+//        for (String parameter : parametersList) {
+//            this.registerTable.storeVariable("p" + i, null, "arg_" + i , parameter);
+//        }
+//        if (!isStaticModifier()) {
+//            this.registerTable.storeVariable("this", null, null, null);
+//        }
         this.parametersList = parametersList;
     }
 

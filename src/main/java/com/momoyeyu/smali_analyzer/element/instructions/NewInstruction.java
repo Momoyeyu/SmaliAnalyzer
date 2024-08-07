@@ -41,17 +41,6 @@ public class NewInstruction extends Instruction {
     }
 
     @Override
-    public void updateTable() {
-        if (parentMethod != null) {
-            if (operation.equals("new-array")) {
-                parentMethod.registerTable.storeVariable(
-                        registers.getFirst(), null,
-                        null , newType);
-            }
-        }
-    }
-
-    @Override
     public INSTRUCTION_TYPE getSubType() {
         return switch (operation) {
             case "new-array" -> INSTRUCTION_TYPE.NEW_ARRAY;

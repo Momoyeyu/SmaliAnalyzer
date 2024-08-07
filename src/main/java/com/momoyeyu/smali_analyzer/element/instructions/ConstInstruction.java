@@ -57,12 +57,6 @@ public class ConstInstruction extends Instruction {
     }
 
     @Override
-    public void updateTable() {
-        if (parentMethod != null)
-            parentMethod.registerTable.storeVariable(registers.getFirst(), null, value, constType);
-    }
-
-    @Override
     public INSTRUCTION_TYPE getSubType() {
         return switch (constType) {
             case "string" -> INSTRUCTION_TYPE.CONST_STRING;

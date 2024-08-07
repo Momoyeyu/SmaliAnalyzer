@@ -1,7 +1,6 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
-import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 
 import java.util.regex.Matcher;
@@ -34,22 +33,6 @@ public class MovArrayInstruction extends Instruction {
             operation += matcher.group(stp.step(3)) == null ? "" : matcher.group(stp.step(0));
             registers = getRegistersList(matcher.group(stp.step(2)));
             super.analyze();
-        }
-    }
-
-    @Override
-    public void updateTable() {
-        if (parentMethod != null) {
-            RegisterTable stack = parentMethod.registerTable;
-            String valueRegister = stack.getValue(registers.get(0));
-            String arrayRegister = stack.getValue(registers.get(1));
-            String indexRegister = stack.getValue(registers.get(2));
-            if (operation.startsWith("aput")) {
-                stack.storeVariable(arrayRegister, indexRegister, valueRegister, "array");
-            } else {
-                stack.storeVariable(valueRegister, null,
-                        arrayRegister + "[" + indexRegister + "]", "array");
-            }
         }
     }
 

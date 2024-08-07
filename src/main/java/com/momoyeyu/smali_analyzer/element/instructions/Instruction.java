@@ -33,8 +33,6 @@ public class Instruction {
         return thisRegister(Arrays.stream(registers.split("(,\\s*)")).toList());
     }
 
-    public void updateTable() {}
-
     @Override
     public String toString() {
         Logger.log("[TODO] unknown instruction: " + signature);

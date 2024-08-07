@@ -39,11 +39,6 @@ public class Label extends Instruction {
     }
 
     @Override
-    public void updateTable() {
-        parentMethod.labelTable.addLabel(label);
-    }
-
-    @Override
     public INSTRUCTION_TYPE getSubType() {
         return switch (label.substring(1, Math.min(5, label.length()))) {
             case "goto" -> INSTRUCTION_TYPE.LABEL_GOTO;

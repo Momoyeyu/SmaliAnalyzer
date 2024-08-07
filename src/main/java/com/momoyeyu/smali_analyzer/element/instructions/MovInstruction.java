@@ -47,13 +47,6 @@ public class MovInstruction extends Instruction {
     }
 
     @Override
-    public void updateTable() {
-        if (operation.substring(1).equals("put") && parentMethod != null) {
-            parentMethod.registerTable.storeVariable(registers.getLast(), property, registers.getFirst(), "data");
-        }
-    }
-
-    @Override
     public INSTRUCTION_TYPE getSubType() {
         return INSTRUCTION_TYPE.MOV;
     }

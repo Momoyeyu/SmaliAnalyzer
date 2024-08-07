@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Variable {
-    private String name;
     private String type;
     private String value;
     private Map<String, Variable> properties;
 
-    public Variable(String value) {
+    public Variable(String type, String value) {
         this.value = value;
         properties = new HashMap<>();
     }
@@ -28,7 +27,7 @@ public class Variable {
         this.value = value;
     }
 
-    public void setProperty(String key, String value) {
-        properties.put(key, new Variable(value));
+    public void setProperty(String key, Variable var) {
+        properties.put(key, var);
     }
 }
