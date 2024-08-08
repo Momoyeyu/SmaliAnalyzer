@@ -11,7 +11,6 @@ public class ConditionInstruction extends Instruction {
     private static final Pattern conditionPattern = Pattern.compile("if-(\\S+)\\s+(.*),\\s*(:cond_(\\S+))");
 
     private String condition;
-    private List<String> registers;
     private String conditionLabel;
 
     public static void main(String[] args) {

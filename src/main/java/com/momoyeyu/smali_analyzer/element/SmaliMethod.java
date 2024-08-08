@@ -2,7 +2,6 @@ package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.element.instructions.*;
-import com.momoyeyu.smali_analyzer.entity.LabelTable;
 import com.momoyeyu.smali_analyzer.entity.RegisterMap;
 import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Formatter;
@@ -127,8 +126,11 @@ public class SmaliMethod extends SmaliElement {
             } else if (subType == INSTRUCTION_TYPE.TAG) {
                 continue;
             } else if (subType == INSTRUCTION_TYPE.RESULT && lastType == INSTRUCTION_TYPE.INVOKE) {
+                InvokeInstruction invokeInstruction = (InvokeInstruction) stack.pop();
+                ((ResultInstruction) instruction).setResultType(invokeInstruction.getReturnType());
+                instruction.updateTable();
                 sb.append("\t").append(Formatter.replacePattern(
-                        stack.pop().toString(),
+                        invokeInstruction.toString(),
                         "(.*?) ret = (.*)",
                         "$1 " + instruction + " $2")).append(";\n");
             } else if (Instruction.equalType(type, INSTRUCTION_TYPE.DEFAULT, INSTRUCTION_TYPE.TAG)) {

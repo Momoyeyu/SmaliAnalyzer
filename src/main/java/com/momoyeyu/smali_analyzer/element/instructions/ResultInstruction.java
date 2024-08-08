@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,6 +9,8 @@ import java.util.regex.Pattern;
 public class ResultInstruction extends Instruction {
 
     private static final Pattern resultPattern = Pattern.compile("^move-result(\\S+)?\\s+(\\S+)");
+
+    private String resultType = null;
 
     public static void main(String[] args) {
         System.out.println(new ResultInstruction("move-result-object v1"));
@@ -35,6 +38,15 @@ public class ResultInstruction extends Instruction {
     }
 
     @Override
+    public void updateTable() {
+        if (!updated && resultType != null) {
+            RegisterTable table = parentMethod.getRegisterTable();
+            table.storeVariable(registers.getFirst(), resultType);
+            super.updateTable();
+        }
+    }
+
+    @Override
     public INSTRUCTION_TYPE getSubType() {
         return INSTRUCTION_TYPE.RESULT;
     }
@@ -51,6 +63,11 @@ public class ResultInstruction extends Instruction {
         StringBuilder sb = new StringBuilder();
         sb.append(registers.getFirst()).append(" =");
         return sb.toString();
+    }
+
+    // setter
+    public void setResultType(String resultType) {
+        this.resultType = resultType;
     }
 
     public static boolean isResultInstruction(String instruction) {

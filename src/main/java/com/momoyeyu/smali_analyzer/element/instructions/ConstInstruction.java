@@ -62,7 +62,7 @@ public class ConstInstruction extends Instruction {
         if (!updated) {
             RegisterTable table = parentMethod.getRegisterTable();
             String newType = switch (constType) {
-                case "class" -> "java.lang.CLass";
+                case "class" -> "java.lang.Class";
                 case "string" -> "java.lang.String";
                 case "" -> "java.lang.Object";
                 default -> constType;
