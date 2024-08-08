@@ -14,6 +14,6 @@ public enum INSTRUCTION_TYPE {
     RESULT,
     RETURN, RETURN_VOID,
     SYNCHRONIZED,
-    TAG,
+    TAG, TAG_END_METHOD,
     THROW;
 }

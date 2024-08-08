@@ -28,7 +28,7 @@ public class ExceptionInstruction extends Instruction {
     public String toString() {
         if (!analyzed)
             return analysisFail("exception");
-        return "";
+        return "// " + signature;
     }
 
     @Override

@@ -42,6 +42,9 @@ public class CatchInstruction extends Instruction{
                 tryStartLabels = matcher.group(1);
                 tryEndLabels = matcher.group(2);
                 catchLabel = matcher.group(3);
+                if (parentMethod != null) {
+                    parentMethod.addTryPeer(tryStartLabels, tryEndLabels);
+                }
                 super.analyze();
             }
         } else {
@@ -80,8 +83,12 @@ public class CatchInstruction extends Instruction{
         } else {
             sb.append("catch (" + TypeUtils.getNameFromJava(exceptionType) + " e)");
         }
-        sb.append(" from ").append(tryStartLabels).append(" to ").append(tryEndLabels);
         return sb.toString();
+    }
+
+    // getter
+    public String getCatchLabel() {
+        return catchLabel;
     }
 
     public static boolean isCatchInstruction(String instruction) {

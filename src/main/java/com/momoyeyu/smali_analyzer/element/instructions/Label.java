@@ -40,6 +40,10 @@ public class Label extends Instruction {
 
     @Override
     public INSTRUCTION_TYPE getSubType() {
+        if (label.startsWith(":try_start"))
+            return INSTRUCTION_TYPE.LABEL_TRY_START;
+        else if (label.startsWith(":try_end"))
+            return INSTRUCTION_TYPE.LABEL_TRY_END;
         return switch (label.substring(1, Math.min(5, label.length()))) {
             case "goto" -> INSTRUCTION_TYPE.LABEL_GOTO;
             case "cond" -> INSTRUCTION_TYPE.LABEL_CONDITION;

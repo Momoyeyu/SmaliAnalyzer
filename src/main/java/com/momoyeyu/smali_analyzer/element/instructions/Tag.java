@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class Tag extends Instruction{
 
     private static final Pattern tagPattern = Pattern.compile(
-            "\\.((line)|(registers)|(locals)|(end method)).*");
+            "^\\.((line)|(registers)|(locals)|(end method)).*");
     private String tag;
 
     public static void main(String[] args) {
@@ -47,6 +47,8 @@ public class Tag extends Instruction{
 
     @Override
     public INSTRUCTION_TYPE getSubType() {
+        if (tag.equals("end method"))
+            return INSTRUCTION_TYPE.TAG_END_METHOD;
         return INSTRUCTION_TYPE.TAG;
     }
 

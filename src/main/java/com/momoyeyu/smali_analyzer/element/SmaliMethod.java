@@ -8,9 +8,7 @@ import com.momoyeyu.smali_analyzer.utils.Formatter;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class SmaliMethod extends SmaliElement {
     protected final List<Instruction> body;
@@ -21,6 +19,8 @@ public class SmaliMethod extends SmaliElement {
     private boolean nativeModifier;
     private String annotation;
     private String returnType;
+
+    private final Map<String, String> tryMap = new HashMap<>();
 
     private RegisterTable registerTable;
 
@@ -93,14 +93,16 @@ public class SmaliMethod extends SmaliElement {
         sb.append(" {\n");
         INSTRUCTION_TYPE lastSubType = INSTRUCTION_TYPE.DEFAULT;
         INSTRUCTION_TYPE lastType = INSTRUCTION_TYPE.DEFAULT;
+        int indentLevel = 1;
         Stack<Instruction> stack = new Stack<>();
+        Stack<String> labelStack = new Stack<>();
         for (Instruction instruction : this.body) {
             INSTRUCTION_TYPE subType = instruction.getSubType();
             INSTRUCTION_TYPE type = instruction.getType();
             instruction.updateTable();
             if (subType == INSTRUCTION_TYPE.INVOKE_CONSTRUCTOR) {
                 if (lastSubType == INSTRUCTION_TYPE.NEW_INSTANCE) {
-                    sb.append("\t").append(stack.pop()).append(" ");
+                    sb.append("\t".repeat(indentLevel)).append(stack.pop()).append(" ");
                     String instance = instruction.toString();
                     sb.append(instance.substring(instance.indexOf('='))).append(";\n");
                 } else {
@@ -111,7 +113,7 @@ public class SmaliMethod extends SmaliElement {
                 }
             } else if (type == INSTRUCTION_TYPE.INVOKE) {
                 if (!instruction.toString().contains("=")) {
-                    sb.append("\t").append(instruction).append(";\n");
+                    sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
                 } else {
                     stack.push(instruction);
                     lastType = type;
@@ -123,20 +125,57 @@ public class SmaliMethod extends SmaliElement {
                 lastType = type;
                 lastSubType = subType;
                 continue;
-            } else if (subType == INSTRUCTION_TYPE.TAG) {
+            } else if (Instruction.equalType(type, INSTRUCTION_TYPE.TAG, INSTRUCTION_TYPE.SYNCHRONIZED)) {
                 continue;
+            } else if (subType == INSTRUCTION_TYPE.LABEL_TRY_START) {
+                Label label = (Label) instruction;
+                sb.append("\t".repeat(indentLevel)).append("try {\n");
+                labelStack.push(label.toString());
+                indentLevel++;
+            } else if (subType == INSTRUCTION_TYPE.LABEL_TRY_END) {
+                String start = Objects.requireNonNullElse(tryMap.get(labelStack.peek()), "");
+                if (start.equals(instruction.toString())) {
+                    labelStack.pop();
+                    indentLevel--;
+                    sb.append("\t".repeat(indentLevel)).append("}\n");
+                    lastSubType = INSTRUCTION_TYPE.LABEL_TRY_END;
+                    lastType = INSTRUCTION_TYPE.LABEL;
+                    continue;
+                }
+//            } else if (type == INSTRUCTION_TYPE.CATCH) {
+//                if (lastSubType == INSTRUCTION_TYPE.LABEL_TRY_END) {
+//                    sb.deleteCharAt(sb.length() - 1).append(" ").append(instruction).append(" {\n");
+//                } else {
+//                    sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
+//                }
+            } else if (Instruction.equalType(type, INSTRUCTION_TYPE.CONDITION)) {
+                ConditionInstruction condition = (ConditionInstruction) instruction;
+                sb.append("\t".repeat(indentLevel)).append(condition.reverseCondition()).append(" {\n");
+                labelStack.push(condition.getConditionLabel());
+                indentLevel++;
+            } else if (Instruction.equalType(subType, INSTRUCTION_TYPE.LABEL_CONDITION)) {
+                if (labelStack.peek().equals(instruction.toString())) {
+                    labelStack.pop();
+                    indentLevel--;
+                    sb.append("\t".repeat(indentLevel)).append("}\n");
+                }
             } else if (subType == INSTRUCTION_TYPE.RESULT && lastType == INSTRUCTION_TYPE.INVOKE) {
                 InvokeInstruction invokeInstruction = (InvokeInstruction) stack.pop();
                 ((ResultInstruction) instruction).setResultType(invokeInstruction.getReturnType());
                 instruction.updateTable();
-                sb.append("\t").append(Formatter.replacePattern(
+                sb.append("\t".repeat(indentLevel)).append(Formatter.replacePattern(
                         invokeInstruction.toString(),
                         "(.*?) ret = (.*)",
                         "$1 " + instruction + " $2")).append(";\n");
+            } else if (subType == INSTRUCTION_TYPE.TAG_END_METHOD) {
+                while (indentLevel > 1) {
+                    indentLevel--;
+                    sb.append("\t".repeat(indentLevel)).append("}\n");
+                }
             } else if (Instruction.equalType(type, INSTRUCTION_TYPE.DEFAULT, INSTRUCTION_TYPE.TAG)) {
-                sb.append("\t").append(instruction).append("\n");
+                sb.append("\t".repeat(indentLevel)).append(instruction).append("\n");
             } else { //  if (Instruction.equalType(type, INSTRUCTION_TYPE.DEFAULT, INSTRUCTION_TYPE.NEW_ARRAY, ...))
-                sb.append("\t").append(instruction).append(";\n");
+                sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
             }
             lastSubType = INSTRUCTION_TYPE.DEFAULT;
             lastType = INSTRUCTION_TYPE.DEFAULT;
@@ -227,5 +266,10 @@ public class SmaliMethod extends SmaliElement {
 
     public void setAnnotation(String annotation) {
         this.annotation = annotation;
+    }
+
+    // adder
+    public void addTryPeer(String try_start, String try_end) {
+        tryMap.put(try_start, try_end);
     }
 }
