@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
@@ -46,13 +47,29 @@ public class ConstInstruction extends Instruction {
         if (matcher.find()) {
             Stepper stp = new Stepper();
             constType = Objects.requireNonNullElse(matcher.group(stp.step(2)), "");
-            constSize = matcher.group(stp.step(2));
+            constSize = Objects.requireNonNullElse(matcher.group(stp.step(2)), "");
             registers = getRegistersList(matcher.group(stp.step(1)));
             value = matcher.group(stp.step(1));
             if (constType != null && constType.equals("class")) {
                 value = TypeUtils.getTypeFromSmali(value);
             }
             super.analyze();
+        }
+    }
+
+    @Override
+    public void updateTable() {
+        if (!updated) {
+            RegisterTable table = parentMethod.getRegisterTable();
+            String newType = switch (constType) {
+                case "class" -> "java.lang.CLass";
+                case "string" -> "java.lang.String";
+                case "" -> "java.lang.Object";
+                default -> constType;
+            };
+            table.storeVariable(registers.getFirst(), newType);
+            registers = getSubstituteRegisters(registers);
+            updated = true;
         }
     }
 
@@ -77,7 +94,7 @@ public class ConstInstruction extends Instruction {
         StringBuilder sb = new StringBuilder();
         sb.append("final ");
         sb.append(switch (constType) {
-            default -> "";
+            default -> "Object ";
             case "class" -> "Class<?> ";
             case "string" -> "String ";
         });

@@ -4,6 +4,7 @@ import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.element.instructions.*;
 import com.momoyeyu.smali_analyzer.entity.LabelTable;
 import com.momoyeyu.smali_analyzer.entity.RegisterMap;
+import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Formatter;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
@@ -15,15 +16,18 @@ import java.util.Stack;
 public class SmaliMethod extends SmaliElement {
     protected final List<Instruction> body;
     protected SmaliClass ownerClass;
-
-    public final LabelTable labelTable = new LabelTable(this);
-
     protected List<String> parametersList;
     protected boolean abstractModifier;
     protected boolean synchronizedModifier;
     private boolean nativeModifier;
     private String annotation;
     private String returnType;
+
+    private RegisterTable registerTable;
+
+    public RegisterTable getRegisterTable() {
+        return registerTable;
+    }
 
     public SmaliMethod(String signature) {
         this(signature, null, new ArrayList<>());
@@ -69,6 +73,8 @@ public class SmaliMethod extends SmaliElement {
             } else {
                 body.add(new Instruction(instruction, this));
             }
+            this.toJava();
+            registerTable = new RegisterMap(this);
         }
     }
 
@@ -91,6 +97,7 @@ public class SmaliMethod extends SmaliElement {
         for (Instruction instruction : this.body) {
             INSTRUCTION_TYPE subType = instruction.getSubType();
             INSTRUCTION_TYPE type = instruction.getType();
+            instruction.updateTable();
             if (subType == INSTRUCTION_TYPE.INVOKE_DIRECT) {
                 if (lastSubType == INSTRUCTION_TYPE.NEW_INSTANCE) {
                     sb.append("\t").append(stack.pop()).append(" ");
@@ -115,6 +122,8 @@ public class SmaliMethod extends SmaliElement {
                 stack.push(instruction);
                 lastType = type;
                 lastSubType = subType;
+                continue;
+            } else if (subType == INSTRUCTION_TYPE.TAG) {
                 continue;
             } else if (subType == INSTRUCTION_TYPE.RESULT && lastType == INSTRUCTION_TYPE.INVOKE) {
                 sb.append("\t").append(Formatter.replacePattern(

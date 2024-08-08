@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
@@ -52,6 +53,16 @@ public class NewInstruction extends Instruction {
     @Override
     public INSTRUCTION_TYPE getType() {
         return INSTRUCTION_TYPE.NEW;
+    }
+
+    @Override
+    public void updateTable() {
+        if (!updated) {
+            RegisterTable table = parentMethod.getRegisterTable();
+            table.storeVariable(registers.getFirst(), newType);
+            registers = getSubstituteRegisters(registers);
+            updated = true;
+        }
     }
 
     @Override

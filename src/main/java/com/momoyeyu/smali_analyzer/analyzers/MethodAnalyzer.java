@@ -136,7 +136,7 @@ public class MethodAnalyzer {
         }
         StringBuilder sb = new StringBuilder();
         for (int idx = 0; idx < parametersList.size(); idx++) {
-            sb.append(String.format("%s p%d, ", TypeUtils.getNameFromJava(parametersList.get(idx)), isStatic ? idx : idx + 1));
+            sb.append(String.format("%s arg%d, ", TypeUtils.getNameFromJava(parametersList.get(idx)), isStatic ? idx : idx + 1));
         }
         return sb.delete(sb.length() - 2, sb.length()).toString();
     }

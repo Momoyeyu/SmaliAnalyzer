@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class Instruction {
     protected List<String> registers;
     protected SmaliMethod parentMethod;
     protected boolean analyzed;
+    protected boolean updated;
 
     protected void analyze() {
         analyzed = true;
@@ -24,13 +26,14 @@ public class Instruction {
         signature = Objects.requireNonNullElse(instruction, "");
         this.parentMethod = parentMethod;
         analyzed = false;
+        updated = false;
     }
 
     protected List<String> getRegistersList(String registers) {
         if (registers == null) {
             return new ArrayList<>();
         }
-        return thisRegister(Arrays.stream(registers.split("(,\\s*)")).toList());
+        return Arrays.stream(registers.split("(,\\s*)")).toList();
     }
 
     @Override
@@ -57,17 +60,6 @@ public class Instruction {
         return signature;
     }
 
-    protected List<String> thisRegister(List<String> registers) {
-        if (this.parentMethod == null || this.parentMethod.isStaticModifier()) {
-            return registers;
-        }
-        List<String> thisRegisters = new ArrayList<>();
-        for (String register : registers) {
-            thisRegisters.add(register.equals("p0") ? "this" : register);
-        }
-        return thisRegisters;
-    }
-
     public static boolean equalType(INSTRUCTION_TYPE type, INSTRUCTION_TYPE... otherType) {
         for (INSTRUCTION_TYPE instructionType : otherType) {
             if (type.equals(instructionType)) {
@@ -75,6 +67,23 @@ public class Instruction {
             }
         }
         return false;
+    }
+
+    public void updateTable() {
+        if (!updated) {
+            if (registers != null)
+                registers = getSubstituteRegisters(registers);
+            updated = true;
+        }
+    }
+
+    protected List<String> getSubstituteRegisters(List<String> registers) {
+        List<String> substitutedRegisters = new ArrayList<>();
+        RegisterTable table = parentMethod.getRegisterTable();
+        for (String register : registers) {
+            substitutedRegisters.add(table.getVariableName(register));
+        }
+        return substitutedRegisters;
     }
 
 }

@@ -3,8 +3,7 @@ package com.momoyeyu.smali_analyzer.entity;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,13 +16,44 @@ public class RegisterMap implements RegisterTable {
     private Map<String, Integer> variableIndexMap = new HashMap<>();
     private SmaliMethod parentMethod;
 
+    private static final Set<String> JAVA_KEYWORDS = new HashSet<>();
+    static {
+        String[] keywords = new String[]{
+                "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class",
+                "const", "continue", "default", "do", "double", "else", "enum", "extends", "final",
+                "finally", "float", "for", "goto", "if", "implements", "import", "instanceof", "int",
+                "interface", "long", "native", "new", "package", "private", "protected", "public",
+                "return", "short", "static", "strictfp", "super", "switch", "synchronized", "this",
+                "throw", "throws", "transient", "try", "void", "volatile", "while"
+        };
+        for (String keyword : keywords) {
+            JAVA_KEYWORDS.add(keyword);
+        }
+    }
+
     public static void main(String[] args) {
         System.out.println(getStdName("SmaliMethod"));
         System.out.println(getStdName("List<List<String>>"));
+        System.out.println(getStdName("java.lang.String[]"));
+        RegisterMap map = new RegisterMap(null);
+        System.out.println(map.getNewName("SmaliMethod"));
+        System.out.println(map.getNewName("SmaliMethod"));
     }
 
     public RegisterMap(SmaliMethod smaliMethod) {
         parentMethod = smaliMethod;
+        if (parentMethod != null) {
+            List<String> params = parentMethod.getParametersList();
+            for (int i = 0; i < params.size(); i++) {
+                String param = params.get(i);
+                String name;
+                if ( i == 0 && !parentMethod.isStaticModifier())
+                    name = "this";
+                else
+                    name = "arg" + i;
+                storeVariableWithName("p" + i, param, name);
+            }
+        }
     }
 
     /**
@@ -33,6 +63,11 @@ public class RegisterMap implements RegisterTable {
     @Override
     public void storeVariable(String register, String type) {
         String name = getNewName(type);
+        reigisterMap.put(register, name);
+        variableMap.put(name, new Variable(type));
+    }
+
+    private void storeVariableWithName(String register, String type, String name) {
         reigisterMap.put(register, name);
         variableMap.put(name, new Variable(type));
     }
@@ -55,21 +90,35 @@ public class RegisterMap implements RegisterTable {
      * @return a name that haven't been used in the namespace.
      */
     private String getNewName(String type) {
+        if (type == null || type.isEmpty()) {
+            type = "Var";
+        }
         if (!variableIndexMap.containsKey(type)) {
             variableIndexMap.put(type, 0);
         }
         int index = variableIndexMap.get(type);
-        String name = getStdName(type) + "_" + index++;
+        String stdName = getStdName(type);
+        String name = stdName + "_" + index++;
         while (variableMap.containsKey(name)) {
-            name = getStdName(type) + "_" + index++;
+            name = stdName + "_" + index++;
         }
         variableIndexMap.put(type, index);
+        if (name.endsWith("_0"))
+            name = name.substring(0, name.length() - 2);
+        while (variableMap.containsKey(name) || JAVA_KEYWORDS.contains(name))
+            name = name + "_0";
         return name;
     }
 
-    private static String getStdName(String type) {
+    private static String getStdName(String type) throws IllegalArgumentException {
         if (type == null || type.isEmpty()) {
-            return "";
+            throw new IllegalArgumentException("type is null or empty");
+        }
+        if (type.endsWith("[]")) {
+            String tmp = getStdName(type.substring(0, type.length() - 2));
+            if (tmp.endsWith("s"))
+                return tmp + "es";
+            return tmp + "s";
         }
         Matcher matcher = typePattern.matcher(type);
         if (matcher.find()) {
