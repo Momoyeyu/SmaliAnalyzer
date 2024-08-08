@@ -87,6 +87,7 @@ public class SmaliMethod extends SmaliElement {
             Logger.logException(e.getMessage());
             return Logger.logAnalysisFailure("method", signature);
         }
+        registerTable.storeParams();
         if ((ownerClass != null && ownerClass.getClassType().equals("interface") && this.body.isEmpty()) || nativeModifier) {
             return sb.append(";").toString();
         }
@@ -98,7 +99,7 @@ public class SmaliMethod extends SmaliElement {
             INSTRUCTION_TYPE subType = instruction.getSubType();
             INSTRUCTION_TYPE type = instruction.getType();
             instruction.updateTable();
-            if (subType == INSTRUCTION_TYPE.INVOKE_DIRECT) {
+            if (subType == INSTRUCTION_TYPE.INVOKE_CONSTRUCTOR) {
                 if (lastSubType == INSTRUCTION_TYPE.NEW_INSTANCE) {
                     sb.append("\t").append(stack.pop()).append(" ");
                     String instance = instruction.toString();
@@ -185,15 +186,12 @@ public class SmaliMethod extends SmaliElement {
         return annotation;
     }
 
+    public String getOwnerClassType() {
+        return ownerClass.getClassType();
+    }
+
     // setter
     public void setParametersList(List<String> parametersList) {
-        int i = isStaticModifier() ? 0 : 1;
-//        for (String parameter : parametersList) {
-//            this.registerTable.storeVariable("p" + i, null, "arg_" + i , parameter);
-//        }
-//        if (!isStaticModifier()) {
-//            this.registerTable.storeVariable("this", null, null, null);
-//        }
         this.parametersList = parametersList;
     }
 

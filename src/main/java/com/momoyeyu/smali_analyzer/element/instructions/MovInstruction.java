@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
@@ -14,6 +15,7 @@ public class MovInstruction extends Instruction {
     private String object;
     private String property;
     private String propertyType;
+    private boolean newVar;
 
     public static void main(String[] args) {
         System.out.println(new MovInstruction("iput v3, v2, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;->weight:F"));
@@ -28,7 +30,23 @@ public class MovInstruction extends Instruction {
 
     public MovInstruction(String instruction, SmaliMethod smaliMethod) {
         super(instruction, smaliMethod);
+        newVar = false;
         this.analyze();
+    }
+
+    @Override
+    public void updateTable() {
+        if (!updated) {
+            RegisterTable table = parentMethod.getRegisterTable();
+            if (operation.startsWith("get", 1)) {
+                String register = registers.getFirst();
+                if (table.getVariableName(register).equals(register)) {
+                    table.storeVariable(register, propertyType);
+                    newVar = true;
+                }
+            }
+            super.updateTable();
+        }
     }
 
     @Override
@@ -62,7 +80,9 @@ public class MovInstruction extends Instruction {
             return analysisFail("mov");
         }
         StringBuilder sb = new StringBuilder();
-        if (operation.substring(1).startsWith("put")) {
+        if (newVar)
+            sb.append(TypeUtils.getNameFromJava(propertyType)).append(" ");
+        if (operation.startsWith("put", 1)) {
             if (operation.startsWith("i")) {
                 sb.append(registers.getLast());
             } else {

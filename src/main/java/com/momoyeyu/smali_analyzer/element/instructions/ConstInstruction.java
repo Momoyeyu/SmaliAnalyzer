@@ -68,8 +68,7 @@ public class ConstInstruction extends Instruction {
                 default -> constType;
             };
             table.storeVariable(registers.getFirst(), newType);
-            registers = getSubstituteRegisters(registers);
-            updated = true;
+            super.updateTable();
         }
     }
 

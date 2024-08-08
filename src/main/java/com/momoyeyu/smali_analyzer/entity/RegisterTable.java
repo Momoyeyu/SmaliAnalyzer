@@ -16,4 +16,6 @@ public interface RegisterTable {
      * @return variable's name
      */
     String getVariableName(String register);
+
+    void storeParams();
 }

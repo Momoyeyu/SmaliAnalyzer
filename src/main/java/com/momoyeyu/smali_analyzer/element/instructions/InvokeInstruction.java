@@ -54,6 +54,8 @@ public class InvokeInstruction extends Instruction {
 
     @Override
     public INSTRUCTION_TYPE getSubType() {
+        if (operation.equals("invoke-direct") && methodName.equals("<init>"))
+            return INSTRUCTION_TYPE.INVOKE_CONSTRUCTOR;
         return switch (operation) {
             case "invoke-direct" -> INSTRUCTION_TYPE.INVOKE_DIRECT;
             case "invoke-virtual" -> INSTRUCTION_TYPE.INVOKE_VIRTUAL;
@@ -80,7 +82,7 @@ public class InvokeInstruction extends Instruction {
 //            sb.append(rt).append(" _").append(rt.toLowerCase()).append(" = ");
             sb.append(rt).append(" ret = ");
         }
-        if (operation.equals("invoke-direct")) {
+        if (this.getSubType() == INSTRUCTION_TYPE.INVOKE_CONSTRUCTOR) {
             String name = TypeUtils.getNameFromJava(callee);
             sb.append(name).append(" ret = ");
             sb.append("new ").append(name);

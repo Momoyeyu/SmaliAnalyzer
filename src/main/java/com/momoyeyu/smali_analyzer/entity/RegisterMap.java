@@ -42,16 +42,18 @@ public class RegisterMap implements RegisterTable {
 
     public RegisterMap(SmaliMethod smaliMethod) {
         parentMethod = smaliMethod;
+    }
+
+    @Override
+    public void storeParams() {
         if (parentMethod != null) {
+            if (!parentMethod.isStaticModifier())
+                storeVariableWithName("p0", parentMethod.getOwnerClassType(), "this");
             List<String> params = parentMethod.getParametersList();
-            for (int i = 0; i < params.size(); i++) {
-                String param = params.get(i);
-                String name;
-                if ( i == 0 && !parentMethod.isStaticModifier())
-                    name = "this";
-                else
-                    name = "arg" + i;
-                storeVariableWithName("p" + i, param, name);
+            int i = parentMethod.isStaticModifier() ? 0 : 1;
+            for (String param : params) {
+                storeVariableWithName("p" + i, param, "arg" + i);
+                i++;
             }
         }
     }

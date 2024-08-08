@@ -60,8 +60,7 @@ public class NewInstruction extends Instruction {
         if (!updated) {
             RegisterTable table = parentMethod.getRegisterTable();
             table.storeVariable(registers.getFirst(), newType);
-            registers = getSubstituteRegisters(registers);
-            updated = true;
+            super.updateTable();
         }
     }
 
