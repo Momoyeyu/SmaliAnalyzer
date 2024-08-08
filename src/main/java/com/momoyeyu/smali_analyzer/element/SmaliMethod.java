@@ -125,8 +125,25 @@ public class SmaliMethod extends SmaliElement {
                 lastType = type;
                 lastSubType = subType;
                 continue;
-            } else if (Instruction.equalType(type, INSTRUCTION_TYPE.TAG, INSTRUCTION_TYPE.SYNCHRONIZED)) {
+            } else if (type == INSTRUCTION_TYPE.RETURN) {
+                sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
+                lastType = type;
+                lastSubType = subType;
                 continue;
+            } else if (subType == INSTRUCTION_TYPE.TAG_END_METHOD) {
+                if (indentLevel > 1) {
+                    String tmp = "";
+                    if (lastType == INSTRUCTION_TYPE.RETURN) {
+                        int idx = sb.lastIndexOf("\t".repeat(indentLevel) + "return");
+                        tmp = sb.substring(idx + indentLevel);
+                        sb.delete(idx, sb.length());
+                    }
+                    while (indentLevel > 1) {
+                        indentLevel--;
+                        sb.append("\t".repeat(indentLevel)).append("}\n");
+                    }
+                    sb.append("\t".repeat(indentLevel)).append(tmp);
+                }
             } else if (subType == INSTRUCTION_TYPE.LABEL_TRY_START) {
                 Label label = (Label) instruction;
                 sb.append("\t".repeat(indentLevel)).append("try {\n");
@@ -167,13 +184,10 @@ public class SmaliMethod extends SmaliElement {
                         invokeInstruction.toString(),
                         "(.*?) ret = (.*)",
                         "$1 " + instruction + " $2")).append(";\n");
-            } else if (subType == INSTRUCTION_TYPE.TAG_END_METHOD) {
-                while (indentLevel > 1) {
-                    indentLevel--;
-                    sb.append("\t".repeat(indentLevel)).append("}\n");
-                }
-            } else if (Instruction.equalType(type, INSTRUCTION_TYPE.DEFAULT, INSTRUCTION_TYPE.TAG)) {
+            } else if (Instruction.equalType(type, INSTRUCTION_TYPE.DEFAULT)) {
                 sb.append("\t".repeat(indentLevel)).append(instruction).append("\n");
+            } else if (Instruction.equalType(type, INSTRUCTION_TYPE.TAG, INSTRUCTION_TYPE.SYNCHRONIZED)) {
+                continue;
             } else { //  if (Instruction.equalType(type, INSTRUCTION_TYPE.DEFAULT, INSTRUCTION_TYPE.NEW_ARRAY, ...))
                 sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
             }

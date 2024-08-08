@@ -115,7 +115,10 @@ public class FileAnalyzer {
                             }
                         } else
                             instructions.add(line);
-                        if (line.startsWith(".end method")) break;
+                        if (line.startsWith(".end method")) {
+                            instructions.add(line);
+                            break;
+                        }
                     }
                     // add method to the current class
                     if (ConstructorAnalyzer.isConstructor(signature)) {
