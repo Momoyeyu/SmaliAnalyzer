@@ -26,6 +26,7 @@ public class MethodAnalyzer {
         System.out.println(getSignature(".method public varargs doInBackground([Ljava/lang/Object;)Ljava/lang/Void;"));
         System.out.println(getSignature(".method public abstract setActivityChooserModel(Landroidx/appcompat/widget/ActivityChooserModel;)V;"));
         System.out.println(getSignature(".method public static get(Landroid/content/Context;Ljava/lang/String;I)Landroidx/appcompat/widget/ActivityChooserModel;"));
+        System.out.println(getSignature(".method public onItemSelected(Landroid/widget/AdapterView;Landroid/view/View;IJ)V"));
     }
 
     /**

@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class OperationInstruction extends Instruction {
     private static final Pattern operationPattern = Pattern.compile(
-            "^((add)|(sub)|(mul)|(div)|(rem)|(and)|(or)|(xor)|(shl)|(shr)|(ushr))-((int)|(long)|(float)|(double))(/\\S+)?\\s+(.+)");
+            "^(add|sub|mul|div|rem|and|or|xor|shl|shr|ushr|neg)-(int|long|float|double)(/\\S+)?\\s+(.+)");
 
     private String operationType;
     private String valueType;
@@ -35,6 +35,7 @@ public class OperationInstruction extends Instruction {
         System.out.println(new OperationInstruction("add-float/2addr v0, v1"));
         System.out.println(new OperationInstruction("add-float v0, v1, v2"));
         System.out.println(new OperationInstruction("add-int/lit8 v1, v1, 0x1"));
+        System.out.println(new OperationInstruction("neg-int v3, v7"));
     }
 
     private OperationInstruction(String instruction) {
@@ -60,10 +61,10 @@ public class OperationInstruction extends Instruction {
     @Override
     protected void analyze() {
         Matcher matcher = operationPattern.matcher(signature);
-        if (matcher.matches()) {
+        if (matcher.find()) {
             operationType = matcher.group(1);
-            valueType = matcher.group(13);
-            registers = getRegistersList(matcher.group(19));
+            valueType = matcher.group(2);
+            registers = getRegistersList(matcher.group(4));
             super.analyze();
         }
     }
@@ -73,7 +74,11 @@ public class OperationInstruction extends Instruction {
         if (!analyzed)
             return analysisFail("calculation");
         StringBuilder sb = new StringBuilder();
-        if (registers.size() == 3) {
+        if (operationType.equals("neg")) {
+            if (newRegister())
+                sb.append(valueType).append(" ");
+            sb.append(registers.get(0)).append(" = -").append(registers.get(1));
+        } else if (registers.size() == 3) {
             if (newRegister())
                 sb.append(valueType).append(" ");
             sb.append(registers.get(0)).append(" = ");
@@ -102,11 +107,11 @@ public class OperationInstruction extends Instruction {
     public static boolean isOperationInstruction(String instruction) {
         if (instruction == null)
             return false;
-        return operationPattern.matcher(instruction).matches();
+        return operationPattern.matcher(instruction).find();
     }
 
     private boolean newRegister() {
-        String first = registers.get(0);
+        String first = registers.getFirst();
         for (int i = 1; i < registers.size(); i++) {
             if (first.equals(registers.get(i)))
                 return false;

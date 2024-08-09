@@ -165,12 +165,6 @@ public class SmaliMethod extends SmaliElement {
                     lastType = INSTRUCTION_TYPE.LABEL;
                     continue;
                 }
-//            } else if (type == INSTRUCTION_TYPE.CATCH) {
-//                if (lastSubType == INSTRUCTION_TYPE.LABEL_TRY_END) {
-//                    sb.deleteCharAt(sb.length() - 1).append(" ").append(instruction).append(" {\n");
-//                } else {
-//                    sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
-//                }
             } else if (Instruction.equalType(type, INSTRUCTION_TYPE.CONDITION)) {
                 ConditionInstruction condition = (ConditionInstruction) instruction;
                 sb.append("\t".repeat(indentLevel)).append(condition.reverseCondition()).append(" {\n");
@@ -211,6 +205,7 @@ public class SmaliMethod extends SmaliElement {
                 MethodAnalyzer.analyze(this);
             } catch (Exception e) {
                 Logger.logException(e.getMessage());
+                Logger.log("[INFO] belong class: " + ownerClass.getSignature());
                 analyzed = true;
                 return Logger.logAnalysisFailure("method", signature);
             }
