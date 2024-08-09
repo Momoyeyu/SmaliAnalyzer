@@ -48,11 +48,13 @@ public class OperationInstruction extends Instruction {
 
     @Override
     public void updateTable() {
-        if (registers.size() == 3 && newRegister()) {
-            RegisterTable table = parentMethod.getRegisterTable();
-            table.storeVariable(registers.getFirst(), valueType);
+        if (!updated) {
+            if (registers.size() == 3 && newRegister()) {
+                RegisterTable table = parentMethod.getRegisterTable();
+                table.storeVariable(registers.getFirst(), valueType);
+            }
+            super.updateTable();
         }
-        super.updateTable();
     }
 
     @Override
