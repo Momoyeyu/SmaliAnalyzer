@@ -32,12 +32,13 @@ public class RegisterMap implements RegisterTable {
     }
 
     public static void main(String[] args) {
-        System.out.println(getStdName("SmaliMethod"));
-        System.out.println(getStdName("List<List<String>>"));
-        System.out.println(getStdName("java.lang.String[]"));
         RegisterMap map = new RegisterMap(null);
-        System.out.println(map.getNewName("SmaliMethod"));
-        System.out.println(map.getNewName("SmaliMethod"));
+        System.out.println(map.nameGenerator("SmaliMethod"));
+        System.out.println(map.nameGenerator("java.lang.Class"));
+        System.out.println(map.nameGenerator("smaliMethod"));
+        System.out.println(map.nameGenerator("List<List<String>>"));
+        System.out.println(map.nameGenerator("java.lang.Class[]"));
+        System.out.println(map.nameGenerator("java.lang.String[]"));
     }
 
     public RegisterMap(SmaliMethod smaliMethod) {
@@ -64,7 +65,7 @@ public class RegisterMap implements RegisterTable {
      */
     @Override
     public void storeVariable(String register, String type) {
-        String name = getNewName(type);
+        String name = nameGenerator(type);
         reigisterMap.put(register, name);
         variableMap.put(name, new Variable(type));
     }
@@ -103,42 +104,43 @@ public class RegisterMap implements RegisterTable {
      * @param type datatype
      * @return a name that haven't been used in the namespace.
      */
-    private String getNewName(String type) {
+    private String nameGenerator(String type) {
         if (type == null || type.isEmpty()) {
-            type = "Var";
+            type = "Object";
         }
         if (!variableIndexMap.containsKey(type)) {
-            variableIndexMap.put(type, 0);
+            variableIndexMap.put(type, 1);
         }
         int index = variableIndexMap.get(type);
-        String stdName = getStdName(type);
+        String stdName = stdNameGenerator(type);
+        while (JAVA_KEYWORDS.contains(stdName) || stdName.equals(type))
+            stdName = "_" + stdName;
+        if (!variableMap.containsKey(stdName))
+            return stdName;
         String name = stdName + "_" + index++;
         while (variableMap.containsKey(name)) {
             name = stdName + "_" + index++;
         }
         variableIndexMap.put(type, index);
-        if (name.endsWith("_0"))
-            name = name.substring(0, name.length() - 2);
-        while (variableMap.containsKey(name) || JAVA_KEYWORDS.contains(name))
-            name = name + "_0";
         return name;
     }
 
-    private static String getStdName(String type) throws IllegalArgumentException {
+    public static String stdNameGenerator(String type) throws IllegalArgumentException {
         if (type == null || type.isEmpty()) {
             throw new IllegalArgumentException("type is null or empty");
         }
         if (type.endsWith("[]")) {
-            String tmp = getStdName(type.substring(0, type.length() - 2));
+            String tmp = stdNameGenerator(type.substring(0, type.length() - 2));
             if (tmp.endsWith("s"))
                 return tmp + "es";
             return tmp + "s";
         }
         Matcher matcher = typePattern.matcher(type);
         if (matcher.find()) {
-            return getStdName(matcher.group(2)) + matcher.group(1);
+            return stdNameGenerator(matcher.group(2)) + matcher.group(1);
         }
         String name = TypeUtils.getNameFromJava(type);
-        return name.substring(0, 1).toLowerCase() + name.substring(1);
+        name = name.substring(0, 1).toLowerCase() + name.substring(1);
+        return name;
     }
 }
