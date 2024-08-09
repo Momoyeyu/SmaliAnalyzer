@@ -78,6 +78,8 @@ public class Instruction {
     }
 
     protected List<String> getSubstituteRegisters(List<String> registers) {
+        if (parentMethod == null)
+            return registers;
         List<String> substitutedRegisters = new ArrayList<>();
         RegisterTable table = parentMethod.getRegisterTable();
         for (String register : registers) {

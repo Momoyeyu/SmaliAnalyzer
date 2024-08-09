@@ -2,6 +2,7 @@ package com.momoyeyu.smali_analyzer.element.instructions;
 
 public enum INSTRUCTION_TYPE {
     DEFAULT,
+    CAST,
     CATCH, CATCHALL,
     CONDITION,
     CONST, CONST_STRING, CONST_CLASS,

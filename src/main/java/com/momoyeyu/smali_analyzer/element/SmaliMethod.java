@@ -71,6 +71,8 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new ExceptionInstruction(instruction, this));
             } else if (OperationInstruction.isOperationInstruction(instruction)) {
                 body.add(new OperationInstruction(instruction, this));
+            } else if (CastInstruction.isCastInstruction(instruction)) {
+                body.add(new CastInstruction(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }
