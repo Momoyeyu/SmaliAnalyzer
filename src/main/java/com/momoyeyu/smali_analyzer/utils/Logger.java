@@ -3,10 +3,7 @@ package com.momoyeyu.smali_analyzer.utils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static com.momoyeyu.smali_analyzer.utils.PathUtils.DEFAULT_LOG;
 
@@ -23,7 +20,8 @@ public class Logger {
     private static String savePath = null;
     private static int total = 0;
 
-    private static List<String> logs = new ArrayList<String>();
+    private static List<String> logs = new ArrayList<>();
+    private static Set<String> todo = new HashSet<>();
 
     /**
      * return standard error log
@@ -33,6 +31,15 @@ public class Logger {
      */
     public static String logAnalysisFailure(String type, String element) {
         return "// " + log("[ERROR] Fail to analyze " + type + ": " + element + "\n");
+    }
+
+    public static void logTodo(String type, String element) {
+        todo.add("[TODO] unknown " + type + ": " + element);
+    }
+
+    public static void loadTodo() {
+        logs.addAll(todo);
+        total += todo.size();
     }
 
     /**
