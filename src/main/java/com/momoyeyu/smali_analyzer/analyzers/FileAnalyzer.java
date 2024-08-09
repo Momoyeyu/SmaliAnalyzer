@@ -2,7 +2,6 @@ package com.momoyeyu.smali_analyzer.analyzers;
 
 import com.momoyeyu.smali_analyzer.element.*;
 import com.momoyeyu.smali_analyzer.repository.ClassRepository;
-import com.momoyeyu.smali_analyzer.utils.Formatter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,6 +28,9 @@ public class FileAnalyzer {
         String inputPath = "C:\\Users\\antiy\\Desktop\\projects\\SmaliAnalyzer\\res\\data\\input\\ActivityChooserModel.smali";
         FileAnalyzer smaliFileReader = new FileAnalyzer(inputPath);
         System.out.println(smaliFileReader.smaliFile.toString());
+        System.out.println(getInstruction("check-cast v0 java.lang.String # check casting"));
+        System.out.println(getInstruction("const-string v0 \"this is a # string\" # String"));
+
     }
 
     public static String getOutputPath(String inputPath) {
@@ -65,12 +67,12 @@ public class FileAnalyzer {
         try {
             scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
-                String line = Formatter.getInstruction(scanner.nextLine());
+                String line = getInstruction(scanner.nextLine());
                 if (lastFlag != null && lastFlag.equals(".field") && curSmaliField != null) {
                     if (line.startsWith(".annotation")) {
                         curSmaliField.addAnnotation(line);
                         while (scanner.hasNextLine()) {
-                            line = Formatter.getInstruction(scanner.nextLine());
+                            line = getInstruction(scanner.nextLine());
                             curSmaliField.addAnnotation(line);
                             if (line.startsWith(".end annotation")) break;
                         }
@@ -86,7 +88,7 @@ public class FileAnalyzer {
                     }
                     smaliFile.addClass(currentSmaliClass);
                     ClassRepository.addClass(currentSmaliClass);
-                    line = Formatter.getInstruction(scanner.nextLine());
+                    line = getInstruction(scanner.nextLine());
                     if (line.startsWith(".super")) {
                         try {
                             currentSmaliClass.setSuperClass(ClassRepository.getClass(line));
@@ -101,12 +103,12 @@ public class FileAnalyzer {
                     List<String> instructions = new ArrayList<>();
                     // read the whole method
                     while (scanner.hasNextLine()) {
-                        line = Formatter.getInstruction(scanner.nextLine());
+                        line = getInstruction(scanner.nextLine());
                         if (line.isBlank()) continue;
                         if (line.startsWith(".annotation")) {
                             StringBuilder sb = new StringBuilder(line);
                             while (scanner.hasNextLine()) {
-                                line = Formatter.getInstruction(scanner.nextLine());
+                                line = getInstruction(scanner.nextLine());
                                 sb.append(line);
                                 if (line.startsWith(".end annotation")) {
                                     annotation = sb.toString();
@@ -144,5 +146,60 @@ public class FileAnalyzer {
                 scanner.close();
             }
         }
+    }
+
+    /**
+     * Remove space and comment from smali source.
+     * @param line a line of smali source code
+     * @return smali instruction without space and comment
+     */
+    public static String getInstruction(String line) {
+        line = line.strip();
+        StringStatus status = StringStatus.OUTSIDE;
+        for (int i = 0; i < line.length(); i++) {
+            char ch = line.charAt(i);
+            switch (status) {
+                case OUTSIDE:
+                    switch (ch) {
+                        case '#':
+                            return line.substring(0, i).strip();
+                        case '"':
+                            status = StringStatus.IN_STRING;
+                            continue;
+                        case '\'':
+                            status = StringStatus.IN_CHAR;
+                            continue;
+                        default:
+                            continue;
+                    }
+                case IN_STRING:
+                    switch (ch) {
+                        case '\\':
+                            i++;
+                            continue;
+                        case '"':
+                            status = StringStatus.OUTSIDE;
+                            continue;
+                        default:
+                            continue;
+                    }
+                case IN_CHAR:
+                    switch (ch) {
+                        case '\\':
+                            i++;
+                            continue;
+                        case '\'':
+                            status = StringStatus.OUTSIDE;
+                            continue;
+                        default:
+                            continue;
+                    }
+            }
+        }
+        return line;
+    }
+
+    private enum StringStatus {
+        OUTSIDE, IN_STRING, IN_CHAR
     }
 }
