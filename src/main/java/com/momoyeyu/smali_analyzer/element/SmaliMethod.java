@@ -38,6 +38,7 @@ public class SmaliMethod extends SmaliElement {
         this.abstractModifier = false;
         this.synchronizedModifier = false;
         this.body = new ArrayList<>();
+        registerTable = new RegisterMap(this);
         for (String instruction : instructions) {
             if (MovArrayInstruction.isArrayMovInstruction(instruction)) {
                 body.add(new MovArrayInstruction(instruction, this));
@@ -83,7 +84,6 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new Instruction(instruction, this));
             }
             this.toJava();
-            registerTable = new RegisterMap(this);
         }
     }
 
@@ -183,7 +183,6 @@ public class SmaliMethod extends SmaliElement {
             } else if (subType == INSTRUCTION_TYPE.RESULT && lastType == INSTRUCTION_TYPE.INVOKE) {
                 InvokeInstruction invokeInstruction = (InvokeInstruction) stack.pop();
                 ((ResultInstruction) instruction).setResultType(invokeInstruction.getReturnType());
-                instruction.updateTable();
                 sb.append("\t".repeat(indentLevel)).append(Formatter.replacePattern(
                         invokeInstruction.toString(),
                         "(.*?) ret = (.*)",

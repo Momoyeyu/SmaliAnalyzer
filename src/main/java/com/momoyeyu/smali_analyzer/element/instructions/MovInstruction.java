@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class MovInstruction extends Instruction {
 
-    private static final Pattern movPattern = Pattern.compile("move(-object)?(/\\S+)?\\s+(.+)");
+    private static final Pattern movPattern = Pattern.compile("move(-object|-wide)?(/\\S+)?\\s+(.+)");
 
     private String dataType = "Object";
 
@@ -18,6 +18,7 @@ public class MovInstruction extends Instruction {
         System.out.println(new MovInstruction("move v0, v3"));
         System.out.println(new MovInstruction("move/from16 v31, v5"));
         System.out.println(new MovInstruction("move-object/from16 v28, v6"));
+        System.out.println(new MovInstruction("move-wide v3, v5"));
     }
 
     // testing

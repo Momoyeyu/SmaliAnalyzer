@@ -32,6 +32,8 @@ public class SmaliConstructor extends SmaliMethod {
         if (!ownerClass.isAnalyzed()) {
             ownerClass.toJava();
         }
+        if (initType.equals("<clinit>"))
+            return "static";
         StringBuilder sb = new StringBuilder();
         if (!accessModifier.equals("default")) {
             sb.append(accessModifier).append(" ");
