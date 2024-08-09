@@ -17,5 +17,7 @@ public interface RegisterTable {
      */
     String getVariableName(String register);
 
+    String getVariableType(String register);
+
     void storeParams();
 }

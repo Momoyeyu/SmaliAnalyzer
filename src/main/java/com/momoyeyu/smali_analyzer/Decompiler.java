@@ -21,7 +21,7 @@ public class Decompiler {
         }
         Logger.log("[INFO] Input directory: " + inputDir, true);
         String outputDir = null;
-//        outputDir = "C:\Users\antiy\Desktop";
+        outputDir = "C:\\Users\\antiy\\Desktop\\projects\\SmaliAnalyzer\\res\\data\\output";
         if (outputDir == null)
             outputDir = PathUtils.selectPath("Please select the output directory", PathUtils.SelectType.SAVE);
         if (outputDir == null) {

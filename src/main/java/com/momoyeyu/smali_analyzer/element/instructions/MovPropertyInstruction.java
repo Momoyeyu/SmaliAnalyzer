@@ -77,7 +77,7 @@ public class MovPropertyInstruction extends Instruction {
     @Override
     public String toString() {
         if (!analyzed) {
-            return analysisFail("mov");
+            return analysisFail("mov property");
         }
         StringBuilder sb = new StringBuilder();
         if (newVar)

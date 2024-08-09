@@ -49,7 +49,7 @@ public class MovArrayInstruction extends Instruction {
     @Override
     public String toString() {
         if (!analyzed) {
-            return analysisFail("array mov");
+            return analysisFail("mov array");
         }
         StringBuilder sb = new StringBuilder();
         String valueRegister = registers.get(0);

@@ -87,6 +87,18 @@ public class RegisterMap implements RegisterTable {
     }
 
     /**
+     * @param register register name
+     * @return the datatype of the variable inside the register
+     */
+    @Override
+    public String getVariableType(String register) {
+        if (!reigisterMap.containsKey(register)) {
+            return "Object";
+        }
+        return variableMap.get(reigisterMap.get(register)).getType();
+    }
+
+    /**
      * Return a name that don't conflict with other name.
      * @param type datatype
      * @return a name that haven't been used in the namespace.
