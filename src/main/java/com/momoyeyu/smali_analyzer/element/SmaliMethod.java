@@ -69,6 +69,8 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new SynchronizedInstruction(instruction, this));
             } else if (ExceptionInstruction.isExceptionInstruction(instruction)) {
                 body.add(new ExceptionInstruction(instruction, this));
+            } else if (OperationInstruction.isOperationInstruction(instruction)) {
+                body.add(new OperationInstruction(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }
