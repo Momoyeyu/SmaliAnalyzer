@@ -65,6 +65,7 @@ public class ResultInstruction extends Instruction {
 
     // setter
     public void setResultType(String resultType) {
+        updated = false;
         this.resultType = resultType;
     }
 

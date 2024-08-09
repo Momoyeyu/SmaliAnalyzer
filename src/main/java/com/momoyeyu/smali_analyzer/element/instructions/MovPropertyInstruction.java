@@ -14,12 +14,12 @@ public class MovPropertyInstruction extends Instruction {
     private String object;
     private String property;
     private String propertyType;
-    private boolean newVar;
 
     public static void main(String[] args) {
         System.out.println(new MovPropertyInstruction("iput v3, v2, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;->weight:F"));
-        System.out.println(new MovPropertyInstruction("iget-object v2, p0, Landroidx/appcompat/widget/ActivityChooserModel;->mIntent:Landroid/content/Intent;"));
-        System.out.println();
+        MovPropertyInstruction instruction = new MovPropertyInstruction("iget-object v2, p0, Landroidx/appcompat/widget/ActivityChooserModel;->mIntent:Landroid/content/Intent;");
+        instruction.updateTable();
+        System.out.println(instruction);
     }
 
     // testing
@@ -29,7 +29,6 @@ public class MovPropertyInstruction extends Instruction {
 
     public MovPropertyInstruction(String instruction, SmaliMethod smaliMethod) {
         super(instruction, smaliMethod);
-        newVar = false;
         this.analyze();
     }
 
@@ -40,7 +39,6 @@ public class MovPropertyInstruction extends Instruction {
                 String register = registers.getFirst();
                 if (registerTable.getVariableName(register).equals(register)) {
                     registerTable.storeVariable(register, propertyType);
-                    newVar = true;
                 }
             }
             super.updateTable();
@@ -78,8 +76,6 @@ public class MovPropertyInstruction extends Instruction {
             return analysisFail("mov property");
         }
         StringBuilder sb = new StringBuilder();
-        if (newVar)
-            sb.append(TypeUtils.getNameFromJava(propertyType)).append(" ");
         if (operation.startsWith("put", 1)) {
             if (operation.startsWith("i")) {
                 sb.append(registers.getLast());
@@ -88,6 +84,7 @@ public class MovPropertyInstruction extends Instruction {
             }
             sb.append(".").append(property).append(" = ").append(registers.getFirst());
         } else { // get
+            sb.append(TypeUtils.getNameFromJava(propertyType)).append(" ");
             sb.append(registers.getFirst()).append(" = ");
             if (operation.startsWith("i")) {
                 sb.append(registers.getLast());

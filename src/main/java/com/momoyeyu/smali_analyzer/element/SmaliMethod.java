@@ -183,6 +183,7 @@ public class SmaliMethod extends SmaliElement {
             } else if (subType == INSTRUCTION_TYPE.RESULT && lastType == INSTRUCTION_TYPE.INVOKE) {
                 InvokeInstruction invokeInstruction = (InvokeInstruction) stack.pop();
                 ((ResultInstruction) instruction).setResultType(invokeInstruction.getReturnType());
+                instruction.updateTable();
                 sb.append("\t".repeat(indentLevel)).append(Formatter.replacePattern(
                         invokeInstruction.toString(),
                         "(.*?) ret = (.*)",
