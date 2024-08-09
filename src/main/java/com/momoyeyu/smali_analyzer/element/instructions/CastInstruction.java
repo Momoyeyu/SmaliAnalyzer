@@ -1,7 +1,6 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
-import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.regex.Matcher;
@@ -49,10 +48,9 @@ public class CastInstruction extends Instruction {
 
     @Override
     public void updateTable() {
-        RegisterTable table = parentMethod.getRegisterTable();
         if (!updated) {
-            oldName = table.getVariableName(oldName);
-            table.storeVariable(registers.getFirst(), newType);
+            oldName = registerTable.getVariableName(oldName);
+            registerTable.storeVariable(registers.getFirst(), newType);
             super.updateTable();
         }
     }

@@ -1,7 +1,6 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
-import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 
 import java.util.HashMap;
@@ -51,8 +50,7 @@ public class OperationInstruction extends Instruction {
     public void updateTable() {
         if (!updated) {
             if (registers.size() == 3 && newRegister()) {
-                RegisterTable table = parentMethod.getRegisterTable();
-                table.storeVariable(registers.getFirst(), valueType);
+                registerTable.storeVariable(registers.getFirst(), valueType);
             }
             super.updateTable();
         }

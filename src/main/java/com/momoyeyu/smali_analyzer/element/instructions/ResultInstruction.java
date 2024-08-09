@@ -1,7 +1,6 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
-import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,8 +39,7 @@ public class ResultInstruction extends Instruction {
     @Override
     public void updateTable() {
         if (!updated && resultType != null) {
-            RegisterTable table = parentMethod.getRegisterTable();
-            table.storeVariable(registers.getFirst(), resultType);
+            registerTable.storeVariable(registers.getFirst(), resultType);
             super.updateTable();
         }
     }

@@ -1,7 +1,6 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
-import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
@@ -37,11 +36,10 @@ public class MovPropertyInstruction extends Instruction {
     @Override
     public void updateTable() {
         if (!updated) {
-            RegisterTable table = parentMethod.getRegisterTable();
             if (operation.startsWith("get", 1)) {
                 String register = registers.getFirst();
-                if (table.getVariableName(register).equals(register)) {
-                    table.storeVariable(register, propertyType);
+                if (registerTable.getVariableName(register).equals(register)) {
+                    registerTable.storeVariable(register, propertyType);
                     newVar = true;
                 }
             }

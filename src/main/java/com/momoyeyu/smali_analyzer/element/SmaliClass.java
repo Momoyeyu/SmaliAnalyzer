@@ -50,7 +50,7 @@ public class SmaliClass extends SmaliElement {
 //            sb.append("\t".repeat(Math.max(0, indent + 1))).append(field.toJava()).append("\n");
         }
         for (SmaliMethod method : smaliMethodList) {
-            sb.append(Formatter.addIndent(method.toString(), indent + 1));
+            sb.append('\n').append(Formatter.addIndent(method.toString(), indent + 1));
 //            sb.append("\t".repeat(Math.max(0, indent + 1))).append(method.toJava()).append(";\n\n");
         }
         for (SmaliClass superClass : subClassList) {

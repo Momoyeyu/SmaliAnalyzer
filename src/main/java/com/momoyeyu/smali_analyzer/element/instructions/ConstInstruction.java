@@ -1,7 +1,6 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
-import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
@@ -60,14 +59,13 @@ public class ConstInstruction extends Instruction {
     @Override
     public void updateTable() {
         if (!updated) {
-            RegisterTable table = parentMethod.getRegisterTable();
             String newType = switch (constType) {
                 case "class" -> "java.lang.Class";
                 case "string" -> "java.lang.String";
                 case "" -> "java.lang.Object";
                 default -> constType;
             };
-            table.storeVariable(registers.getFirst(), newType);
+            registerTable.storeVariable(registers.getFirst(), newType);
             super.updateTable();
         }
     }

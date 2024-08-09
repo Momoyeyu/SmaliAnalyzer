@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.entity.RegisterMap;
 import com.momoyeyu.smali_analyzer.entity.RegisterTable;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 
@@ -15,6 +16,7 @@ public class Instruction {
     protected String operation;
     protected List<String> registers;
     protected SmaliMethod parentMethod;
+    protected final RegisterTable registerTable;
     protected boolean analyzed;
     protected boolean updated;
 
@@ -27,6 +29,10 @@ public class Instruction {
         this.parentMethod = parentMethod;
         analyzed = false;
         updated = false;
+        if (parentMethod != null)
+            registerTable = parentMethod.getRegisterTable();
+        else
+            registerTable = new RegisterMap(new SmaliMethod(""));
     }
 
     protected List<String> getRegistersList(String registers) {
