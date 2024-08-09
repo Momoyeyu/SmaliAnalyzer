@@ -43,7 +43,7 @@ public class MovArrayInstruction extends Instruction {
 
     @Override
     public INSTRUCTION_TYPE getType() {
-        return INSTRUCTION_TYPE.MOV_ARRAY;
+        return INSTRUCTION_TYPE.MOV;
     }
 
     @Override

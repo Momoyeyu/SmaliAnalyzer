@@ -8,9 +8,9 @@ import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MovInstruction extends Instruction {
+public class MovPropertyInstruction extends Instruction {
 
-    private static final Pattern movPattern = Pattern.compile("^((i)|(s))((put)|(get))(-(\\S+))?\\s+(.+),\\s*(\\S+)->(\\S+):(\\S+);?");
+    private static final Pattern movPropertyPattern = Pattern.compile("^((i)|(s))((put)|(get))(-(\\S+))?\\s+(.+),\\s*(\\S+)->(\\S+):(\\S+);?");
 
     private String object;
     private String property;
@@ -18,17 +18,17 @@ public class MovInstruction extends Instruction {
     private boolean newVar;
 
     public static void main(String[] args) {
-        System.out.println(new MovInstruction("iput v3, v2, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;->weight:F"));
-        System.out.println(new MovInstruction("iget-object v2, p0, Landroidx/appcompat/widget/ActivityChooserModel;->mIntent:Landroid/content/Intent;"));
+        System.out.println(new MovPropertyInstruction("iput v3, v2, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;->weight:F"));
+        System.out.println(new MovPropertyInstruction("iget-object v2, p0, Landroidx/appcompat/widget/ActivityChooserModel;->mIntent:Landroid/content/Intent;"));
         System.out.println();
     }
 
     // testing
-    private MovInstruction(String instruction) {
+    private MovPropertyInstruction(String instruction) {
         this(instruction, null);
     }
 
-    public MovInstruction(String instruction, SmaliMethod smaliMethod) {
+    public MovPropertyInstruction(String instruction, SmaliMethod smaliMethod) {
         super(instruction, smaliMethod);
         newVar = false;
         this.analyze();
@@ -51,7 +51,7 @@ public class MovInstruction extends Instruction {
 
     @Override
     protected void analyze() {
-        Matcher matcher = movPattern.matcher(signature);
+        Matcher matcher = movPropertyPattern.matcher(signature);
         if (matcher.find()) {
             Stepper stp = new Stepper();
             operation = matcher.group(stp.step(1)) + matcher.group(stp.step(3));
@@ -66,7 +66,7 @@ public class MovInstruction extends Instruction {
 
     @Override
     public INSTRUCTION_TYPE getSubType() {
-        return INSTRUCTION_TYPE.MOV;
+        return INSTRUCTION_TYPE.MOV_PROPERTY;
     }
 
     @Override
@@ -101,10 +101,10 @@ public class MovInstruction extends Instruction {
         return sb.toString();
     }
 
-    public static boolean isMovInstruction(String instruction) {
+    public static boolean isMovPropertyInstruction(String instruction) {
         if (instruction == null)
             return false;
-        return movPattern.matcher(instruction).matches();
+        return movPropertyPattern.matcher(instruction).matches();
     }
 
     // getter

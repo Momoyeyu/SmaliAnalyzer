@@ -47,8 +47,8 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new ConditionInstruction(instruction, this));
             } else if (ConstInstruction.isConstInstruction(instruction)) {
                 body.add(new ConstInstruction(instruction, this));
-            } else if (MovInstruction.isMovInstruction(instruction)) {
-                body.add(new MovInstruction(instruction, this));
+            } else if (MovPropertyInstruction.isMovPropertyInstruction(instruction)) {
+                body.add(new MovPropertyInstruction(instruction, this));
             } else if (NewInstruction.isNewInstruction(instruction)) {
                 body.add(new NewInstruction(instruction, this));
             } else if (ResultInstruction.isResultInstruction(instruction)) {
