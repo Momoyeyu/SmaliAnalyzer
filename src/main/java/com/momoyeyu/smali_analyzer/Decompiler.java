@@ -44,7 +44,6 @@ public class Decompiler {
         }
         Logger.log("[INFO] Output directory: " + outputDir, true);
         decompile(inputDir, outputDir);
-        Logger.loadTodo();
         Logger.log("[INFO] Total logs: " + Logger.getTotal());
         Logger.saveLogs();
         System.exit(0);

@@ -33,13 +33,12 @@ public class Logger {
         return "// " + log("[ERROR] Fail to analyze " + type + ": " + element + "\n");
     }
 
-    public static void logTodo(String type, String element) {
-        todo.add("[TODO] unknown " + type + ": " + element);
-    }
-
-    public static void loadTodo() {
-        logs.addAll(todo);
-        total += todo.size();
+    public static void logTodo(String type, String element, String info) {
+        String operator = element.split(" ")[0];
+        if (!todo.contains(operator)) {
+            todo.add(operator);
+            logs.add("[TODO] unknown " + type + ": " + element + "\n[INFO] " + info);
+        }
     }
 
     /**
