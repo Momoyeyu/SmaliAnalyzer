@@ -93,7 +93,7 @@ public class SmaliMethod extends SmaliElement {
             return Logger.logAnalysisFailure("method", signature);
         }
         registerTable.storeParams();
-        if ((ownerClass != null && ownerClass.getClassType().equals("interface") && this.body.isEmpty()) || nativeModifier) {
+        if ((ownerClass != null && ownerClass.getClassFileType().equals("interface") && this.body.isEmpty()) || nativeModifier) {
             return sb.append(";").toString();
         }
         sb.append(" {\n");

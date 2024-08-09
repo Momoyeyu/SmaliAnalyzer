@@ -34,13 +34,13 @@ public class ClassAnalyzer {
             Stepper stepper = new Stepper();
             smaliClass.setAccessModifier(matcher.group(stepper.step(5)));
             smaliClass.setFinalModifier(matcher.group(stepper.step(5)));
-            smaliClass.setClassType(matcher.group(stepper.step(2))); // interface?
+            smaliClass.setClassFileType(matcher.group(stepper.step(2))); // interface?
             smaliClass.setAbstractModifier(matcher.group(stepper.step(2)));
             stepper.step(2); // synthetic
-            smaliClass.setClassType(matcher.group(stepper.step(2))); // enum?
+            smaliClass.setClassFileType(matcher.group(stepper.step(2))); // enum?
             stepper.step(2); // annotation
             String pkg = matcher.group(stepper.step(3)) == null ? "" : matcher.group(stepper.step(0)) + ".";
-            smaliClass.setPackageName(pkg.replaceAll("/", ".") + matcher.group(stepper.step(2)));
+            smaliClass.setRoutes(pkg.replaceAll("/", ".") + matcher.group(stepper.step(2)));
             if (matcher.group(stepper.step(2)) != null) {
                 smaliClass.setName(matcher.group(stepper.step(0)));
             } else {
@@ -54,7 +54,7 @@ public class ClassAnalyzer {
     public static String getRoutes(SmaliClass smaliClass) {
         if (!smaliClass.isAnalyzed())
             analyze(smaliClass);
-        return smaliClass.getPackageName();
+        return smaliClass.getRoutes();
     }
 
     /**
@@ -84,7 +84,7 @@ public class ClassAnalyzer {
     public static boolean isMainClass(SmaliClass smaliClass) {
         if (!smaliClass.isAnalyzed())
             ClassAnalyzer.analyze(smaliClass);
-        return smaliClass.getName().equals(TypeUtils.getObjectNameFromJava(smaliClass.getPackageName()));
+        return smaliClass.getName().equals(TypeUtils.getObjectNameFromJava(smaliClass.getRoutes()));
     }
 
 }

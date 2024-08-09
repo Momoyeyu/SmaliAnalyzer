@@ -14,8 +14,8 @@ public class SmaliClass extends SmaliElement {
     private List<SmaliMethod> smaliMethodList; // add, get
     private List<SmaliField> smaliFieldList; // add, get
 
-    private String packageName;
-    private String classType;
+    private String routes;
+    private String classFileType;
     private boolean abstractModifier;
 
     // constructor
@@ -28,14 +28,14 @@ public class SmaliClass extends SmaliElement {
         this.subClassList = subClassList == null ? new ArrayList<>() : subClassList;
         this.smaliMethodList = methodList == null ? new ArrayList<>() : methodList;
         this.smaliFieldList = fieldList == null ? new ArrayList<>() : fieldList;
-        this.classType = "class";
+        this.classFileType = "class";
         this.superClass = null;
     }
 
     @Override
     public String toString() {
         this.toJava();
-        String pkg = TypeUtils.getObjectPackageFromJava(packageName);
+        String pkg = TypeUtils.getObjectPackageFromJava(routes);
         if (pkg.equals("default")) {
             return toStringIndent(0);
         }
@@ -85,7 +85,7 @@ public class SmaliClass extends SmaliElement {
         if (abstractModifier) {
             sb.append("abstract ");
         }
-        sb.append(classType).append(" "); // class / interface / enum
+        sb.append(classFileType).append(" "); // class / interface / enum
         sb.append(name);
         if (superClass != null && !superClass.getName().equals("Object")) {
             sb.append(" extends ");
@@ -95,8 +95,8 @@ public class SmaliClass extends SmaliElement {
     }
 
     // getter
-    public String getPackageName() {
-        return packageName;
+    public String getRoutes() {
+        return routes;
     }
 
     @Override
@@ -107,8 +107,12 @@ public class SmaliClass extends SmaliElement {
         return this.name;
     }
 
+    public String getClassFileType() {
+        return classFileType;
+    }
+
     public String getClassType() {
-        return classType;
+        return TypeUtils.getObjectPackageFromJava(routes) + "." + name;
     }
 
     // setter
@@ -130,13 +134,13 @@ public class SmaliClass extends SmaliElement {
         }
     }
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
+    public void setRoutes(String routes) {
+        this.routes = routes;
     }
 
-    public void setClassType(String classType) {
-        if (classType != null)
-            this.classType = classType;
+    public void setClassFileType(String classFileType) {
+        if (classFileType != null)
+            this.classFileType = classFileType;
     }
 
     public void setAbstractModifier(String abstractModifier) {
