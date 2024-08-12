@@ -49,6 +49,16 @@ public class ArrayLengthInstruction extends Instruction {
         return "int " + registers.getFirst() + " = " + array + ".length";
     }
 
+    @Override
+    public INSTRUCTION_TYPE getSubType() {
+        return INSTRUCTION_TYPE.ARRAY_LENGTH;
+    }
+
+    @Override
+    public INSTRUCTION_TYPE getType() {
+        return INSTRUCTION_TYPE.ARRAY_LENGTH;
+    }
+
     public static boolean isArrayLengthInstruction(String instruction) {
         if (instruction == null)
             return false;

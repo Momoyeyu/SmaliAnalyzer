@@ -82,6 +82,10 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new ArrayLengthInstruction(instruction, this));
             } else if (CompareInstruction.isCompareInstruction(instruction)) {
                 body.add(new CompareInstruction(instruction, this));
+            } else if (NopInstruction.isNopInstruction(instruction)) {
+                body.add(new NopInstruction(instruction, this));
+            } else if (ArrayData.isArrayData(instruction)) {
+                body.add(new ArrayData(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }
@@ -192,9 +196,11 @@ public class SmaliMethod extends SmaliElement {
                         "$1 " + instruction + " $2")).append(";\n");
             } else if (Instruction.equalType(type, INSTRUCTION_TYPE.DEFAULT)) {
                 sb.append("\t".repeat(indentLevel)).append(instruction).append("\n");
-            } else if (Instruction.equalType(type, INSTRUCTION_TYPE.TAG, INSTRUCTION_TYPE.SYNCHRONIZED)) {
+            } else if (Instruction.equalType(type, INSTRUCTION_TYPE.TAG,
+                    INSTRUCTION_TYPE.SYNCHRONIZED, INSTRUCTION_TYPE.NOP,
+                    INSTRUCTION_TYPE.ARRAT_DATA)) {
                 continue;
-            } else { //  if (Instruction.equalType(type, INSTRUCTION_TYPE.DEFAULT, INSTRUCTION_TYPE.NEW_ARRAY, ...))
+            } else { // other
                 sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
             }
             lastSubType = INSTRUCTION_TYPE.DEFAULT;

@@ -28,8 +28,8 @@ public class FileAnalyzer {
         String inputPath = "C:\\Users\\antiy\\Desktop\\projects\\SmaliAnalyzer\\res\\data\\input\\ActivityChooserModel.smali";
         FileAnalyzer smaliFileReader = new FileAnalyzer(inputPath);
         System.out.println(smaliFileReader.smaliFile.toString());
-        System.out.println(getInstruction("check-cast v0 java.lang.String # check casting"));
-        System.out.println(getInstruction("const-string v0 \"this is a # string\" # String"));
+        System.out.println(removeComment("check-cast v0 java.lang.String # check casting"));
+        System.out.println(removeComment("const-string v0 \"this is a # string\" # String"));
 
     }
 
@@ -67,12 +67,12 @@ public class FileAnalyzer {
         try {
             scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
-                String line = getInstruction(scanner.nextLine());
+                String line = removeComment(scanner.nextLine());
                 if (lastFlag != null && lastFlag.equals(".field") && curSmaliField != null) {
                     if (line.startsWith(".annotation")) {
                         curSmaliField.addAnnotation(line);
                         while (scanner.hasNextLine()) {
-                            line = getInstruction(scanner.nextLine());
+                            line = removeComment(scanner.nextLine());
                             curSmaliField.addAnnotation(line);
                             if (line.startsWith(".end annotation")) break;
                         }
@@ -88,7 +88,7 @@ public class FileAnalyzer {
                     }
                     smaliFile.addClass(currentSmaliClass);
                     ClassRepository.addClass(currentSmaliClass);
-                    line = getInstruction(scanner.nextLine());
+                    line = removeComment(scanner.nextLine());
                     if (line.startsWith(".super")) {
                         try {
                             currentSmaliClass.setSuperClass(ClassRepository.getClass(line));
@@ -103,15 +103,25 @@ public class FileAnalyzer {
                     List<String> instructions = new ArrayList<>();
                     // read the whole method
                     while (scanner.hasNextLine()) {
-                        line = getInstruction(scanner.nextLine());
+                        line = removeComment(scanner.nextLine());
                         if (line.isBlank()) continue;
                         if (line.startsWith(".annotation")) {
                             StringBuilder sb = new StringBuilder(line);
                             while (scanner.hasNextLine()) {
-                                line = getInstruction(scanner.nextLine());
+                                line = removeComment(scanner.nextLine());
                                 sb.append(line);
                                 if (line.startsWith(".end annotation")) {
                                     annotation = sb.toString();
+                                    break;
+                                }
+                            }
+                        } else if (line.startsWith(".array-data")) {
+                            StringBuilder sb = new StringBuilder(line);
+                            while (scanner.hasNextLine()) {
+                                line = removeComment(scanner.nextLine());
+                                sb.append(",").append(line);
+                                if (line.startsWith(".end array-data")) {
+                                    instructions.add(sb.toString());
                                     break;
                                 }
                             }
@@ -153,7 +163,7 @@ public class FileAnalyzer {
      * @param line a line of smali source code
      * @return smali instruction without space and comment
      */
-    public static String getInstruction(String line) {
+    public static String removeComment(String line) {
         line = line.strip();
         StringStatus status = StringStatus.OUTSIDE;
         for (int i = 0; i < line.length(); i++) {

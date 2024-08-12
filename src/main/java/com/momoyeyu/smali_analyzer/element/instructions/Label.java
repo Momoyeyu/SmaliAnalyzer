@@ -2,17 +2,19 @@ package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Label extends Instruction {
 
-    private static final Pattern labelPattern = Pattern.compile(":(\\S+)");
+    private static final Pattern labelPattern = Pattern.compile("(:\\S+)");
 
     private String label;
 
     public static void main(String[] args) {
         System.out.println(new Label(":cond_1"));
+        System.out.println(new Label(":cond_2"));
     }
 
     private Label(String label) {
@@ -27,8 +29,8 @@ public class Label extends Instruction {
     @Override
     protected void analyze() {
         Matcher matcher = labelPattern.matcher(signature);
-        if (matcher.matches()) {
-            label = matcher.group();
+        if (matcher.find()) {
+            label = matcher.group(1);
             super.analyze();
         }
     }

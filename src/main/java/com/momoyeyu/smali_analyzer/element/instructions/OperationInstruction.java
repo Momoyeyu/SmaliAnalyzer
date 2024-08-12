@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class OperationInstruction extends Instruction {
     private static final Pattern operationPattern = Pattern.compile(
-            "^(add|sub|mul|div|rem|and|or|xor|shl|shr|ushr|neg|rsub)-(int|long|float|double)(/\\S+)?\\s+(.+)");
+            "^(add|sub|mul|div|rem|and|or|xor|shl|shr|ushr|neg|rsub|not)-(int|long|float|double)(/\\S+)?\\s+(.+)");
 
     private String operationType;
     private String valueType;
@@ -36,6 +36,7 @@ public class OperationInstruction extends Instruction {
         System.out.println(new OperationInstruction("add-int/lit8 v1, v1, 0x1"));
         System.out.println(new OperationInstruction("neg-int v3, v7"));
         System.out.println(new OperationInstruction("rsub-int/lit8 v5, v5, 0xf"));
+        System.out.println(new OperationInstruction("not-int p1, p1"));
     }
 
     private OperationInstruction(String instruction) {
@@ -86,7 +87,11 @@ public class OperationInstruction extends Instruction {
             else
                 sb.append(registers.get(1)).append(" ").append(operatorMap.get(operationType)).append(" ").append(registers.get(2));
         } else if (registers.size() == 2) {
-            sb.append(registers.get(0)).append(" = ").append(registers.get(0)).append(" ").append(operatorMap.get(operationType)).append(" ").append(registers.get(1));
+            sb.append(registers.get(0)).append(" = ");
+            if (operationType.equals("not"))
+                sb.append('~').append(registers.get(1));
+            else
+                sb.append(registers.get(0)).append(" ").append(operatorMap.get(operationType)).append(" ").append(registers.get(1));
         } else {
             Logger.logAnalysisFailure("operation", signature);
             sb.append("// ").append(signature);
