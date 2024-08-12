@@ -50,6 +50,8 @@ public class Decompiler {
     }
 
     public static void decompile(String inputDir, String outputDir) {
+        inputDir = inputDir.strip();
+        outputDir = outputDir.strip();
         SmaliProject project = SmaliProject.getProject();
         try {
             project.load(inputDir);

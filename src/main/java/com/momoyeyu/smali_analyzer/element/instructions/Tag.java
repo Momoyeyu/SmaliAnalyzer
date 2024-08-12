@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class Tag extends Instruction{
 
     private static final Pattern tagPattern = Pattern.compile(
-            "^\\.((line)|(registers)|(locals)|(end method)|(param)|(end param)).*");
+            "^\\.(line|registers|locals|end method|param|end param|end local).*");
     private String tag;
 
     public static void main(String[] args) {

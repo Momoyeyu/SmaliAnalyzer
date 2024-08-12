@@ -92,6 +92,8 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new SwitchInstruction(instruction, this));
             } else if (SwitchPack.isSwitchPack(instruction)) {
                 body.add(new SwitchPack(instruction, this));
+            } else if (LocalInstruction.isLocalInstruction(instruction)) {
+                body.add(new LocalInstruction(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }
@@ -187,7 +189,7 @@ public class SmaliMethod extends SmaliElement {
                 labelStack.push(condition.getConditionLabel());
                 indentLevel++;
             } else if (Instruction.equalType(subType, INSTRUCTION_TYPE.LABEL_CONDITION)) {
-                if (labelStack.peek().equals(instruction.toString())) {
+                if (!labelStack.isEmpty() && labelStack.peek().equals(instruction.toString())) {
                     labelStack.pop();
                     indentLevel--;
                     sb.append("\t".repeat(indentLevel)).append("}\n");
@@ -225,7 +227,7 @@ public class SmaliMethod extends SmaliElement {
                 Logger.logException(e.getMessage());
                 Logger.log("[INFO] belong class: " + ownerClass.getSignature());
                 analyzed = true;
-                return Logger.logAnalysisFailure("method", signature);
+                return Logger.logAnalysisFailure("method signature", signature);
             }
         }
         StringBuilder sb = new StringBuilder();

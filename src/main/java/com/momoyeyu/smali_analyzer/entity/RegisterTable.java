@@ -10,6 +10,8 @@ public interface RegisterTable {
      */
     void storeVariable(String register, String type);
 
+    void storeVariableWithName(String register, String type, String name);
+
     /**
      * Return the name of the variable inside the register.
      * @param register register

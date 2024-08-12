@@ -70,7 +70,7 @@ public class RegisterMap implements RegisterTable {
         variableMap.put(name, new Variable(type));
     }
 
-    private void storeVariableWithName(String register, String type, String name) {
+    public void storeVariableWithName(String register, String type, String name) {
         reigisterMap.put(register, name);
         variableMap.put(name, new Variable(type));
     }
