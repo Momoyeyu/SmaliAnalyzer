@@ -1,7 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 public enum INSTRUCTION_TYPE {
-    ARRAT_DATA,
+    ARRAT_DATA, FILL_ARRAY_DATA,
     ARRAY_LENGTH,
     DEFAULT,
     CAST, CHECK_CAST, BASIC_CAST,

@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -42,9 +43,15 @@ public class ArrayData extends Instruction {
     public String toString() {
         if (!analyzed)
             return analysisFail("array-data");
-        if (dataType != null)
-            return "new " + dataType + "[]{" + String.join(", ", data) + "}";
-        return "new Object[]{" + String.join(", ", data) + "}";
+        StringBuilder sb = new StringBuilder();
+        if (dataType != null) {
+            if (!TypeUtils.isJavaBasicType(dataType))
+                sb.append("new ").append(TypeUtils.getNameFromJava(dataType)).append("[]");
+            // else : none
+        } else {
+            sb.append("new Object[]");
+        }
+        return sb.append("{").append(String.join(", ", data)).append("}").toString();
     }
 
     @Override
@@ -55,6 +62,10 @@ public class ArrayData extends Instruction {
     @Override
     public INSTRUCTION_TYPE getType() {
         return INSTRUCTION_TYPE.ARRAT_DATA;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 
     public static boolean isArrayData(String instruction) {

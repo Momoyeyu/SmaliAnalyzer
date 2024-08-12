@@ -86,6 +86,8 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new NopInstruction(instruction, this));
             } else if (ArrayData.isArrayData(instruction)) {
                 body.add(new ArrayData(instruction, this));
+            } else if (FillArrayDataInstruction.isFillArrayDataInstruction(instruction)) {
+                body.add(new FillArrayDataInstruction(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }
