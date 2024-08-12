@@ -35,29 +35,29 @@ public class CatchInstruction extends Instruction{
 
     @Override
     protected void analyze() {
-        if (signature.startsWith(".catchall")) {
-            Matcher matcher = catchallPattern.matcher(signature);
-            if (matcher.matches()) {
-                catchType = ".catchall";
-                tryStartLabels = matcher.group(1);
-                tryEndLabels = matcher.group(2);
-                catchLabel = matcher.group(3);
-                if (parentMethod != null) {
-                    parentMethod.addTryPeer(tryStartLabels, tryEndLabels);
+        if (!analyzed) {
+            if (signature.startsWith(".catchall")) {
+                Matcher matcher = catchallPattern.matcher(signature);
+                if (matcher.matches()) {
+                    catchType = ".catchall";
+                    tryStartLabels = matcher.group(1);
+                    tryEndLabels = matcher.group(2);
+                    catchLabel = matcher.group(3);
+                    if (parentMethod != null) {
+                        parentMethod.addTryPeer(tryStartLabels, tryEndLabels);
+                    }
                 }
-                super.analyze();
+            } else {
+                Matcher matcher = catchPattern.matcher(signature);
+                if (matcher.matches()) {
+                    catchType = ".catch";
+                    exceptionType = TypeUtils.getTypeFromSmali(matcher.group(1));
+                    tryStartLabels = matcher.group(2);
+                    tryEndLabels = matcher.group(3);
+                    catchLabel = matcher.group(4);
+                }
             }
-        } else {
-            Matcher matcher = catchPattern.matcher(signature);
-            if (matcher.matches()) {
-                catchType = ".catch";
-                exceptionType = TypeUtils.getTypeFromSmali(matcher.group(1));
-                tryStartLabels = matcher.group(2);
-                tryEndLabels = matcher.group(3);
-                catchLabel = matcher.group(4);
-
-                super.analyze();
-            }
+            super.analyze();
         }
     }
 

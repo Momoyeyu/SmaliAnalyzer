@@ -80,6 +80,8 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new InstanceOfInstruction(instruction, this));
             } else if (ArrayLengthInstruction.isArrayLengthInstruction(instruction)) {
                 body.add(new ArrayLengthInstruction(instruction, this));
+            } else if (CompareInstruction.isCompareInstruction(instruction)) {
+                body.add(new CompareInstruction(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }

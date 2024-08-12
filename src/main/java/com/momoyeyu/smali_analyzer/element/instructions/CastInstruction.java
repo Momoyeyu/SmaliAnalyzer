@@ -29,21 +29,23 @@ public class CastInstruction extends Instruction {
 
     @Override
     protected void analyze() {
-        Matcher matcher = checkCastPattern.matcher(signature);
-        if (matcher.matches()) {
-            registers = getRegistersList(matcher.group(1));
-            newType = TypeUtils.getTypeFromSmali(matcher.group(2));
-            oldName = registers.getFirst();
-            oldType = null;
+        if (!analyzed) {
+            Matcher matcher = checkCastPattern.matcher(signature);
+            if (matcher.matches()) {
+                registers = getRegistersList(matcher.group(1));
+                newType = TypeUtils.getTypeFromSmali(matcher.group(2));
+                oldName = registers.getFirst();
+                oldType = null;
+            }
+            matcher = basicCastPattern.matcher(signature);
+            if (matcher.matches()) {
+                oldType = matcher.group(1);
+                newType = matcher.group(2);
+                registers = getRegistersList(matcher.group(3));
+                oldName = registers.get(1);
+            }
+            super.analyze();
         }
-        matcher = basicCastPattern.matcher(signature);
-        if (matcher.matches()) {
-            oldType = matcher.group(1);
-            newType = matcher.group(2);
-            registers = getRegistersList(matcher.group(3));
-            oldName = registers.get(1);
-        }
-        super.analyze();
     }
 
     @Override
