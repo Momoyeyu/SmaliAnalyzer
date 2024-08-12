@@ -14,6 +14,7 @@ public class SmaliClass extends SmaliElement {
     private List<SmaliMethod> smaliMethodList; // add, get
     private List<SmaliField> smaliFieldList; // add, get
 
+    private String source;
     private String routes;
     private String classFileType;
     private boolean abstractModifier;
@@ -115,6 +116,10 @@ public class SmaliClass extends SmaliElement {
         return TypeUtils.getObjectPackageFromJava(routes) + "." + name;
     }
 
+    public String getSource() {
+        return source;
+    }
+
     // setter
     /**
      * Set the super class.
@@ -145,6 +150,10 @@ public class SmaliClass extends SmaliElement {
 
     public void setAbstractModifier(String abstractModifier) {
         this.abstractModifier = abstractModifier != null;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     // adder

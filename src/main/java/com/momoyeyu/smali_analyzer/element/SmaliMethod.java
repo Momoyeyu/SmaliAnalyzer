@@ -225,8 +225,10 @@ public class SmaliMethod extends SmaliElement {
                 MethodAnalyzer.analyze(this);
             } catch (Exception e) {
                 analyzed = true; // analyzed, but fail
-                return Logger.logAnalysisFailure("method signature", signature,
-                        "belong class: " + ownerClass.getSignature());
+                String info = null;
+                if (ownerClass != null)
+                    info = "error localtion:\t\nsource: " + ownerClass.getSource() + "\t\nclass: " + ownerClass.getSignature();
+                return Logger.logAnalysisFailure("method signature", signature, info);
             }
         }
         StringBuilder sb = new StringBuilder();

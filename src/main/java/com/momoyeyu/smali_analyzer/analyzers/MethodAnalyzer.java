@@ -23,7 +23,10 @@ public class MethodAnalyzer {
     public static void main(String[] args) {
         SmaliMethod smaliMethod = new SmaliMethod(".method public sort(Landroid/content/Intent;Ljava/util/List;Ljava/util/List;)V");
         smaliMethod.setAnnotation(".annotation system Ldalvik/annotation/Signature;value = {\"(\",\"Landroid/content/Intent;\",\"Ljava/util/List<\",\"Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;\",\">;\",\"Ljava/util/List<\",\"Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;\",\">;)V\"}.end annotation");
+        SmaliMethod smaliMethod2 = new SmaliMethod(".method public onItemClick(Landroid/widget/AdapterView;Landroid/view/View;IJ)V");
+        smaliMethod2.setAnnotation(".annotation system Ldalvik/annotation/Signature;value = {\"(\",\"Landroid/widget/AdapterView<\",\"*>;\",\"Landroid/view/View;\",\"IJ)V\"}.end annotation");
         System.out.println(smaliMethod.toJava());
+        System.out.println(smaliMethod2.toJava());
         System.out.println(getSignature(".method public varargs doInBackground([Ljava/lang/Object;)Ljava/lang/Void;"));
         System.out.println(getSignature(".method public abstract setActivityChooserModel(Landroidx/appcompat/widget/ActivityChooserModel;)V;"));
         System.out.println(getSignature(".method public static get(Landroid/content/Context;Ljava/lang/String;I)Landroidx/appcompat/widget/ActivityChooserModel;"));
@@ -65,7 +68,7 @@ public class MethodAnalyzer {
         if (annotation != null) {
             matcher = systemAnnotationPattern.matcher(annotation);
             if (matcher.matches()) {
-                List<String> generic = Arrays.stream(matcher.group(1).split("(\",\\s*\")")).toList();
+                List<String> generic = splitGeneric(matcher.group(1));
                 List<String> params = smaliMethod.getParametersList();
                 smaliMethod.setParametersList(analyzeAnnotations(params, generic));
             }
@@ -104,7 +107,7 @@ public class MethodAnalyzer {
                     tmp = genericParams.get(i++);
                     if (tmp.endsWith("<"))
                         count++;
-                    if (tmp.equals(">;")) {
+                    if (tmp.endsWith(">;")) {
                         if (count == 0) break;
                         count--;
                     }
@@ -172,5 +175,25 @@ public class MethodAnalyzer {
             sb.append(arguments.get(idx)).append(", ");
         }
         return sb.delete(Math.max(sb.length() - 2, 0), sb.length()).toString();
+    }
+
+    public static List<String> splitGeneric(String generic) {
+        List<String> ret = new ArrayList<>();
+        String appendix = null;
+        for (String s : Arrays.stream(generic.split("(\",\\s*\")")).toList()) {
+            if (s.endsWith(">;") && !s.startsWith("*")) {
+                s = s.substring(0, s.length() - 2);
+                appendix = ">;";
+            }
+            if (TypeUtils.isSmaliBasicType(s.substring(0, 1)))
+                ret.addAll(TypeUtils.splitSmaliParameters(s));
+            else
+                ret.add(s);
+            if (appendix != null) {
+                ret.add(appendix);
+                appendix = null;
+            }
+        }
+        return ret;
     }
 }

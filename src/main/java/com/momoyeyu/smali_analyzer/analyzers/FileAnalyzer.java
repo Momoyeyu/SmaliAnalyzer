@@ -83,6 +83,7 @@ public class FileAnalyzer {
                 if (line.isEmpty() || line.startsWith("#")) continue;
                 if (line.startsWith(".class")) {
                     currentSmaliClass = new SmaliClass(line);
+                    currentSmaliClass.setSource(file.getAbsolutePath());
                     if (smaliFile == null) {
                         smaliFile = SmaliProject.getFile(ClassAnalyzer.getRoutes(currentSmaliClass));
                     }

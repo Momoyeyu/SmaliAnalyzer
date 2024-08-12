@@ -116,7 +116,10 @@ public class FieldAnalyzer {
                 appendix = "";
             }
         }
-        sb.delete(sb.length() - 2, sb.length()).append(">");
+        if (generic.size() > 0) {
+            sb.delete(sb.length() - 2, sb.length());
+        }
+        sb.append(">");
         return sb.toString();
     }
 

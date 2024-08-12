@@ -23,6 +23,15 @@ public class Formatter {
                 "}";
         System.out.println(addIndent(example, 0));
         System.out.println(addIndent(example, 1));
+        System.out.println(getAnnotation(".annotation system Ldalvik/annotation/Signature;\n" +
+                "        value = {\n" +
+                "            \"(\",\n" +
+                "            \"Landroid/widget/AdapterView<\",\n" +
+                "            \"*>;\",\n" +
+                "            \"Landroid/view/View;\",\n" +
+                "            \"IJ)V\"\n" +
+                "        }\n" +
+                "    .end annotation"));
     }
 
     /**
@@ -39,6 +48,17 @@ public class Formatter {
                 sb.append("\t".repeat(Math.max(0, indent)));
             }
             sb.append(line).append("\n");
+        }
+        return sb.toString();
+    }
+
+    private static String getAnnotation(String annotation) {
+        String[] lines = annotation.split("\n");
+        StringBuilder sb = new StringBuilder();
+        for (String line : lines) {
+            if (!line.isBlank()) {
+                sb.append(line.strip());
+            }
         }
         return sb.toString();
     }
