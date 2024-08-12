@@ -88,6 +88,10 @@ public class SmaliMethod extends SmaliElement {
                 body.add(new ArrayData(instruction, this));
             } else if (FillArrayDataInstruction.isFillArrayDataInstruction(instruction)) {
                 body.add(new FillArrayDataInstruction(instruction, this));
+            } else if (SwitchInstruction.isSwitchInstruction(instruction)) {
+                body.add(new SwitchInstruction(instruction, this));
+            } else if (SwitchPack.isSwitchPack(instruction)) {
+                body.add(new SwitchPack(instruction, this));
             } else {
                 body.add(new Instruction(instruction, this));
             }
@@ -200,7 +204,7 @@ public class SmaliMethod extends SmaliElement {
                 sb.append("\t".repeat(indentLevel)).append(instruction).append("\n");
             } else if (Instruction.equalType(type, INSTRUCTION_TYPE.TAG,
                     INSTRUCTION_TYPE.SYNCHRONIZED, INSTRUCTION_TYPE.NOP,
-                    INSTRUCTION_TYPE.ARRAT_DATA)) {
+                    INSTRUCTION_TYPE.ARRAT_DATA, INSTRUCTION_TYPE.SWITCH_PACK)) {
                 continue;
             } else { // other
                 sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");

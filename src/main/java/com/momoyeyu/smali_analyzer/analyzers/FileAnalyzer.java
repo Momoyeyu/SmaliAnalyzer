@@ -125,6 +125,16 @@ public class FileAnalyzer {
                                     break;
                                 }
                             }
+                        } else if (line.startsWith(".packed-switch")) {
+                            StringBuilder sb = new StringBuilder(line);
+                            while (scanner.hasNextLine()) {
+                                line = removeComment(scanner.nextLine());
+                                sb.append(",").append(line);
+                                if (line.startsWith(".end packed-switch")) {
+                                    instructions.add(sb.toString());
+                                    break;
+                                }
+                            }
                         } else
                             instructions.add(line);
                         if (line.startsWith(".end method")) {
