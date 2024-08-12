@@ -30,7 +30,18 @@ public class Logger {
      * @return error log for analysis failure
      */
     public static String logAnalysisFailure(String type, String element) {
-        return "// " + log("[ERROR] Fail to analyze " + type + ": " + element + "\n");
+        return logAnalysisFailure(type, element, null);
+    }
+
+    public static String logAnalysisFailure(String type, String element, String info) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ERROR] Fail to analyze ").append(type).append(": ").append(element).append("\n");
+        String ret = sb.toString();
+        if (info != null && !info.isEmpty()) {
+            sb.append("[INFO] ").append(info).append("\n");
+        }
+        log(sb.toString());
+        return "// " + ret;
     }
 
     public static void logTodo(String type, String element, String info) {

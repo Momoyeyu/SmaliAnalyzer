@@ -100,18 +100,34 @@ public class FileAnalyzer {
                 if (line.startsWith(".method")) {
                     String signature = line;
                     String annotation = null;
+                    List<String> tags = new ArrayList<>();
                     List<String> instructions = new ArrayList<>();
+                    String tagType = "method";
                     // read the whole method
                     while (scanner.hasNextLine()) {
                         line = removeComment(scanner.nextLine());
                         if (line.isBlank()) continue;
-                        if (line.startsWith(".annotation")) {
+                        if (line.startsWith(".annotation system")) {
                             StringBuilder sb = new StringBuilder(line);
                             while (scanner.hasNextLine()) {
                                 line = removeComment(scanner.nextLine());
                                 sb.append(line);
                                 if (line.startsWith(".end annotation")) {
                                     annotation = sb.toString();
+                                    break;
+                                }
+                            }
+                        } else if (line.startsWith(".param")) {
+                            tagType = line.split(" ")[1];
+                        } else if (line.startsWith(".end param")) {
+                            tagType = "method";
+                        } else if (line.startsWith(".annotation build")) {
+                            StringBuilder sb = new StringBuilder(line);
+                            while (scanner.hasNextLine()) {
+                                line = removeComment(scanner.nextLine());
+                                sb.append(line);
+                                if (line.startsWith(".end annotation")) {
+                                    tags.add(sb.toString() + " " + tagType);
                                     break;
                                 }
                             }
@@ -146,10 +162,12 @@ public class FileAnalyzer {
                     if (ConstructorAnalyzer.isConstructor(signature)) {
                         SmaliConstructor constructor = new SmaliConstructor(signature, currentSmaliClass, instructions);
                         constructor.setAnnotation(annotation);
+                        constructor.setTags(tags);
                         currentSmaliClass.addSmaliMethod(constructor);
                     } else {
                         SmaliMethod method = new SmaliMethod(signature, currentSmaliClass, instructions);
                         method.setAnnotation(annotation);
+                        method.setTags(tags);
                         currentSmaliClass.addSmaliMethod(method);
                     }
                 }

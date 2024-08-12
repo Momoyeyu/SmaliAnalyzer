@@ -12,7 +12,7 @@ public class Decompiler {
     public static void main(String[] args) {
         // C:\Users\antiy\Desktop\apks\招商银行实例\CMBMobileBank\smali\androidx\appcompat\widget
         String inputDir = null;
-        inputDir = "C:\\Users\\antiy\\Desktop\\apks\\招商银行实例\\CMBMobileBank\\smali\\androidx\\appcompat\\widget";
+//        inputDir = "C:\\Users\\antiy\\Desktop\\apks\\招商银行实例\\CMBMobileBank\\smali\\androidx\\appcompat\\widget";
         if (inputDir == null)
             inputDir = PathUtils.selectPath("Please select the input directory", PathUtils.SelectType.LOAD);
         if (inputDir == null) {

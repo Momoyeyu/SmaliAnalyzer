@@ -14,6 +14,7 @@ public class SmaliMethod extends SmaliElement {
     protected final List<Instruction> body;
     protected SmaliClass ownerClass;
     protected List<String> parametersList;
+    protected List<String> tags;
     protected boolean abstractModifier;
     protected boolean synchronizedModifier;
     private boolean nativeModifier;
@@ -107,7 +108,6 @@ public class SmaliMethod extends SmaliElement {
         try {
             sb.append(this.toJava());
         } catch (RuntimeException e) {
-            Logger.logException(e.getMessage());
             return Logger.logAnalysisFailure("method", signature);
         }
         registerTable.storeParams();
@@ -224,13 +224,18 @@ public class SmaliMethod extends SmaliElement {
             try {
                 MethodAnalyzer.analyze(this);
             } catch (Exception e) {
-                Logger.logException(e.getMessage());
-                Logger.log("[INFO] belong class: " + ownerClass.getSignature());
-                analyzed = true;
-                return Logger.logAnalysisFailure("method signature", signature);
+                analyzed = true; // analyzed, but fail
+                return Logger.logAnalysisFailure("method signature", signature,
+                        "belong class: " + ownerClass.getSignature());
             }
         }
         StringBuilder sb = new StringBuilder();
+        if (tags != null) {
+            for (String tag : tags) {
+                if (!tag.endsWith("method"))
+                    sb.append(tag).append('\n');
+            }
+        }
         if (!accessModifier.equals("default"))
             sb.append(accessModifier).append(" ");
         if (staticModifier)
@@ -258,8 +263,18 @@ public class SmaliMethod extends SmaliElement {
         return parametersList;
     }
 
+    public String getParameter(int index) {
+        if (index >= parametersList.size())
+            return null;
+        return parametersList.get(index);
+    }
+
     public String getAnnotation() {
         return annotation;
+    }
+
+    public List<String> getTags() {
+        return tags;
     }
 
     public String getOwnerClassType() {
@@ -269,6 +284,12 @@ public class SmaliMethod extends SmaliElement {
     // setter
     public void setParametersList(List<String> parametersList) {
         this.parametersList = parametersList;
+    }
+
+    public void alterParameter(int index, String param) {
+        if (index >= parametersList.size())
+            return;
+        parametersList.set(index, param);
     }
 
     public void setReturnType(String returnType) {
@@ -301,6 +322,10 @@ public class SmaliMethod extends SmaliElement {
 
     public void setAnnotation(String annotation) {
         this.annotation = annotation;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     // adder

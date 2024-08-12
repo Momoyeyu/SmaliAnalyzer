@@ -74,6 +74,10 @@ public class TypeUtils {
      * @throws IllegalArgumentException Invalid or Unknown Java object input
      */
     public static String getNameFromJava(String javaType) throws IllegalArgumentException {
+        if (javaType.startsWith("@")) {
+            int idx = javaType.indexOf(' ');
+            return javaType.substring(0, idx + 1) + getNameFromJava(javaType.substring(idx + 1));
+        }
         if (isJavaBasicType(javaType)) {
             return javaType;
         }

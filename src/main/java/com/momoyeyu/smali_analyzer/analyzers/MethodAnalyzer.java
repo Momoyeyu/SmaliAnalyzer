@@ -12,7 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MethodAnalyzer {
-    private static final Pattern annotationPattern = Pattern.compile("^\\.annotation\\s+system\\s+Ldalvik\\/annotation\\/Signature;value\\s*=\\s*\\{\"\\(\",\"(\\S+)\\)(\\S+)\"\\}\\.end\\s+annotation");
+    private static final Pattern systemAnnotationPattern = Pattern.compile("^\\.annotation\\s+system\\s+Ldalvik\\/annotation\\/Signature;value\\s*=\\s*\\{\"\\(\",\"(\\S+)\\)(\\S+)\"\\}\\.end\\s+annotation");
+    private static final Pattern buildAnnotationPattern = Pattern.compile("^\\.annotation\\s+build\\s+(\\S+);?\\.end\\s+annotation\\s+(\\S+)");
     private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?(((declared-synchronized)|(synchronized))\\s+)?((bridge)\\s+)?((varargs)\\s+)?((native)\\s+)?((abstract)\\s+)?((synthetic)\\s+)?(\\S+)\\((.*?)\\)([a-zA-Z/\\[]++);?");
 
     /**
@@ -61,15 +62,34 @@ public class MethodAnalyzer {
             throw new RuntimeException("Unknown method: " + smaliMethod.getSignature());
         }
         String annotation = smaliMethod.getAnnotation();
-        if (annotation == null)
-            return;
-        matcher = annotationPattern.matcher(annotation);
-        if (matcher.find()) {
-            List<String> generic = Arrays.stream(matcher.group(1).split("(\",\\s*\")")).toList();
-            List<String> params = smaliMethod.getParametersList();
-            smaliMethod.setParametersList(analyzeAnnotations(params, generic));
+        if (annotation != null) {
+            matcher = systemAnnotationPattern.matcher(annotation);
+            if (matcher.matches()) {
+                List<String> generic = Arrays.stream(matcher.group(1).split("(\",\\s*\")")).toList();
+                List<String> params = smaliMethod.getParametersList();
+                smaliMethod.setParametersList(analyzeAnnotations(params, generic));
+            }
+            smaliMethod.setAnnotation("[DONE] " + annotation);
         }
-        smaliMethod.setAnnotation(null);
+        List<String> tags = smaliMethod.getTags();
+        if (tags != null && !tags.isEmpty()) {
+            List<String> newTags = new ArrayList<>();
+            for (String tag : tags) {
+                matcher = buildAnnotationPattern.matcher(tag);
+                if (matcher.matches()) {
+                    String newTag = "@" + TypeUtils.getNameFromSmali(matcher.group(1));
+                    String tagType = matcher.group(2);
+                    if (tagType.equals("method"))
+                        newTags.add(newTag);
+                    else {
+                        int idx = Integer.parseInt(tagType.substring(1)) -
+                                (smaliMethod.isStaticModifier() ? 0 : 1);
+                        smaliMethod.alterParameter(idx, newTag + " " + smaliMethod.getParameter(idx));
+                    }
+                }
+            }
+            smaliMethod.setTags(newTags);
+        }
     }
 
     private static List<String> analyzeAnnotations(List<String> params, List<String> genericParams) {
