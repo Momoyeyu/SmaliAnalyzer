@@ -21,7 +21,7 @@ public class FileAnalyzer {
 
     private SmaliFile smaliFile;
     private SmaliClass currentSmaliClass;
-    private static Pattern pathPattern = Pattern.compile("((.*)\\\\input\\\\)?((\\S+).smali)");
+    private static Pattern pathPattern = Pattern.compile("((.*)\\\\input\\\\)?((\\S+)\\.smali)");
 
     public static void main(String[] args) {
         // TODO: test SmaliFileReader

@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class FieldAnalyzer {
 
-    private static final Pattern fieldPattern = Pattern.compile("\\.field\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((transient)\\s+)?((volatile)\\s+)?((enum)\\s+)?((synthetic)\\s+)?((\\S*):)((\\S+)(\\s*=\\s*(\\S+))?)");
+    private static final Pattern fieldPattern = Pattern.compile("\\.field\\s+((private|protected|public)\\s+)?((static)\\s+)?((final)\\s+)?((transient)\\s+)?((volatile)\\s+)?((enum)\\s+)?((synthetic)\\s+)?((\\S*):)((\\S+)(\\s*=\\s*(\\S+))?)");
     private static final Pattern annotationPattern = Pattern.compile("\\.annotation\\s+system\\s+Ldalvik/annotation/Signature;value\\s*=\\s*\\{\"\\S+?<\",\"(\\S+)\",\">;\"\\}\\.end\\s+annotation");
 
     /**
@@ -55,7 +55,7 @@ public class FieldAnalyzer {
         if (matcher.find()) {
             Stepper stepper = new Stepper();
             smaliField.setAccessModifier(matcher.group(stepper.step(2))); // default?
-            smaliField.setStaticModifier(matcher.group(stepper.step(5))); // static?
+            smaliField.setStaticModifier(matcher.group(stepper.step(2))); // static?
             smaliField.setFinalModifier(matcher.group(stepper.step(2))); // final?
             smaliField.setTransientModifier(matcher.group(stepper.step(2))); // transient?
             smaliField.setVolatileModifier(matcher.group(stepper.step(2))); // volatile?

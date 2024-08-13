@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class ClassAnalyzer {
 
-    private static final Pattern classPattern = Pattern.compile("\\.((class)|(super))\\s+(((private)|(protected)|(public))\\s+)?((final)\\s+)?((interface)\\s+)?((abstract)\\s+)?((enum)\\s+)?((synthetic)\\s+)?((annotation)\\s+)?(L((\\S*)/)?((\\S*?)(\\$(\\S*))?));\\s*");
+    private static final Pattern classPattern = Pattern.compile("\\.(class|super)\\s+((private|protected|public)\\s+)?((final)\\s+)?((interface)\\s+)?((abstract)\\s+)?((enum)\\s+)?((synthetic)\\s+)?((annotation)\\s+)?(L((\\S*)/)?((\\S*?)(\\$(\\S*))?));\\s*");
 
     /**
      * Testing usage of ClassAnalyzer.
@@ -32,8 +32,8 @@ public class ClassAnalyzer {
         Matcher matcher = classPattern.matcher(smaliClass.getSignature());
         if (matcher.find()) {
             Stepper stepper = new Stepper();
-            smaliClass.setAccessModifier(matcher.group(stepper.step(5)));
-            smaliClass.setFinalModifier(matcher.group(stepper.step(5)));
+            smaliClass.setAccessModifier(matcher.group(stepper.step(3)));
+            smaliClass.setFinalModifier(matcher.group(stepper.step(2)));
             smaliClass.setClassFileType(matcher.group(stepper.step(2))); // interface?
             smaliClass.setAbstractModifier(matcher.group(stepper.step(2)));
             stepper.step(2); // synthetic

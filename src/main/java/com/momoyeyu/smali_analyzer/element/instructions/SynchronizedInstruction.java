@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SynchronizedInstruction extends Instruction {
-    private static final Pattern synchronizedPattern = Pattern.compile("^monitor-((enter)|(exit))\\s+(\\S+)");
+    private static final Pattern synchronizedPattern = Pattern.compile("^monitor-(enter|exit)\\s+(\\S+)");
 
     public static void main(String[] args) {
         System.out.println(new SynchronizedInstruction("monitor-enter p0"));
@@ -27,7 +27,7 @@ public class SynchronizedInstruction extends Instruction {
         Matcher matcher = synchronizedPattern.matcher(signature);
         if (matcher.matches()) {
             operation = "monitor-" + matcher.group(1);
-            registers = getRegistersList(matcher.group(4));
+            registers = getRegistersList(matcher.group(2));
             super.analyze();
         }
     }

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class MethodAnalyzer {
     private static final Pattern systemAnnotationPattern = Pattern.compile("^\\.annotation\\s+system\\s+Ldalvik\\/annotation\\/Signature;value\\s*=\\s*\\{\"\\(\",\"(\\S+)\\)(\\S+)\"\\}\\.end\\s+annotation");
     private static final Pattern tagAnnotationPattern = Pattern.compile("^\\.annotation\\s+\\S+\\s+(\\S+);?\\.end\\s+annotation\\s+(\\S+)");
-    private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?(((declared-synchronized)|(synchronized))\\s+)?((bridge)\\s+)?((varargs)\\s+)?((native)\\s+)?((abstract)\\s+)?((synthetic)\\s+)?(\\S+)\\((.*?)\\)([a-zA-Z/\\[]++);?");
+    private static final Pattern methodPattern = Pattern.compile("\\.method\\s+((private|protected|public)\\s+)?((static)\\s+)?((final)\\s+)?((declared-synchronized|synchronized)\\s+)?((bridge)\\s+)?((varargs)\\s+)?((native)\\s+)?((abstract)\\s+)?((synthetic)\\s+)?(\\S+)\\((.*?)\\)([a-zA-Z/\\[]++);?");
 
     /**
      * Test
@@ -47,10 +47,10 @@ public class MethodAnalyzer {
         if (matcher.find()) {
             Stepper stepper = new Stepper();
             smaliMethod.setAccessModifier(matcher.group(stepper.step(2))); // access?
-            smaliMethod.setStaticModifier(matcher.group(stepper.step(5))); // static?
+            smaliMethod.setStaticModifier(matcher.group(stepper.step(2))); // static?
             smaliMethod.setFinalModifier(matcher.group(stepper.step(2))); // final?
             smaliMethod.setSynchronizedModifier(matcher.group(stepper.step(2))); // synchronized?
-            stepper.step(4); // bridge?
+            stepper.step(2); // bridge?
             String varargs = matcher.group(stepper.step(2)); // varargs? It would be handled in later code. Don't do it here.
             smaliMethod.setNativeModifier(matcher.group(stepper.step(2))); // native?
             smaliMethod.setAbstractModifier(matcher.group(stepper.step(2))); // abstract?
@@ -180,7 +180,6 @@ public class MethodAnalyzer {
         return sb.delete(Math.max(sb.length() - 2, 0), sb.length()).toString();
     }
 
-    // TODO
     public static List<String> splitGeneric(String generic) {
         List<String> ret = new ArrayList<>();
         if (generic == null || generic.isEmpty() || generic.equals("*"))

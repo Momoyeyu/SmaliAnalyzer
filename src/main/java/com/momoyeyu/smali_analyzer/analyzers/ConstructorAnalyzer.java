@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class ConstructorAnalyzer extends MethodAnalyzer {
 
-    private static final Pattern constructorPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?((varargs)\\s+)?((synthetic)\\s+)?constructor\\s+((<init>)|(<clinit>))\\((\\S*?)\\)V");
+    private static final Pattern constructorPattern = Pattern.compile("\\.method\\s+((private|protected|public)\\s+)?((static)\\s+)?((final)\\s+)?((varargs)\\s+)?((synthetic)\\s+)?constructor\\s+(<init>|<clinit>)\\((\\S*?)\\)V");
 
     /**
      * Testing ConstructorAnalyzer/
@@ -34,7 +34,7 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
         if (matcher.find()) {
             Stepper stepper = new Stepper();
             smaliConstructor.setAccessModifier(matcher.group(stepper.step(2))); // access?
-            smaliConstructor.setStaticModifier(matcher.group(stepper.step(5))); // static?
+            smaliConstructor.setStaticModifier(matcher.group(stepper.step(2))); // static?
             smaliConstructor.setFinalModifier(matcher.group(stepper.step(2))); // final?
             String varargs = matcher.group(stepper.step(2)); // varargs?
             stepper.step(2); // synthetic
@@ -42,7 +42,7 @@ public class ConstructorAnalyzer extends MethodAnalyzer {
 //            smaliConstructor.setParametersList(TypeTranslator.getJavaParameters(matcher.group(stepper.step(3)))); // params?
 
             // set parameters
-            List<String> parametersList = TypeUtils.getJavaParametersFromSmali(matcher.group(stepper.step(3)));
+            List<String> parametersList = TypeUtils.getJavaParametersFromSmali(matcher.group(stepper.step(1)));
             if (varargs != null) { // varargs?
                 parametersList.set(parametersList.size() - 1, parametersList.getLast() + "...");
             }

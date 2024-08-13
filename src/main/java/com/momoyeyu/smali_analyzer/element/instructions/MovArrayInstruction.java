@@ -8,10 +8,10 @@ import java.util.regex.Pattern;
 
 public class MovArrayInstruction extends Instruction {
 
-    private static final Pattern arrayMovPattern = Pattern.compile("^a((put)|(get))(-(\\S+))?\\s+((\\S+),\\s*(\\S+),\\s*(\\S+))\\s*");
+    private static final Pattern arrayMovPattern = Pattern.compile("^a(put|get)(-(\\S+))?\\s+((\\S+),\\s*(\\S+),\\s*(\\S+))");
 
     public static void main(String[] args) {
-        System.out.println(new MovArrayInstruction("aput-object v4, v3, v0"));
+        System.out.println(new MovArrayInstruction("aput-object v4, v3, v0")); // value, array, index
         System.out.println(new MovArrayInstruction("aget-object v4, p1, v3"));
     }
 
@@ -30,7 +30,7 @@ public class MovArrayInstruction extends Instruction {
         if (matcher.matches()) {
             Stepper stp = new Stepper();
             operation = "a" + matcher.group(stp.step(1));
-            operation += matcher.group(stp.step(3)) == null ? "" : matcher.group(stp.step(0));
+            operation += matcher.group(stp.step(1)) == null ? "" : matcher.group(stp.step(0));
             registers = getRegistersList(matcher.group(stp.step(2)));
             super.analyze();
         }
