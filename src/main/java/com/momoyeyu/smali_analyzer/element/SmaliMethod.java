@@ -21,7 +21,7 @@ public class SmaliMethod extends SmaliElement {
     protected String annotation;
     protected String returnType;
 
-    protected BlockMap blockTable = new BlockMap(this);
+    protected BlockTable blockTable = new BlockMap(this);
     protected LabelTable labelTable = new LabelMap(this);
 
     protected final Map<String, String> tryMap = new HashMap<>();
@@ -268,6 +268,7 @@ public class SmaliMethod extends SmaliElement {
     public void blocking() {
         String currentBlockName = "start";
         Block currentBlock = blockTable.newBlock(currentBlockName);
+        // separate all instructions into blocks
         for (int i = 0; i < instructions.size(); i++) {
             Instruction instruction = instructions.get(i);
             if (instruction instanceof ReturnInstruction) {

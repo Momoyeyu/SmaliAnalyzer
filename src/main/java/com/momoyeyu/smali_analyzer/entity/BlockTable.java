@@ -8,6 +8,9 @@ public interface BlockTable {
 
     Block newBlock(String name);
 
-    List<Block> getFollowingBlocks(String name);
+    List<Block> getNextBlocks(String name);
 
+    List<Block> getNextBlocks(Block block);
+
+    void linkBlocks();
 }
