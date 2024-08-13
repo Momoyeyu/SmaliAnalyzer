@@ -8,5 +8,10 @@ public interface LabelTable {
 
     Label getLabel(String label);
 
+    /**
+     * Make sure there is only one Label instance name {@code label}
+     * @param label the name of Label instance
+     * @return the corresponding Label instance
+     */
     Label accessLabel(String label);
 }

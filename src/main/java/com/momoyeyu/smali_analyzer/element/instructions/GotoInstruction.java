@@ -52,6 +52,10 @@ public class GotoInstruction extends Instruction {
         return "goto " + label;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
     public static boolean isGoto(String instruction) {
         if (instruction == null)
             return false;

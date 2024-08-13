@@ -2,8 +2,7 @@ package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.element.instructions.*;
-import com.momoyeyu.smali_analyzer.entity.RegisterMap;
-import com.momoyeyu.smali_analyzer.entity.RegisterTable;
+import com.momoyeyu.smali_analyzer.entity.*;
 import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 import com.momoyeyu.smali_analyzer.utils.Formatter;
 import com.momoyeyu.smali_analyzer.utils.Logger;
@@ -12,19 +11,22 @@ import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 import java.util.*;
 
 public class SmaliMethod extends SmaliElement {
-    protected final List<Instruction> body;
+    protected final List<Instruction> instructions;
     protected SmaliClass ownerClass;
     protected List<String> parametersList;
     protected List<String> tags;
     protected boolean abstractModifier;
     protected boolean synchronizedModifier;
-    private boolean nativeModifier;
-    private String annotation;
-    private String returnType;
+    protected boolean nativeModifier;
+    protected String annotation;
+    protected String returnType;
 
-    private final Map<String, String> tryMap = new HashMap<>();
+    protected BlockMap blockTable = new BlockMap(this);
+    protected LabelTable labelTable = new LabelMap(this);
 
-    private RegisterTable registerTable;
+    protected final Map<String, String> tryMap = new HashMap<>();
+
+    protected RegisterTable registerTable;
 
     public RegisterTable getRegisterTable() {
         return registerTable;
@@ -39,68 +41,72 @@ public class SmaliMethod extends SmaliElement {
         this.ownerClass = ownerClass;
         this.abstractModifier = false;
         this.synchronizedModifier = false;
-        this.body = new ArrayList<>();
+        this.instructions = new ArrayList<>();
         registerTable = new RegisterMap(this);
+        // generate instructions
         for (String instruction : instructions) {
             if (MovArrayInstruction.isArrayMovInstruction(instruction)) {
-                body.add(new MovArrayInstruction(instruction, this));
+                this.instructions.add(new MovArrayInstruction(instruction, this));
             } else if (InvokeInstruction.isCallInstruction(instruction)) {
-                body.add(new InvokeInstruction(instruction, this));
+                this.instructions.add(new InvokeInstruction(instruction, this));
             } else if (ConditionInstruction.isConditionInstruction(instruction)) {
-                body.add(new ConditionInstruction(instruction, this));
+                this.instructions.add(new ConditionInstruction(instruction, this));
             } else if (ConstInstruction.isConstInstruction(instruction)) {
-                body.add(new ConstInstruction(instruction, this));
+                this.instructions.add(new ConstInstruction(instruction, this));
             } else if (MovPropertyInstruction.isMovPropertyInstruction(instruction)) {
-                body.add(new MovPropertyInstruction(instruction, this));
+                this.instructions.add(new MovPropertyInstruction(instruction, this));
             } else if (NewInstruction.isNewInstruction(instruction)) {
-                body.add(new NewInstruction(instruction, this));
+                this.instructions.add(new NewInstruction(instruction, this));
             } else if (ResultInstruction.isResultInstruction(instruction)) {
-                body.add(new ResultInstruction(instruction, this));
+                this.instructions.add(new ResultInstruction(instruction, this));
             } else if (ReturnInstruction.isReturnInstruction(instruction)) {
-                body.add(new ReturnInstruction(instruction, this));
+                this.instructions.add(new ReturnInstruction(instruction, this));
             } else if (Label.isLabel(instruction)) {
-                body.add(new Label(instruction, this));
+                this.instructions.add(new Label(instruction, this));
             } else if (GotoInstruction.isGoto(instruction)) {
-                body.add(new GotoInstruction(instruction, this));
+                this.instructions.add(new GotoInstruction(instruction, this));
             } else if (Tag.isTag(instruction)) {
-                body.add(new Tag(instruction, this));
+                this.instructions.add(new Tag(instruction, this));
             } else if (CatchInstruction.isCatchInstruction(instruction)) {
-                body.add(new CatchInstruction(instruction, this));
+                this.instructions.add(new CatchInstruction(instruction, this));
             } else if (ThrowInstruction.isThrowInstruction(instruction)) {
-                body.add(new ThrowInstruction(instruction, this));
+                this.instructions.add(new ThrowInstruction(instruction, this));
             } else if (SynchronizedInstruction.isSynchronizedInstruction(instruction)) {
-                body.add(new SynchronizedInstruction(instruction, this));
+                this.instructions.add(new SynchronizedInstruction(instruction, this));
             } else if (ExceptionInstruction.isExceptionInstruction(instruction)) {
-                body.add(new ExceptionInstruction(instruction, this));
+                this.instructions.add(new ExceptionInstruction(instruction, this));
             } else if (OperationInstruction.isOperationInstruction(instruction)) {
-                body.add(new OperationInstruction(instruction, this));
+                this.instructions.add(new OperationInstruction(instruction, this));
             } else if (CastInstruction.isCastInstruction(instruction)) {
-                body.add(new CastInstruction(instruction, this));
+                this.instructions.add(new CastInstruction(instruction, this));
             } else if (MovInstruction.isMovInstruction(instruction)) {
-                body.add(new MovInstruction(instruction, this));
+                this.instructions.add(new MovInstruction(instruction, this));
             } else if (InstanceOfInstruction.isInstanceOfInstruction(instruction)) {
-                body.add(new InstanceOfInstruction(instruction, this));
+                this.instructions.add(new InstanceOfInstruction(instruction, this));
             } else if (ArrayLengthInstruction.isArrayLengthInstruction(instruction)) {
-                body.add(new ArrayLengthInstruction(instruction, this));
+                this.instructions.add(new ArrayLengthInstruction(instruction, this));
             } else if (CompareInstruction.isCompareInstruction(instruction)) {
-                body.add(new CompareInstruction(instruction, this));
+                this.instructions.add(new CompareInstruction(instruction, this));
             } else if (NopInstruction.isNopInstruction(instruction)) {
-                body.add(new NopInstruction(instruction, this));
+                this.instructions.add(new NopInstruction(instruction, this));
             } else if (ArrayData.isArrayData(instruction)) {
-                body.add(new ArrayData(instruction, this));
+                this.instructions.add(new ArrayData(instruction, this));
             } else if (FillArrayDataInstruction.isFillArrayDataInstruction(instruction)) {
-                body.add(new FillArrayDataInstruction(instruction, this));
+                this.instructions.add(new FillArrayDataInstruction(instruction, this));
             } else if (SwitchInstruction.isSwitchInstruction(instruction)) {
-                body.add(new SwitchInstruction(instruction, this));
+                this.instructions.add(new SwitchInstruction(instruction, this));
             } else if (SwitchPack.isSwitchPack(instruction)) {
-                body.add(new SwitchPack(instruction, this));
+                this.instructions.add(new SwitchPack(instruction, this));
             } else if (LocalInstruction.isLocalInstruction(instruction)) {
-                body.add(new LocalInstruction(instruction, this));
+                this.instructions.add(new LocalInstruction(instruction, this));
             } else {
-                body.add(new Instruction(instruction, this));
+                this.instructions.add(new Instruction(instruction, this));
             }
-            this.toJava();
         }
+        // blocking
+        blocking();
+        // analysis
+        this.toJava();
     }
 
     @Override
@@ -112,7 +118,7 @@ public class SmaliMethod extends SmaliElement {
             return Logger.logAnalysisFailure("method", signature);
         }
         registerTable.storeParams();
-        if ((ownerClass != null && ownerClass.getClassFileType().equals("interface") && this.body.isEmpty()) || nativeModifier) {
+        if ((ownerClass != null && ownerClass.getClassFileType().equals("interface") && this.instructions.isEmpty()) || nativeModifier) {
             return sb.append(";").toString();
         }
         sb.append(" {\n");
@@ -121,7 +127,7 @@ public class SmaliMethod extends SmaliElement {
         int indentLevel = 1;
         Stack<Instruction> stack = new Stack<>();
         Stack<String> labelStack = new Stack<>();
-        for (Instruction instruction : this.body) {
+        for (Instruction instruction : this.instructions) {
             INSTRUCTION_TYPE subType = instruction.getSubType();
             INSTRUCTION_TYPE type = instruction.getType();
             instruction.updateTable();
@@ -187,7 +193,7 @@ public class SmaliMethod extends SmaliElement {
             } else if (Instruction.equalType(type, INSTRUCTION_TYPE.CONDITION)) {
                 ConditionInstruction condition = (ConditionInstruction) instruction;
                 sb.append("\t".repeat(indentLevel)).append(condition.reverseCondition()).append(" {\n");
-                labelStack.push(condition.getConditionLabel());
+                labelStack.push(condition.getLabel());
                 indentLevel++;
             } else if (Instruction.equalType(subType, INSTRUCTION_TYPE.LABEL_CONDITION)) {
                 if (!labelStack.isEmpty() && labelStack.peek().equals(instruction.toString())) {
@@ -256,6 +262,58 @@ public class SmaliMethod extends SmaliElement {
         sb.append(" ").append(name).append("(");
         sb.append(listParameters(parametersList)).append(")");
         return sb.toString();
+    }
+
+    // separate instructions into blocks
+    public void blocking() {
+        String currentBlockName = "start";
+        Block currentBlock = blockTable.newBlock(currentBlockName);
+        for (int i = 0; i < instructions.size(); i++) {
+            Instruction instruction = instructions.get(i);
+            if (instruction instanceof ReturnInstruction) {
+                // add instruction
+                currentBlock.addInstruction(instruction);
+                // iter until 'label' or 'end method'
+                while(++i < instructions.size()) {
+                    instruction = instructions.get(i);
+                    if (instruction instanceof Label)
+                        break;
+                }
+            }
+            if (instruction instanceof Label) {
+                // new block name :label
+                currentBlockName = instruction.toString();
+                labelTable.accessLabel(currentBlockName);
+                // set next block :label
+                currentBlock.addNextBlock(currentBlockName);
+                currentBlock = blockTable.newBlock(currentBlockName);
+                // add instruction
+                currentBlock.addInstruction(instruction);
+            } else if (instruction instanceof ConditionInstruction) {
+                // add instruction
+                currentBlock.addInstruction(instruction);
+                // new block name not:label
+                currentBlockName = "not" + ((ConditionInstruction) instruction).getLabel();
+                labelTable.accessLabel(currentBlockName);
+                // set next block not:label, :label
+                currentBlock.addNextBlock(currentBlockName);
+                currentBlock.addNextBlock(currentBlockName.substring(3));
+                currentBlock = blockTable.newBlock(currentBlockName);
+            } else if (instruction instanceof GotoInstruction) {
+                // add instruction
+                currentBlock.addInstruction(instruction);
+                // create a new block, name not:label
+                currentBlockName = "not" + ((GotoInstruction) instruction).getLabel();
+                labelTable.accessLabel(currentBlockName);
+                // set next block not:label, :label
+                currentBlock.addNextBlock(currentBlockName);
+                currentBlock.addNextBlock(currentBlockName.substring(3));
+                currentBlock = blockTable.newBlock(currentBlockName);
+            } else {
+                // add instruction
+                currentBlock.addInstruction(instruction);
+            }
+        }
     }
 
     // getter

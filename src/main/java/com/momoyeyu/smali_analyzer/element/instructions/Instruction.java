@@ -12,10 +12,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Instruction extends Block {
+public class Instruction {
 
     protected String signature;
     protected String operation;
+    protected SmaliMethod parentMethod;
     protected List<String> registers;
     protected final RegisterTable registerTable;
     protected boolean analyzed;
@@ -26,7 +27,7 @@ public class Instruction extends Block {
     }
 
     public Instruction(String instruction, SmaliMethod parentMethod) {
-        super(parentMethod);
+        this.parentMethod = parentMethod;
         signature = Objects.requireNonNullElse(instruction, "");
         analyzed = false;
         updated = false;

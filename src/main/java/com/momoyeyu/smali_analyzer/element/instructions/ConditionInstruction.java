@@ -13,7 +13,7 @@ public class ConditionInstruction extends Instruction {
     private static final Pattern conditionPattern = Pattern.compile("if-(\\S+)\\s+(.*),\\s*(:cond_(\\S+))");
 
     private String condition;
-    private String conditionLabel;
+    private String label;
 
     private static final Map<String, String> REVERSE_TABLE = new HashMap<>();
 
@@ -68,7 +68,7 @@ public class ConditionInstruction extends Instruction {
         if (matcher.matches()) {
             condition = matcher.group(1);
             registers = getRegistersList(matcher.group(2));
-            conditionLabel = matcher.group(3);
+            label = matcher.group(3);
             super.analyze();
         }
     }
@@ -104,7 +104,7 @@ public class ConditionInstruction extends Instruction {
             case "gez" -> sb.append(registers.getFirst()).append(" >= 0");
         }
         sb.append(") goto ");
-        sb.append(conditionLabel);
+        sb.append(label);
         return sb.toString();
     }
 
@@ -132,8 +132,8 @@ public class ConditionInstruction extends Instruction {
     }
 
     // getter
-    public String getConditionLabel() {
-        return conditionLabel;
+    public String getLabel() {
+        return label;
     }
 
     public static boolean isConditionInstruction(String instruction) {

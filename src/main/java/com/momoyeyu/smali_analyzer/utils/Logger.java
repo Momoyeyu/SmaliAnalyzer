@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+import static com.momoyeyu.smali_analyzer.Decompiler.LOG_SWITCH;
 import static com.momoyeyu.smali_analyzer.utils.PathUtils.DEFAULT_LOG;
 
 public class Logger {
@@ -13,7 +14,7 @@ public class Logger {
      * Switch of the Logger.
      * Decide weather save logs or not.
      */
-    private static final boolean SWITCH = true;
+    private static final boolean SWITCH = LOG_SWITCH;
 
     private static final boolean debug = false;
     private static final boolean trace = false;

@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 
 public class Decompiler {
 
+    public static final boolean LOG_SWITCH = false;
+
     public static void main(String[] args) {
         // C:\Users\antiy\Desktop\apks\招商银行实例\CMBMobileBank\smali\androidx\appcompat\widget
         String inputDir = null;
