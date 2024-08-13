@@ -45,7 +45,7 @@ public class Instruction {
     @Override
     public String toString() {
         Logger.logTodo("instruction", signature,
-                "instruction location: \n\tclass: " + parentMethod.getOwnerClassType() +
+                "instruction location: \n\tsource: " + parentMethod.getSource() + "\n\tclass: " + parentMethod.getOwnerClassType() +
                         "\n\tmethod: " + parentMethod.getSignature());
         return "// " + signature;
     }

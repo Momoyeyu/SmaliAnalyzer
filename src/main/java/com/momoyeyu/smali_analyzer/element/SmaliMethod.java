@@ -284,6 +284,12 @@ public class SmaliMethod extends SmaliElement {
         return ownerClass.getClassType();
     }
 
+    public String getSource() {
+        if (ownerClass == null)
+            return "testing";
+        return ownerClass.getSource();
+    }
+
     // setter
     public void setParametersList(List<String> parametersList) {
         this.parametersList = parametersList;

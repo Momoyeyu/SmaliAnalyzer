@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class MethodAnalyzer {
     private static final Pattern systemAnnotationPattern = Pattern.compile("^\\.annotation\\s+system\\s+Ldalvik\\/annotation\\/Signature;value\\s*=\\s*\\{\"\\(\",\"(\\S+)\\)(\\S+)\"\\}\\.end\\s+annotation");
-    private static final Pattern buildAnnotationPattern = Pattern.compile("^\\.annotation\\s+build\\s+(\\S+);?\\.end\\s+annotation\\s+(\\S+)");
+    private static final Pattern tagAnnotationPattern = Pattern.compile("^\\.annotation\\s+\\S+\\s+(\\S+);?\\.end\\s+annotation\\s+(\\S+)");
     private static final Pattern methodPattern = Pattern.compile("\\.method\\s+(((private)|(protected)|(public))\\s+)?((static)\\s+)?((final)\\s+)?(((declared-synchronized)|(synchronized))\\s+)?((bridge)\\s+)?((varargs)\\s+)?((native)\\s+)?((abstract)\\s+)?((synthetic)\\s+)?(\\S+)\\((.*?)\\)([a-zA-Z/\\[]++);?");
 
     /**
@@ -81,7 +81,7 @@ public class MethodAnalyzer {
         if (tags != null && !tags.isEmpty()) {
             List<String> newTags = new ArrayList<>();
             for (String tag : tags) {
-                matcher = buildAnnotationPattern.matcher(tag);
+                matcher = tagAnnotationPattern.matcher(tag);
                 if (matcher.matches()) {
                     String newTag = "@" + TypeUtils.getNameFromSmali(matcher.group(1));
                     String tagType = matcher.group(2);

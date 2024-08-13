@@ -122,7 +122,7 @@ public class FileAnalyzer {
                             tagType = line.split(" ")[1];
                         } else if (line.startsWith(".end param")) {
                             tagType = "method";
-                        } else if (line.startsWith(".annotation build")) {
+                        } else if (line.startsWith(".annotation")) {
                             StringBuilder sb = new StringBuilder(line);
                             while (scanner.hasNextLine()) {
                                 line = removeComment(scanner.nextLine());
