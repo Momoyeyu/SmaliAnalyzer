@@ -227,8 +227,9 @@ public class SmaliMethod extends SmaliElement {
                 analyzed = true; // analyzed, but fail
                 String info = null;
                 if (ownerClass != null)
-                    info = "error localtion:\t\nsource: " + ownerClass.getSource() + "\t\nclass: " + ownerClass.getSignature();
-                return Logger.logAnalysisFailure("method signature", signature, info);
+                    info = "error localtion:\n\tsource: " + ownerClass.getSource() + "\n\tclass: " + ownerClass.getSignature();
+                return Logger.logAnalysisFailure("method signature",
+                        signature + "\n\tannotation: " + annotation, info);
             }
         }
         StringBuilder sb = new StringBuilder();

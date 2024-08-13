@@ -25,8 +25,11 @@ public class MethodAnalyzer {
         smaliMethod.setAnnotation(".annotation system Ldalvik/annotation/Signature;value = {\"(\",\"Landroid/content/Intent;\",\"Ljava/util/List<\",\"Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;\",\">;\",\"Ljava/util/List<\",\"Landroidx/appcompat/widget/ActivityChooserModel$HistoricalRecord;\",\">;)V\"}.end annotation");
         SmaliMethod smaliMethod2 = new SmaliMethod(".method public onItemClick(Landroid/widget/AdapterView;Landroid/view/View;IJ)V");
         smaliMethod2.setAnnotation(".annotation system Ldalvik/annotation/Signature;value = {\"(\",\"Landroid/widget/AdapterView<\",\"*>;\",\"Landroid/view/View;\",\"IJ)V\"}.end annotation");
+        SmaliMethod smaliMethod3 = new SmaliMethod(".method private addCustomViewsWithGravity(Ljava/util/List;I)V");
+        smaliMethod3.setAnnotation(".annotation system Ldalvik/annotation/Signature;value = {\"(\",\"Ljava/util/List<\",\"Landroid/view/View;\",\">;I)V\"}.end annotation");
         System.out.println(smaliMethod.toJava());
         System.out.println(smaliMethod2.toJava());
+        System.out.println(smaliMethod3.toJava());
         System.out.println(getSignature(".method public varargs doInBackground([Ljava/lang/Object;)Ljava/lang/Void;"));
         System.out.println(getSignature(".method public abstract setActivityChooserModel(Landroidx/appcompat/widget/ActivityChooserModel;)V;"));
         System.out.println(getSignature(".method public static get(Landroid/content/Context;Ljava/lang/String;I)Landroidx/appcompat/widget/ActivityChooserModel;"));
@@ -177,22 +180,22 @@ public class MethodAnalyzer {
         return sb.delete(Math.max(sb.length() - 2, 0), sb.length()).toString();
     }
 
+    // TODO
     public static List<String> splitGeneric(String generic) {
         List<String> ret = new ArrayList<>();
-        String appendix = null;
+        if (generic == null || generic.isEmpty() || generic.equals("*"))
+            return ret;
+        String tmp;
         for (String s : Arrays.stream(generic.split("(\",\\s*\")")).toList()) {
-            if (s.endsWith(">;") && !s.startsWith("*")) {
-                s = s.substring(0, s.length() - 2);
-                appendix = ">;";
-            }
-            if (TypeUtils.isSmaliBasicType(s.substring(0, 1)))
+            if (s.contains(">;") && s.length() > 2) {
+                int idx = s.indexOf(">;");
+                ret.addAll(splitGeneric(s.substring(0, idx)));
+                ret.add(">;");
+                ret.addAll(splitGeneric(s.substring(idx + 2)));
+            } else if (TypeUtils.isSmaliBasicType(s.substring(0, 1)))
                 ret.addAll(TypeUtils.splitSmaliParameters(s));
             else
                 ret.add(s);
-            if (appendix != null) {
-                ret.add(appendix);
-                appendix = null;
-            }
         }
         return ret;
     }
