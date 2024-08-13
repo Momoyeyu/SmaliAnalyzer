@@ -4,6 +4,7 @@ import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.element.instructions.*;
 import com.momoyeyu.smali_analyzer.entity.RegisterMap;
 import com.momoyeyu.smali_analyzer.entity.RegisterTable;
+import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 import com.momoyeyu.smali_analyzer.utils.Formatter;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;

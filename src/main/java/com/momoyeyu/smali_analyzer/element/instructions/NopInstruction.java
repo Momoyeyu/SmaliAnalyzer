@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 
 public class NopInstruction extends Instruction {
     public NopInstruction(String instruction, SmaliMethod parentMethod) {

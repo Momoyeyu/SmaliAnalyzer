@@ -1,4 +1,4 @@
-package com.momoyeyu.smali_analyzer.element.instructions;
+package com.momoyeyu.smali_analyzer.enumeration;
 
 public enum INSTRUCTION_TYPE {
     ARRAT_DATA, FILL_ARRAY_DATA,

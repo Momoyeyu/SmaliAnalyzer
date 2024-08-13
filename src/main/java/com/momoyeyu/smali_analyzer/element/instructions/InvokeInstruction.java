@@ -2,6 +2,7 @@ package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 import com.momoyeyu.smali_analyzer.utils.Stepper;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 

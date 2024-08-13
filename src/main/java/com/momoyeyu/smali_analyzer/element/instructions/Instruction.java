@@ -1,8 +1,10 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.entity.Block;
 import com.momoyeyu.smali_analyzer.entity.RegisterMap;
 import com.momoyeyu.smali_analyzer.entity.RegisterTable;
+import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 
 import java.util.ArrayList;
@@ -10,12 +12,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Instruction {
+public class Instruction extends Block {
 
     protected String signature;
     protected String operation;
     protected List<String> registers;
-    protected SmaliMethod parentMethod;
     protected final RegisterTable registerTable;
     protected boolean analyzed;
     protected boolean updated;
@@ -25,8 +26,8 @@ public class Instruction {
     }
 
     public Instruction(String instruction, SmaliMethod parentMethod) {
+        super(parentMethod);
         signature = Objects.requireNonNullElse(instruction, "");
-        this.parentMethod = parentMethod;
         analyzed = false;
         updated = false;
         if (parentMethod != null)
