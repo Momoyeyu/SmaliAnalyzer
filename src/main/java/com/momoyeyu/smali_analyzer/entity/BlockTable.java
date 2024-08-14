@@ -12,5 +12,5 @@ public interface BlockTable {
 
     List<Block> getNextBlocks(Block block);
 
-    void linkBlocks();
+    void computeBlockPath();
 }

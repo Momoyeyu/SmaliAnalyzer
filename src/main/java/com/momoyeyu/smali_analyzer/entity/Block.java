@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.entity;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.element.instructions.GotoInstruction;
 import com.momoyeyu.smali_analyzer.element.instructions.Instruction;
 
 import java.util.ArrayList;
@@ -12,13 +13,14 @@ public class Block {
     private final List<String> nextBlocks = new ArrayList<>();
     private String previousBlock;
     private SmaliMethod parentMethod;
-    private BlockTable table;
+    private BlockTable blockTable;
+    private RegisterTable registerTable; // 值跟踪
     private int indentation = 0;
 
     public Block(String name, SmaliMethod smaliMethod, BlockTable table) {
         this.name = name;
         this.parentMethod = smaliMethod;
-        this.table = table;
+        this.blockTable = table;
     }
 
     // adder
@@ -27,22 +29,30 @@ public class Block {
     }
 
     public void addNextBlock(String name) {
+        if (name == null || name.isEmpty() || nextBlocks.contains(name))
+            return;
         nextBlocks.add(name);
+    }
+
+    public void removeNextBlock(String name) {
+        nextBlocks.remove(name);
     }
 
     // getter
     public List<Block> getNextBlocks() {
         List<Block> nextBlocks = new ArrayList<>();
         for (String blockName : this.nextBlocks) {
-            Block block = table.getBlock(blockName);
+            Block block = blockTable.getBlock(blockName);
             if (block != null)
                 nextBlocks.add(block);
+            else
+                removeNextBlock(blockName);
         }
         return nextBlocks;
     }
 
     public Block getPreviousBlock() {
-        return table.getBlock(previousBlock);
+        return blockTable.getBlock(previousBlock);
     }
 
     public String getName() {
@@ -62,5 +72,13 @@ public class Block {
     @Override
     public String toString() {
         return null;
+    }
+
+    public boolean isFakeBlock() {
+        for (Instruction instruction : instructions) {
+            if (!(instruction instanceof GotoInstruction))
+                return false;
+        }
+        return true;
     }
 }

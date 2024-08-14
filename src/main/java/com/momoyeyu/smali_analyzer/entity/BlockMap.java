@@ -2,10 +2,7 @@ package com.momoyeyu.smali_analyzer.entity;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BlockMap implements BlockTable {
 
@@ -43,17 +40,37 @@ public class BlockMap implements BlockTable {
     }
 
     @Override
-    public void linkBlocks() {
-//        linkBlocks("start");
+    public void computeBlockPath() {
+        Set<Block> visited = new HashSet<>();
+        Block block = getBlock("start");
+        visited.add(block);
+        computeBlockPath(block, visited);
     }
 
-    private void linkBlocks(String name) {
-        Block block = getBlock(name);
+    private void computeBlockPath(Block block, Set<Block> visited) {
         List<Block> nextBlocks = block.getNextBlocks();
         for (Block nextBlock : nextBlocks) {
+            if (visited.contains(nextBlock))
+                continue;
             nextBlock.setPreviousBlock(block.getName());
-            linkBlocks(nextBlock.getName());
+            computeBlockPath(nextBlock, visited);
         }
+    }
+
+    private void removeFakeBlock() {
+
+    }
+
+    private void removeFakeBlock(Block block) {
+        Block next = block.getNextBlocks().getFirst();
+        List<Block> parentBlocks = new ArrayList<>();
+        for (Block b : blocks.values()) {
+            if (b.getNextBlocks().contains(block)) {
+                b.removeNextBlock(block.getName());
+                b.addNextBlock(next.getName());
+            }
+        }
+        blocks.remove(block.getName());
     }
 
     @Override

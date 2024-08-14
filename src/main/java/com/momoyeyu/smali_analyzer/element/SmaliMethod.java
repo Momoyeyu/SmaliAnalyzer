@@ -315,6 +315,9 @@ public class SmaliMethod extends SmaliElement {
                 currentBlock.addInstruction(instruction);
             }
         }
+        // set previous block
+        blockTable.computeBlockPath();
+        System.out.println();
     }
 
     // getter
