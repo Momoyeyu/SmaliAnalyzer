@@ -20,6 +20,7 @@ public class Instruction {
     protected final RegisterTable registerTable;
     protected boolean analyzed;
     protected boolean updated;
+    protected int line;
 
     protected void analyze() {
         analyzed = true;
@@ -49,6 +50,10 @@ public class Instruction {
                 "instruction location: \n\tsource: " + parentMethod.getSource() + "\n\tclass: " + parentMethod.getOwnerClassType() +
                         "\n\tmethod: " + parentMethod.getSignature());
         return "// " + signature;
+    }
+
+    public int getLine() {
+        return line;
     }
 
     public INSTRUCTION_TYPE getSubType() {
@@ -94,4 +99,7 @@ public class Instruction {
         return substitutedRegisters;
     }
 
+    public void setLine(int line) {
+        this.line = line;
+    }
 }

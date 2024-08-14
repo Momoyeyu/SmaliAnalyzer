@@ -3,6 +3,8 @@ package com.momoyeyu.smali_analyzer.element.instructions;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

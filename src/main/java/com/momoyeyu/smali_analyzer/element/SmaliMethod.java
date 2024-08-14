@@ -3,6 +3,7 @@ package com.momoyeyu.smali_analyzer.element;
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.element.instructions.*;
 import com.momoyeyu.smali_analyzer.entity.*;
+import com.momoyeyu.smali_analyzer.enumeration.BLOCK_TYPE;
 import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 import com.momoyeyu.smali_analyzer.utils.Formatter;
 import com.momoyeyu.smali_analyzer.utils.Logger;
@@ -269,14 +270,16 @@ public class SmaliMethod extends SmaliElement {
         String currentBlockName = "start";
         Block currentBlock = blockTable.newBlock(currentBlockName);
         // separate all instructions into blocks
-        for (int i = 0; i < instructions.size(); i++) {
-            Instruction instruction = instructions.get(i);
+        for (int line = 0; line < instructions.size(); line++) {
+            Instruction instruction = instructions.get(line);
+            instruction.setLine(line);
             if (instruction instanceof ReturnInstruction) {
                 // add instruction
                 currentBlock.addInstruction(instruction);
+
                 // iter until 'label' or 'end method'
-                while(++i < instructions.size()) {
-                    instruction = instructions.get(i);
+                while(++line < instructions.size()) {
+                    instruction = instructions.get(line);
                     if (instruction instanceof Label)
                         break;
                 }
@@ -284,7 +287,7 @@ public class SmaliMethod extends SmaliElement {
             if (instruction instanceof Label) {
                 // new block name :label
                 currentBlockName = instruction.toString();
-                labelTable.accessLabel(currentBlockName);
+                labelTable.addLabel(currentBlockName, line, instruction.getSubType());
                 // set next block :label
                 currentBlock.addNextBlock(currentBlockName);
                 currentBlock = blockTable.newBlock(currentBlockName);
@@ -295,7 +298,7 @@ public class SmaliMethod extends SmaliElement {
                 currentBlock.addInstruction(instruction);
                 // new block name not:label
                 currentBlockName = ((ConditionInstruction) instruction).getLabel();
-                labelTable.accessLabel(currentBlockName);
+                labelTable.useLabel(currentBlockName, line);
                 // set next block not:label, :label
                 currentBlock.addNextBlock(currentBlockName);
                 currentBlockName = blockTable.newName("not" + currentBlockName);
@@ -306,7 +309,7 @@ public class SmaliMethod extends SmaliElement {
                 currentBlock.addInstruction(instruction);
                 // create a new block, name not:label
                 currentBlockName = ((GotoInstruction) instruction).getLabel();
-                labelTable.accessLabel(currentBlockName);
+                labelTable.useLabel(currentBlockName, line);
                 // set next block not:label, :label
                 currentBlock.addNextBlock(currentBlockName);
                 currentBlockName = blockTable.newName("not" + currentBlockName);

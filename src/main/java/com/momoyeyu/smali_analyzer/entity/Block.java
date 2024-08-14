@@ -3,7 +3,10 @@ package com.momoyeyu.smali_analyzer.entity;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.element.instructions.GotoInstruction;
 import com.momoyeyu.smali_analyzer.element.instructions.Instruction;
+import com.momoyeyu.smali_analyzer.element.instructions.Label;
 import com.momoyeyu.smali_analyzer.element.instructions.Tag;
+import com.momoyeyu.smali_analyzer.enumeration.BLOCK_TYPE;
+import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 
 import java.util.ArrayList;
 import java.util.List;

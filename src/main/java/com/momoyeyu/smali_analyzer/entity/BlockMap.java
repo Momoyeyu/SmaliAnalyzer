@@ -7,7 +7,7 @@ import java.util.*;
 public class BlockMap implements BlockTable {
 
     private final Map<String, Block> blocks = new HashMap<>();
-    private int indentation;
+    private int indentation = 0;
 
     private SmaliMethod parentMethod;
 
@@ -100,6 +100,8 @@ public class BlockMap implements BlockTable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        Block block = getBlock("start");
+
         return sb.toString();
     }
 }
