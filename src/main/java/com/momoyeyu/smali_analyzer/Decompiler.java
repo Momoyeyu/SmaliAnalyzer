@@ -9,7 +9,11 @@ import java.io.FileNotFoundException;
 
 public class Decompiler {
 
-    public static final boolean LOG_SWITCH = false;
+    /**
+     * Switch of the Logger.
+     * Decide weather save logs or not.
+     */
+    public static final boolean LOG_CONSOLE = false;
 
     public static void main(String[] args) {
         // C:\Users\antiy\Desktop\apks\招商银行实例\CMBMobileBank\smali\androidx\appcompat\widget
@@ -46,7 +50,7 @@ public class Decompiler {
         }
         Logger.log("[INFO] Output directory: " + outputDir, true);
         decompile(inputDir, outputDir);
-        Logger.log("[INFO] Total logs: " + Logger.getTotal());
+        Logger.log("[INFO] Total logs: " + Logger.getTotal(), true);
         Logger.saveLogs();
         System.exit(0);
     }

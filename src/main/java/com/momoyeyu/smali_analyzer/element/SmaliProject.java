@@ -46,8 +46,8 @@ public class SmaliProject {
         for (String route : routes) {
             new FileAnalyzer(route); // analyze when create
         }
-        Logger.log("[INFO] Finished Decompiling Project: " + inputDir);
-        Logger.log("[INFO] Total input files: " + routes.size());
+        Logger.log("[INFO] Finished Decompiling Project: " + inputDir, true);
+        Logger.log("[INFO] Total input files: " + routes.size(), true);
     }
 
     /**
@@ -74,10 +74,10 @@ public class SmaliProject {
                 }
             } catch (IOException e) {
                 Logger.logException(e.getMessage());
-                Logger.log("[ERROR] IOException occur while decompiling " + smaliFile.getRoutes());
+                Logger.log("[ERROR] IOException occur while decompiling " + smaliFile.getRoutes(), true);
             }
         }
-        Logger.log("[INFO] Total output files: " + files.size());
-        Logger.log("[INFO] Result save at: " + saveDir);
+        Logger.log("[INFO] Total output files: " + files.size(), true);
+        Logger.log("[INFO] Result save at: " + saveDir, true);
     }
 }

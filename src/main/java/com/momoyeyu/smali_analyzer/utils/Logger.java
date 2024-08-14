@@ -5,19 +5,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-import static com.momoyeyu.smali_analyzer.Decompiler.LOG_SWITCH;
+import static com.momoyeyu.smali_analyzer.Decompiler.LOG_CONSOLE;
 import static com.momoyeyu.smali_analyzer.utils.PathUtils.DEFAULT_LOG;
 
 public class Logger {
 
-    /**
-     * Switch of the Logger.
-     * Decide weather save logs or not.
-     */
-    private static final boolean SWITCH = LOG_SWITCH;
-
-    private static final boolean debug = false;
-    private static final boolean trace = false;
+    private static final boolean debug = true;
+    private static final boolean trace = true;
     private static String savePath = null;
     private static int total = 0;
 
@@ -100,9 +94,9 @@ public class Logger {
      * Save current logs into a file
      */
     public static void saveLogs() {
-        if (!SWITCH) {
+        if (!LOG_CONSOLE) {
             System.out.println("[WARN] Logger is OFF, logs were not saved. " +
-                    "You may turn it on by setting Logger.SWITCH to true.");
+                    "You may turn it on by setting LOG_CONSOLE to true.");
             return; // switch off
         }
         if (savePath == null) {

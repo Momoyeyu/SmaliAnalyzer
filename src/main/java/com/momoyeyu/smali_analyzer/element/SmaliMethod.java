@@ -294,21 +294,23 @@ public class SmaliMethod extends SmaliElement {
                 // add instruction
                 currentBlock.addInstruction(instruction);
                 // new block name not:label
-                currentBlockName = "not" + ((ConditionInstruction) instruction).getLabel();
+                currentBlockName = ((ConditionInstruction) instruction).getLabel();
                 labelTable.accessLabel(currentBlockName);
                 // set next block not:label, :label
                 currentBlock.addNextBlock(currentBlockName);
-                currentBlock.addNextBlock(currentBlockName.substring(3));
+                currentBlockName = blockTable.newName("not" + currentBlockName);
+                currentBlock.addNextBlock(currentBlockName);
                 currentBlock = blockTable.newBlock(currentBlockName);
             } else if (instruction instanceof GotoInstruction) {
                 // add instruction
                 currentBlock.addInstruction(instruction);
                 // create a new block, name not:label
-                currentBlockName = "not" + ((GotoInstruction) instruction).getLabel();
+                currentBlockName = ((GotoInstruction) instruction).getLabel();
                 labelTable.accessLabel(currentBlockName);
                 // set next block not:label, :label
                 currentBlock.addNextBlock(currentBlockName);
-                currentBlock.addNextBlock(currentBlockName.substring(3));
+                currentBlockName = blockTable.newName("not" + currentBlockName);
+                currentBlock.addNextBlock(currentBlockName);
                 currentBlock = blockTable.newBlock(currentBlockName);
             } else {
                 // add instruction
@@ -317,7 +319,6 @@ public class SmaliMethod extends SmaliElement {
         }
         // set previous block
         blockTable.computeBlockPath();
-        System.out.println();
     }
 
     // getter

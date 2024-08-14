@@ -3,6 +3,7 @@ package com.momoyeyu.smali_analyzer.entity;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.element.instructions.GotoInstruction;
 import com.momoyeyu.smali_analyzer.element.instructions.Instruction;
+import com.momoyeyu.smali_analyzer.element.instructions.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +77,7 @@ public class Block {
 
     public boolean isFakeBlock() {
         for (Instruction instruction : instructions) {
-            if (!(instruction instanceof GotoInstruction))
+            if (!(instruction instanceof GotoInstruction || instruction instanceof Tag || instruction.getClass() == Instruction.class))
                 return false;
         }
         return true;

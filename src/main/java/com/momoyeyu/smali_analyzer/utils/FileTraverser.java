@@ -31,7 +31,7 @@ public class FileTraverser {
     public static List<String> search(String base) throws FileNotFoundException {
         File dir = new File(base);
         if (!dir.exists()) {
-            Logger.log("[ERROR] The directory does not exist: " + dir);
+            Logger.log("[ERROR] The directory does not exist: " + dir, true);
             throw new FileNotFoundException("The directory does not exist: " + dir);
         }
         return search(dir);

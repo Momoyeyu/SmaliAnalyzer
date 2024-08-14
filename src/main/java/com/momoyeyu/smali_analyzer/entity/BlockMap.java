@@ -28,6 +28,17 @@ public class BlockMap implements BlockTable {
     }
 
     @Override
+    public String newName(String name) {
+        if (blocks.containsKey(name)) {
+            int i = 1;
+            while (blocks.containsKey(name + "_" + i))
+                i += 1;
+            return name + "_" + i;
+        }
+        return name;
+    }
+
+    @Override
     public List<Block> getNextBlocks(String name) {
         return getNextBlocks(getBlock(name));
     }
@@ -41,6 +52,7 @@ public class BlockMap implements BlockTable {
 
     @Override
     public void computeBlockPath() {
+        removeFakeBlock();
         Set<Block> visited = new HashSet<>();
         Block block = getBlock("start");
         visited.add(block);
@@ -53,21 +65,33 @@ public class BlockMap implements BlockTable {
             if (visited.contains(nextBlock))
                 continue;
             nextBlock.setPreviousBlock(block.getName());
+            visited.add(nextBlock);
             computeBlockPath(nextBlock, visited);
         }
     }
 
     private void removeFakeBlock() {
-
+        boolean finish = false;
+        while (!finish && !blocks.isEmpty()) {
+            for (Block block : blocks.values()) {
+                if (block.isFakeBlock() && !block.getName().equals("start")) {
+                    removeFakeBlock(block);
+                    break;
+                }
+                finish = true;
+            }
+        }
     }
 
     private void removeFakeBlock(Block block) {
-        Block next = block.getNextBlocks().getFirst();
-        List<Block> parentBlocks = new ArrayList<>();
-        for (Block b : blocks.values()) {
-            if (b.getNextBlocks().contains(block)) {
-                b.removeNextBlock(block.getName());
-                b.addNextBlock(next.getName());
+        if (!block.getNextBlocks().isEmpty()) {
+            Block next = block.getNextBlocks().getFirst();
+            List<Block> parentBlocks = new ArrayList<>();
+            for (Block b : blocks.values()) {
+                if (b.getNextBlocks().contains(block)) {
+                    b.removeNextBlock(block.getName());
+                    b.addNextBlock(next.getName());
+                }
             }
         }
         blocks.remove(block.getName());
