@@ -88,13 +88,15 @@ public class ConditionInstruction extends Instruction {
     }
 
     @Override
-    public String toString() {
+    public String toString() { // IF, CONTINUE, END_DO_WHILE,
         if (!analyzed)
             return analysisFail("condition");
         if (comment == COMMENT.IF) {
             return "if (" + getCondition(REVERSE_TABLE.get(condition)) + ")";
-        } else if (comment == COMMENT.CONTINUE) {
+        } else if (comment == COMMENT.IF_CONTINUE) {
             return "if (" + getCondition(condition) + ") continue";
+        } else if (comment == COMMENT.IF_BREAK) {
+            return "if (" + getCondition(condition) + ") break";
         } else if (comment == COMMENT.END_DO_WHILE) {
             return "} while(" + getCondition(condition) + ")";
         } else {

@@ -49,6 +49,7 @@ public class LabelMap implements LabelTable {
     public void arrangeInstruction(List<Instruction> instructions) {
         List<Loop> loops = new ArrayList<>();
         Map<Integer, Integer> elseOrBreak = new HashMap<>();
+        Map<Integer, Integer> ifOrBreak = new HashMap<>();
         for (LabelInfo labelInfo : labels.values()) {
             int origin = labelInfo.getOrigin();
             Set<Integer> references = labelInfo.getReferences();
@@ -73,10 +74,12 @@ public class LabelMap implements LabelTable {
             }
             if (labelInfo.getLabelType() == INSTRUCTION_TYPE.LABEL_CONDITION) { // if / do while
                 for (int reference : references) {
-                    if (reference < origin) // reference before origin: if
+                    if (reference < origin) { // reference before origin: if
                         instructions.get(reference).setComment(COMMENT.IF);
-                    else // reference after origin:
-                        instructions.get(reference).setComment(COMMENT.CONTINUE);
+                        ifOrBreak.put(reference, origin); // or break
+                    } else { // reference after origin:
+                        instructions.get(reference).setComment(COMMENT.IF_CONTINUE);
+                    }
                 }
                 // find end loop
                 int max = Collections.max(references);
@@ -94,6 +97,14 @@ public class LabelMap implements LabelTable {
             for (Loop loop : loops) {
                 if (loop.contain(line) && !loop.contain(elseOrBreak.get(line))) {
                     instructions.get(line).setComment(COMMENT.BREAK);
+                    break;
+                }
+            }
+        }
+        for (int line : ifOrBreak.keySet()) {
+            for (Loop loop : loops) {
+                if (loop.contain(line) && !loop.contain(elseOrBreak.get(line))) {
+                    instructions.get(line).setComment(COMMENT.IF_BREAK);
                     break;
                 }
             }

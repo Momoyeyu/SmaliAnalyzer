@@ -51,7 +51,7 @@ public class GotoInstruction extends Instruction {
         if (!analyzed)
             return analysisFail("goto");
         if (comment == COMMENT.ELSE) {
-            return "} else {";
+            return "else";
         } else if (comment == COMMENT.BREAK) {
             return "break";
         } else if (comment == COMMENT.CONTINUE) {

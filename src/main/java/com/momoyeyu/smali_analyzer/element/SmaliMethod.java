@@ -3,6 +3,7 @@ package com.momoyeyu.smali_analyzer.element;
 import com.momoyeyu.smali_analyzer.analyzers.MethodAnalyzer;
 import com.momoyeyu.smali_analyzer.element.instructions.*;
 import com.momoyeyu.smali_analyzer.entity.*;
+import com.momoyeyu.smali_analyzer.enumeration.COMMENT;
 import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 import com.momoyeyu.smali_analyzer.utils.Formatter;
 import com.momoyeyu.smali_analyzer.utils.Logger;
@@ -125,6 +126,7 @@ public class SmaliMethod extends SmaliElement {
         sb.append(" {\n");
         INSTRUCTION_TYPE lastSubType = INSTRUCTION_TYPE.DEFAULT;
         INSTRUCTION_TYPE lastType = INSTRUCTION_TYPE.DEFAULT;
+        COMMENT lastComment = COMMENT.DEFAULT;
         int indentLevel = 1;
         Stack<Instruction> stack = new Stack<>();
         Stack<String> labelStack = new Stack<>();
@@ -132,6 +134,7 @@ public class SmaliMethod extends SmaliElement {
             INSTRUCTION_TYPE subType = instruction.getSubType();
             INSTRUCTION_TYPE type = instruction.getType();
             instruction.updateTable();
+            COMMENT comment = instruction.getComment();
             if (subType == INSTRUCTION_TYPE.INVOKE_CONSTRUCTOR) {
                 if (lastSubType == INSTRUCTION_TYPE.NEW_INSTANCE) {
                     sb.append("\t".repeat(indentLevel)).append(stack.pop()).append(" ");
@@ -192,16 +195,45 @@ public class SmaliMethod extends SmaliElement {
                     continue;
                 }
             } else if (Instruction.equalType(type, INSTRUCTION_TYPE.CONDITION)) {
-                ConditionInstruction condition = (ConditionInstruction) instruction;
-                sb.append("\t".repeat(indentLevel)).append(condition).append(" {\n");
-                labelStack.push(condition.getLabel());
-                indentLevel++;
+                if (comment == COMMENT.IF) {
+                    sb.append("\t".repeat(indentLevel)).append(instruction).append(" {\n");
+                    indentLevel++;
+                } else if (comment == COMMENT.IF_CONTINUE) {
+                    sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
+                } else if (comment == COMMENT.IF_BREAK) {
+                    sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
+                } else if (comment == COMMENT.END_DO_WHILE) {
+                    indentLevel--;
+                    sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
+                }
             } else if (Instruction.equalType(subType, INSTRUCTION_TYPE.LABEL_CONDITION)) {
-                if (!labelStack.isEmpty() && labelStack.peek().equals(instruction.toString())) {
-                    labelStack.pop();
+                if (comment == COMMENT.END_IF) {
+                    if (lastComment != COMMENT.ELSE) {
+                        indentLevel -= labelTable.getLabel(instruction.toString()).getReferences().size();
+                        sb.append("\t".repeat(indentLevel)).append("}\n");
+                    }
+                } else if (comment == COMMENT.DO_WHILE) {
+                    sb.append("\t".repeat(indentLevel)).append("do {\n");
+                    indentLevel++;
+                } // else ?
+            } else if (Instruction.equalType(type, INSTRUCTION_TYPE.GOTO)) {
+                if (comment == COMMENT.ELSE) {
+                    sb.append("\t".repeat(indentLevel - 1)).append("} else {\n");
+                    lastComment = COMMENT.ELSE;
+                } else if (comment == COMMENT.CONTINUE) {
+                    sb.append("\t".repeat(indentLevel)).append("continue;\n");
+                } else if (comment == COMMENT.END_WHILE) {
                     indentLevel--;
                     sb.append("\t".repeat(indentLevel)).append("}\n");
-                }
+                } // else ?
+            } else if (Instruction.equalType(subType, INSTRUCTION_TYPE.LABEL_GOTO)) {
+                if (comment == COMMENT.END_ELSE) {
+                    indentLevel -= 1;
+                    sb.append("\t".repeat(indentLevel)).append("}\n");
+                } else if (comment == COMMENT.WHILE) {
+                    sb.append("\t".repeat(indentLevel)).append("while (true) {\n");
+                    indentLevel++;
+                } // else ?
             } else if (subType == INSTRUCTION_TYPE.RESULT && lastType == INSTRUCTION_TYPE.INVOKE) {
                 InvokeInstruction invokeInstruction = (InvokeInstruction) stack.pop();
                 ((ResultInstruction) instruction).setResultType(invokeInstruction.getReturnType());
