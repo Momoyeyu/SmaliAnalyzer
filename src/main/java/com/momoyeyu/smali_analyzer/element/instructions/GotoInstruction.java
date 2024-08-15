@@ -1,6 +1,7 @@
 package com.momoyeyu.smali_analyzer.element.instructions;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
+import com.momoyeyu.smali_analyzer.enumeration.COMMENT;
 import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 
 import java.util.regex.Matcher;
@@ -49,7 +50,17 @@ public class GotoInstruction extends Instruction {
     public String toString() {
         if (!analyzed)
             return analysisFail("goto");
-        return "goto " + label;
+        if (comment == COMMENT.ELSE) {
+            return "} else {";
+        } else if (comment == COMMENT.BREAK) {
+            return "break";
+        } else if (comment == COMMENT.CONTINUE) {
+            return "continue";
+        } else if (comment == COMMENT.END_WHILE) {
+            return "}";
+        } else {
+            return "goto " + label;
+        }
     }
 
     public String getLabel() {

@@ -10,8 +10,8 @@ import static com.momoyeyu.smali_analyzer.utils.PathUtils.DEFAULT_LOG;
 
 public class Logger {
 
-    private static final boolean debug = true;
-    private static final boolean trace = true;
+    private static final boolean debug = false;
+    private static final boolean trace = false;
     private static String savePath = null;
     private static int total = 0;
 

@@ -127,7 +127,7 @@ public class Block {
             } else if (Instruction.equalType(type, INSTRUCTION_TYPE.CONDITION)) {
                 ConditionInstruction condition = (ConditionInstruction) instruction;
                 if (comment == COMMENT.IF) {
-                    sb.append("\t".repeat(indentLevel)).append(condition.reverseCondition()).append(" {\n");
+                    sb.append("\t".repeat(indentLevel)).append(condition).append(" {\n");
                     // add indentation
                 }
             } else if (Instruction.equalType(subType, INSTRUCTION_TYPE.LABEL_CONDITION)) {
@@ -167,7 +167,7 @@ public class Block {
 
     public boolean isFakeBlock() {
         for (Instruction instruction : instructions) {
-            if (!(instruction instanceof GotoInstruction || instruction instanceof Tag || instruction.getClass() == Instruction.class))
+            if (!(instruction instanceof Tag || instruction.getClass() == Instruction.class))
                 return false;
         }
         return true;

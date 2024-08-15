@@ -193,7 +193,7 @@ public class SmaliMethod extends SmaliElement {
                 }
             } else if (Instruction.equalType(type, INSTRUCTION_TYPE.CONDITION)) {
                 ConditionInstruction condition = (ConditionInstruction) instruction;
-                sb.append("\t".repeat(indentLevel)).append(condition.reverseCondition()).append(" {\n");
+                sb.append("\t".repeat(indentLevel)).append(condition).append(" {\n");
                 labelStack.push(condition.getLabel());
                 indentLevel++;
             } else if (Instruction.equalType(subType, INSTRUCTION_TYPE.LABEL_CONDITION)) {

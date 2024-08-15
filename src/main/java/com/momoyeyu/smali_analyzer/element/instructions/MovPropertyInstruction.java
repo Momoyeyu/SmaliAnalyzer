@@ -15,6 +15,7 @@ public class MovPropertyInstruction extends Instruction {
     private String object;
     private String property;
     private String propertyType;
+    private boolean printType = false;
 
     public static void main(String[] args) {
         System.out.println(new MovPropertyInstruction("iput v3, v2, Landroidx/appcompat/widget/ActivityChooserModel$ActivityResolveInfo;->weight:F"));
@@ -38,8 +39,10 @@ public class MovPropertyInstruction extends Instruction {
         if (!updated) {
             if (operation.startsWith("get", 1)) {
                 String register = registers.getFirst();
-                if (registerTable.getVariableName(register).equals(register)) {
+                String oldType = registerTable.getVariableType(register);
+                if (registerTable.getVariableName(register).equals(register) || !oldType.equals(propertyType)) {
                     registerTable.storeVariable(register, propertyType);
+                    printType = true;
                 }
             }
             super.updateTable();
@@ -85,7 +88,8 @@ public class MovPropertyInstruction extends Instruction {
             }
             sb.append(".").append(property).append(" = ").append(registers.getFirst());
         } else { // get
-            sb.append(TypeUtils.getNameFromJava(propertyType)).append(" ");
+            if (printType)
+                sb.append(TypeUtils.getNameFromJava(propertyType)).append(" ");
             sb.append(registers.getFirst()).append(" = ");
             if (operation.startsWith("i")) {
                 sb.append(registers.getLast());

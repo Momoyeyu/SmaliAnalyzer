@@ -41,42 +41,75 @@ public class LabelMap implements LabelTable {
         return labels.get(label).getReferences().size() == 1;
     }
 
+    /**
+     * Write comment for all label and jump statement of method.
+     * @param instructions all instruction of the method
+     */
     @Override
     public void arrangeInstruction(List<Instruction> instructions) {
+        List<Loop> loops = new ArrayList<>();
+        Map<Integer, Integer> elseOrBreak = new HashMap<>();
         for (LabelInfo labelInfo : labels.values()) {
             int origin = labelInfo.getOrigin();
             Set<Integer> references = labelInfo.getReferences();
-            String label = labelInfo.getLabel();
-            if (labelInfo.getLabelType() == INSTRUCTION_TYPE.LABEL_GOTO) {
+            if (labelInfo.getLabelType() == INSTRUCTION_TYPE.LABEL_GOTO) { // loop / break / continue / else
                 for (int reference : references) {
-                    if (reference < origin) // reference before origin: else
-                        instructions.get(reference).setComment(COMMENT.ELSE);
-                    else // reference after origin: continue / end while loop
+                    if (reference < origin) { // reference before origin: else / break
+                        instructions.get(reference).setComment(COMMENT.ELSE); // else by default
+                        elseOrBreak.put(reference, origin); // or break
+                    } else { // reference after origin: continue / end while loop
                         instructions.get(reference).setComment(COMMENT.CONTINUE);
+                    }
                 }
+                // find end loop
                 int max = Collections.max(references);
-                if (max < origin) {
-                    instructions.get(origin).setComment(COMMENT.WHILE);
-                    instructions.get(max).setComment(COMMENT.END_WHILE);
+                if (origin < max) { // label before max
+                    instructions.get(origin).setComment(COMMENT.WHILE); // label
+                    instructions.get(max).setComment(COMMENT.END_WHILE); // goto
+                    loops.add(new Loop(origin, max));
                 } else {
                     instructions.get(origin).setComment(COMMENT.END_ELSE);
                 }
             }
-            if (labelInfo.getLabelType() == INSTRUCTION_TYPE.LABEL_CONDITION) {
+            if (labelInfo.getLabelType() == INSTRUCTION_TYPE.LABEL_CONDITION) { // if / do while
                 for (int reference : references) {
                     if (reference < origin) // reference before origin: if
                         instructions.get(reference).setComment(COMMENT.IF);
                     else // reference after origin:
                         instructions.get(reference).setComment(COMMENT.CONTINUE);
                 }
+                // find end loop
                 int max = Collections.max(references);
-                if (max < origin) {
-                    instructions.get(origin).setComment(COMMENT.DO_WHILE);
-                    instructions.get(max).setComment(COMMENT.END_DO_WHILE);
+                if (origin < max) { // label before condition
+                    instructions.get(origin).setComment(COMMENT.DO_WHILE); // label
+                    instructions.get(max).setComment(COMMENT.END_DO_WHILE); // condition
+                    loops.add(new Loop(origin, max));
                 } else {
                     instructions.get(origin).setComment(COMMENT.END_IF);
                 }
             }
         } // end for (LabelInfo labelInfo : labels.values())
+        // find break
+        for (int line : elseOrBreak.keySet()) {
+            for (Loop loop : loops) {
+                if (loop.contain(line) && !loop.contain(elseOrBreak.get(line))) {
+                    instructions.get(line).setComment(COMMENT.BREAK);
+                    break;
+                }
+            }
+        }
+    } // end method
+
+    private static class Loop {
+        int start;
+        int end;
+        Loop(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public boolean contain(int line) {
+            return start < line && line < end;
+        }
     }
 }
