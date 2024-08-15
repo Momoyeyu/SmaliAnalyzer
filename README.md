@@ -22,9 +22,6 @@ Our primary objective is to ensure that SmaliAnalyzer can effectively decompile 
 We welcome contributions from the community! If you have ideas, bug reports, or would like to collaborate, please get in touch.
 
 ### License
-
-**[License Information Will Be Added Later]**
-
-As the project is still in its infancy, we are open to suggestions and discussions about the licensing. We will update the license information once a decision is made.
+We are using GNU v3.0 License for this project.
 
 Feel free to use SmaliAnalyzer for your projects, and we look forward to your feedback and support.
