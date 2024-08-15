@@ -3,6 +3,7 @@ package com.momoyeyu.smali_analyzer.element.instructions;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.entity.RegisterMap;
 import com.momoyeyu.smali_analyzer.entity.RegisterTable;
+import com.momoyeyu.smali_analyzer.enumeration.COMMENT;
 import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 
@@ -21,7 +22,7 @@ public class Instruction {
     protected boolean analyzed;
     protected boolean updated;
     protected int line;
-    protected String comment;
+    protected COMMENT comment = COMMENT.DEFAULT;
 
     protected void analyze() {
         analyzed = true;
@@ -84,7 +85,7 @@ public class Instruction {
         return false;
     }
 
-    public String getComment() {
+    public COMMENT getComment() {
         return comment;
     }
 
@@ -109,7 +110,7 @@ public class Instruction {
         this.line = line;
     }
 
-    public void setComment(String comment) {
+    public void setComment(COMMENT comment) {
         this.comment = comment;
     }
 }

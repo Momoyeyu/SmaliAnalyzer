@@ -15,4 +15,8 @@ public interface BlockTable {
     List<Block> getNextBlocks(Block block);
 
     void computeBlockPath();
+
+    void setIndentation(int indentation);
+
+    int getIndentation();
 }

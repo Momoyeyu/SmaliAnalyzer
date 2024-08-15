@@ -104,4 +104,12 @@ public class BlockMap implements BlockTable {
 
         return sb.toString();
     }
+
+    public void setIndentation(int indentation) {
+        this.indentation = indentation;
+    }
+
+    public int getIndentation() {
+        return indentation;
+    }
 }

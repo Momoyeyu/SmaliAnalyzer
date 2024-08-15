@@ -2,6 +2,7 @@ package com.momoyeyu.smali_analyzer.entity;
 
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.element.instructions.Instruction;
+import com.momoyeyu.smali_analyzer.enumeration.COMMENT;
 import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 
 import java.util.*;
@@ -49,31 +50,31 @@ public class LabelMap implements LabelTable {
             if (labelInfo.getLabelType() == INSTRUCTION_TYPE.LABEL_GOTO) {
                 for (int reference : references) {
                     if (reference < origin) // reference before origin: else
-                        instructions.get(reference).setComment("else" + label);
+                        instructions.get(reference).setComment(COMMENT.ELSE);
                     else // reference after origin: continue / end while loop
-                        instructions.get(reference).setComment("continue" + label);
+                        instructions.get(reference).setComment(COMMENT.CONTINUE);
                 }
                 int max = Collections.max(references);
                 if (max < origin) {
-                    instructions.get(origin).setComment("start while loop" + label);
-                    instructions.get(max).setComment("end while loop" + label);
+                    instructions.get(origin).setComment(COMMENT.WHILE);
+                    instructions.get(max).setComment(COMMENT.END_WHILE);
                 } else {
-                    instructions.get(origin).setComment("end else" + label);
+                    instructions.get(origin).setComment(COMMENT.END_ELSE);
                 }
             }
             if (labelInfo.getLabelType() == INSTRUCTION_TYPE.LABEL_CONDITION) {
                 for (int reference : references) {
                     if (reference < origin) // reference before origin: if
-                        instructions.get(reference).setComment("if" + label);
+                        instructions.get(reference).setComment(COMMENT.IF);
                     else // reference after origin:
-                        instructions.get(reference).setComment("continue" + label);
+                        instructions.get(reference).setComment(COMMENT.CONTINUE);
                 }
                 int max = Collections.max(references);
                 if (max < origin) {
-                    instructions.get(origin).setComment("start do while loop" + label);
-                    instructions.get(max).setComment("end while loop" + label);
+                    instructions.get(origin).setComment(COMMENT.DO_WHILE);
+                    instructions.get(max).setComment(COMMENT.END_DO_WHILE);
                 } else {
-                    instructions.get(origin).setComment("end if" + label);
+                    instructions.get(origin).setComment(COMMENT.END_IF);
                 }
             }
         } // end for (LabelInfo labelInfo : labels.values())

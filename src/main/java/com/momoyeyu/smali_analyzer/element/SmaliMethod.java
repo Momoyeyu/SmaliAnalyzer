@@ -20,6 +20,7 @@ public class SmaliMethod extends SmaliElement {
     protected boolean nativeModifier;
     protected String annotation;
     protected String returnType;
+    protected IndentationTable indentationTable = new IndentationTable(1);
 
     protected BlockTable blockTable = new BlockMap(this);
     protected LabelTable labelTable = new LabelMap(this);
