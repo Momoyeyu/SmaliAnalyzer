@@ -21,6 +21,7 @@ public class Instruction {
     protected boolean analyzed;
     protected boolean updated;
     protected int line;
+    protected String comment;
 
     protected void analyze() {
         analyzed = true;
@@ -83,6 +84,10 @@ public class Instruction {
         return false;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
     public void updateTable() {
         if (!updated) {
             if (registers != null)
@@ -99,7 +104,12 @@ public class Instruction {
         return substitutedRegisters;
     }
 
+    // setter
     public void setLine(int line) {
         this.line = line;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

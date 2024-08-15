@@ -3,10 +3,7 @@ package com.momoyeyu.smali_analyzer.entity;
 import com.momoyeyu.smali_analyzer.element.SmaliMethod;
 import com.momoyeyu.smali_analyzer.element.instructions.GotoInstruction;
 import com.momoyeyu.smali_analyzer.element.instructions.Instruction;
-import com.momoyeyu.smali_analyzer.element.instructions.Label;
 import com.momoyeyu.smali_analyzer.element.instructions.Tag;
-import com.momoyeyu.smali_analyzer.enumeration.BLOCK_TYPE;
-import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +16,6 @@ public class Block {
     private SmaliMethod parentMethod;
     private BlockTable blockTable;
     private RegisterTable registerTable; // 值跟踪
-    private int indentation = 0;
 
     public Block(String name, SmaliMethod smaliMethod, BlockTable table) {
         this.name = name;
@@ -64,10 +60,6 @@ public class Block {
     }
 
     // setter
-    public void setIndentation(int indentation) {
-        this.indentation = indentation;
-    }
-
     public void setPreviousBlock(String previousBlock) {
         this.previousBlock = previousBlock;
     }

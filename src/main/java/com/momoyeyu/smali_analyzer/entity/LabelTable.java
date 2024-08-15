@@ -1,7 +1,7 @@
 package com.momoyeyu.smali_analyzer.entity;
 
 
-import com.momoyeyu.smali_analyzer.element.instructions.Label;
+import com.momoyeyu.smali_analyzer.element.instructions.Instruction;
 import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 
 import java.util.HashSet;
@@ -18,7 +18,7 @@ public interface LabelTable {
 
     boolean isPeer(String label);
 
-    List<LabelInfo> getLabels();
+    void arrangeInstruction(List<Instruction> instructions);
 
     class LabelInfo {
         private String label;
