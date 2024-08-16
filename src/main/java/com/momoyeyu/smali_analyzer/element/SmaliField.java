@@ -7,7 +7,7 @@ import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 public class SmaliField extends SmaliElement {
     private String annotations;
     private String type;
-    private Object value;
+    private String value;
     private boolean volatileModifier;
     private boolean transientModifier;
 
@@ -55,10 +55,25 @@ public class SmaliField extends SmaliElement {
         if (transientModifier) {
             sb.append("transient ");
         }
-        sb.append(TypeUtils.getNameFromJava(type)).append(" ");
+        String typeName = TypeUtils.getNameFromJava(type);
+        sb.append(typeName).append(" ");
         sb.append(name);
         if (value != null) {
-            sb.append(" = ").append(value);
+            sb.append(" = ");
+            if (typeName.equals("boolean") || typeName.equals("Boolean")) {
+                sb.append(switch (value) {
+                    case "0x0" -> "false";
+                    case "0x1" -> "true";
+                    default -> value;
+                });
+            } else if (typeName.equals("int") || typeName.equals("Integer")
+            || typeName.equals("long") || typeName.equals("Long")) {
+                if (value.startsWith("0x")) {
+                    sb.append(Integer.parseInt(value.substring(2), 16));
+                }
+            } else {
+                sb.append(value);
+            }
         }
         sb.append(";");
         return sb.toString();
@@ -69,7 +84,7 @@ public class SmaliField extends SmaliElement {
         this.type = type;
     }
 
-    public void setValue(Object value) {
+    public void setValue(String value) {
         this.value = value;
     }
 

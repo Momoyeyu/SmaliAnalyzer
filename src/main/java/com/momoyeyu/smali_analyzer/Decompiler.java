@@ -13,7 +13,7 @@ public class Decompiler {
      * Switch of the Logger.
      * Decide weather save logs or not.
      */
-    public static final boolean LOG_CONSOLE = true;
+    public static final boolean LOG_CONSOLE = false;
 
     public static void main(String[] args) {
         // C:\Users\antiy\Desktop\apks\招商银行实例\CMBMobileBank\smali\androidx\appcompat\widget

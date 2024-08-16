@@ -75,6 +75,13 @@ public class RegisterMap implements RegisterTable {
         variableMap.put(name, new Variable(type));
     }
 
+    @Override
+    public void storeConst(String register, String value) {
+        String name = nameGenerator("const");
+        reigisterMap.put(register, name);
+        variableMap.put(name, new Constant(value));
+    }
+
     /**
      * @param register register name
      * @return the name of the variable inside the register
@@ -84,7 +91,13 @@ public class RegisterMap implements RegisterTable {
         if (!reigisterMap.containsKey(register)) {
             return register;
         }
-        return reigisterMap.get(register);
+        String name = reigisterMap.get(register);
+        Variable var = variableMap.get(name);
+        var.addReferenceCount();
+        if (var instanceof Constant) {
+            return ((Constant) var).getValue();
+        }
+        return name;
     }
 
     /**

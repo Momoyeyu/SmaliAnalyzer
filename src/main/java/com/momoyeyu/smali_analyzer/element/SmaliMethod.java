@@ -10,7 +10,6 @@ import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.*;
-import java.util.concurrent.locks.Condition;
 
 public class SmaliMethod extends SmaliElement {
     protected final List<Instruction> instructions;
@@ -106,10 +105,10 @@ public class SmaliMethod extends SmaliElement {
                 this.instructions.add(new Instruction(instruction, this));
             }
         }
-        // blocking
-        blocking();
         // analysis
         this.toJava();
+        // blocking
+        blocking();
     }
 
     @Override
@@ -134,8 +133,8 @@ public class SmaliMethod extends SmaliElement {
         for (Instruction instruction : this.instructions) {
             INSTRUCTION_TYPE subType = instruction.getSubType();
             INSTRUCTION_TYPE type = instruction.getType();
-            instruction.updateTable();
             COMMENT comment = instruction.getComment();
+            instruction.updateTable();
             if (indentLevel < 1)
                 indentLevel = 1;
             if (subType == INSTRUCTION_TYPE.INVOKE_CONSTRUCTOR) {
@@ -275,7 +274,8 @@ public class SmaliMethod extends SmaliElement {
                 sb.append("\t".repeat(indentLevel)).append(instruction).append("\n");
             } else if (Instruction.equalType(type, INSTRUCTION_TYPE.TAG,
                     INSTRUCTION_TYPE.SYNCHRONIZED, INSTRUCTION_TYPE.NOP,
-                    INSTRUCTION_TYPE.ARRAT_DATA, INSTRUCTION_TYPE.SWITCH_PACK)) {
+                    INSTRUCTION_TYPE.ARRAT_DATA, INSTRUCTION_TYPE.SWITCH_PACK,
+                    INSTRUCTION_TYPE.CONST)) {
                 continue;
             } else { // other
                 sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");

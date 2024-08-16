@@ -12,6 +12,8 @@ public interface RegisterTable {
 
     void storeVariableWithName(String register, String type, String name);
 
+    void storeConst(String register, String value);
+
     /**
      * Return the name of the variable inside the register.
      * @param register register

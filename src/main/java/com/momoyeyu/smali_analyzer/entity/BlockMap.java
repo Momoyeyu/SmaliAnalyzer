@@ -53,6 +53,8 @@ public class BlockMap implements BlockTable {
     @Override
     public void computeBlockPath() {
         removeFakeBlock();
+        RegisterTable registerTable = parentMethod.getRegisterTable();
+//        registerTable.storeParams();
         Set<Block> visited = new HashSet<>();
         Block block = getBlock("start");
         visited.add(block);
@@ -60,6 +62,7 @@ public class BlockMap implements BlockTable {
     }
 
     private void computeBlockPath(Block block, Set<Block> visited) {
+//        block.traceValue();
         List<Block> nextBlocks = block.getNextBlocks();
         for (Block nextBlock : nextBlocks) {
             if (visited.contains(nextBlock))

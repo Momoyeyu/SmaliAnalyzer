@@ -66,7 +66,7 @@ public class ConstInstruction extends Instruction {
                 case "" -> "java.lang.Object";
                 default -> constType;
             };
-            registerTable.storeVariable(registers.getFirst(), newType);
+            registerTable.storeConst(registers.getFirst(), value);
             super.updateTable();
         }
     }
