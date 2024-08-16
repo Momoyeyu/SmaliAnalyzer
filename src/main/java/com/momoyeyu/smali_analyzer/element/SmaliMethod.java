@@ -10,6 +10,7 @@ import com.momoyeyu.smali_analyzer.utils.Logger;
 import com.momoyeyu.smali_analyzer.utils.TypeUtils;
 
 import java.util.*;
+import java.util.concurrent.locks.Condition;
 
 public class SmaliMethod extends SmaliElement {
     protected final List<Instruction> instructions;
@@ -135,6 +136,8 @@ public class SmaliMethod extends SmaliElement {
             INSTRUCTION_TYPE type = instruction.getType();
             instruction.updateTable();
             COMMENT comment = instruction.getComment();
+            if (indentLevel < 1)
+                indentLevel = 1;
             if (subType == INSTRUCTION_TYPE.INVOKE_CONSTRUCTOR) {
                 if (lastSubType == INSTRUCTION_TYPE.NEW_INSTANCE) {
                     sb.append("\t".repeat(indentLevel)).append(stack.pop()).append(" ");
@@ -181,7 +184,7 @@ public class SmaliMethod extends SmaliElement {
                 }
             } else if (subType == INSTRUCTION_TYPE.LABEL_TRY_START) {
                 Label label = (Label) instruction;
-                sb.append("\t".repeat(indentLevel)).append("try {\n");
+                sb.append("\t".repeat(indentLevel)).append("try { // ").append(instruction).append("\n");
                 labelStack.push(label.toString());
                 indentLevel++;
             } else if (subType == INSTRUCTION_TYPE.LABEL_TRY_END) {
@@ -189,50 +192,76 @@ public class SmaliMethod extends SmaliElement {
                 if (start.equals(instruction.toString())) {
                     labelStack.pop();
                     indentLevel--;
-                    sb.append("\t".repeat(indentLevel)).append("}\n");
+                    sb.append("\t".repeat(indentLevel)).append("} // ").append(instruction).append("\n");
                     lastSubType = INSTRUCTION_TYPE.LABEL_TRY_END;
                     lastType = INSTRUCTION_TYPE.LABEL;
                     continue;
                 }
             } else if (Instruction.equalType(type, INSTRUCTION_TYPE.CONDITION)) {
+                ConditionInstruction condition = (ConditionInstruction) instruction;
                 if (comment == COMMENT.IF) {
-                    sb.append("\t".repeat(indentLevel)).append(instruction).append(" {\n");
-                    indentLevel++;
+                    if (lastComment == COMMENT.ELSE) {
+                        int idx = sb.lastIndexOf("else {");
+                        sb.replace(idx + 4, idx + 5, "if (" + condition.getCondition(true) + ") ");
+                    } else {
+                        sb.append("\t".repeat(indentLevel)).append(condition).append(" { // ").append(condition.getLabel()).append("\n");
+                        indentLevel++;
+                        indentationTable.addIndentationOf(condition.getLabel());
+                    }
                 } else if (comment == COMMENT.IF_CONTINUE) {
-                    sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
+                    sb.append("\t".repeat(indentLevel)).append(condition).append("; // ").append(condition.getLabel()).append("\n");
                 } else if (comment == COMMENT.IF_BREAK) {
-                    sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
+                    if (lastComment == COMMENT.WHILE) {
+                        int idx = sb.lastIndexOf("(true) {");
+                        sb.replace(idx + 1, idx + 5, condition.getCondition(true));
+                        lastComment = COMMENT.BREAK_TO_WHILE;
+                        continue;
+                    } else if (lastComment == COMMENT.BREAK_TO_WHILE) {
+                        int idx = sb.lastIndexOf(") {");
+                        sb.replace(idx, idx + 1, " && " + condition.getCondition(true) + ")");
+                        lastComment = COMMENT.BREAK_TO_WHILE;
+                        continue;
+                    } else {
+                        sb.append("\t".repeat(indentLevel)).append(condition).append("; // ").append(condition.getLabel()).append("\n");
+                    }
                 } else if (comment == COMMENT.END_DO_WHILE) {
                     indentLevel--;
-                    sb.append("\t".repeat(indentLevel)).append(instruction).append(";\n");
+                    sb.append("\t".repeat(indentLevel)).append(condition).append(";\n");
                 }
             } else if (Instruction.equalType(subType, INSTRUCTION_TYPE.LABEL_CONDITION)) {
                 if (comment == COMMENT.END_IF) {
                     if (lastComment != COMMENT.ELSE) {
-                        indentLevel -= labelTable.getLabel(instruction.toString()).getReferences().size();
-                        sb.append("\t".repeat(indentLevel)).append("}\n");
+                        int indent = indentationTable.getIndentationOf(instruction.toString());
+                        for (int i = 0; i < indent; i++) {
+                            indentLevel--;
+                            sb.append("\t".repeat(indentLevel)).append("} // ").append(instruction).append("\n");
+                        }
                     }
                 } else if (comment == COMMENT.DO_WHILE) {
-                    sb.append("\t".repeat(indentLevel)).append("do {\n");
+                    sb.append("\t".repeat(indentLevel)).append("do { // ").append(instruction).append("\n");
                     indentLevel++;
                 } // else ?
             } else if (Instruction.equalType(type, INSTRUCTION_TYPE.GOTO)) {
+                GotoInstruction gotoInstruction = (GotoInstruction) instruction;
                 if (comment == COMMENT.ELSE) {
-                    sb.append("\t".repeat(indentLevel - 1)).append("} else {\n");
+                    sb.append("\t".repeat(indentLevel - 1)).append("} else { // goto ").append(gotoInstruction.getLabel()).append("\n");
                     lastComment = COMMENT.ELSE;
+                    continue;
                 } else if (comment == COMMENT.CONTINUE) {
-                    sb.append("\t".repeat(indentLevel)).append("continue;\n");
+                    sb.append("\t".repeat(indentLevel)).append("continue; // goto ").append(gotoInstruction.getLabel()).append("\n");
                 } else if (comment == COMMENT.END_WHILE) {
                     indentLevel--;
-                    sb.append("\t".repeat(indentLevel)).append("}\n");
+                    sb.append("\t".repeat(indentLevel)).append("} // goto ").append(gotoInstruction.getLabel()).append("\n");
                 } // else ?
             } else if (Instruction.equalType(subType, INSTRUCTION_TYPE.LABEL_GOTO)) {
                 if (comment == COMMENT.END_ELSE) {
                     indentLevel -= 1;
-                    sb.append("\t".repeat(indentLevel)).append("}\n");
+                    sb.append("\t".repeat(indentLevel)).append("} // ").append(instruction).append("\n");
                 } else if (comment == COMMENT.WHILE) {
-                    sb.append("\t".repeat(indentLevel)).append("while (true) {\n");
+                    sb.append("\t".repeat(indentLevel)).append("while (true) { // ").append(instruction).append("\n");
                     indentLevel++;
+                    lastComment = COMMENT.WHILE;
+                    continue;
                 } // else ?
             } else if (subType == INSTRUCTION_TYPE.RESULT && lastType == INSTRUCTION_TYPE.INVOKE) {
                 InvokeInstruction invokeInstruction = (InvokeInstruction) stack.pop();
@@ -253,6 +282,7 @@ public class SmaliMethod extends SmaliElement {
             }
             lastSubType = INSTRUCTION_TYPE.DEFAULT;
             lastType = INSTRUCTION_TYPE.DEFAULT;
+            lastComment = COMMENT.DEFAULT;
         }
         sb.append("}\n");
         return sb.toString();

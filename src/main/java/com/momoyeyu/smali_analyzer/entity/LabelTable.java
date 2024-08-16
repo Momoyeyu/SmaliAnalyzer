@@ -2,6 +2,7 @@ package com.momoyeyu.smali_analyzer.entity;
 
 
 import com.momoyeyu.smali_analyzer.element.instructions.Instruction;
+import com.momoyeyu.smali_analyzer.element.instructions.Label;
 import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 
 import java.util.HashSet;
@@ -57,6 +58,9 @@ public interface LabelTable {
         }
 
         public INSTRUCTION_TYPE getLabelType() {
+            if (labelType == null) {
+                return Label.getLabelType(label);
+            }
             return labelType;
         }
     }

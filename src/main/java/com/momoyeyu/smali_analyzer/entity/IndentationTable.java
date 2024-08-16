@@ -42,4 +42,8 @@ public class IndentationTable {
         return indentationTable.values().stream().reduce(0, Integer::sum) + offset;
     }
 
+    public int getIndentationOf(String indentation) {
+        return indentationTable.get(indentation);
+    }
+
 }

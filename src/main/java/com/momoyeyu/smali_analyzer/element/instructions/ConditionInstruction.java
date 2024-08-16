@@ -6,7 +6,6 @@ import com.momoyeyu.smali_analyzer.enumeration.INSTRUCTION_TYPE;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,6 +101,12 @@ public class ConditionInstruction extends Instruction {
         } else {
             return "if (" + getCondition(REVERSE_TABLE.get(condition)) + ")";
         }
+    }
+
+    public String getCondition(boolean reverse) {
+        if (reverse)
+            return getCondition(REVERSE_TABLE.get(condition));
+        return getCondition(condition);
     }
 
     private String getCondition(String condition) {

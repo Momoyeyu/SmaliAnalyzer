@@ -103,8 +103,10 @@ public class LabelMap implements LabelTable {
         }
         for (int line : ifOrBreak.keySet()) {
             for (Loop loop : loops) {
-                if (loop.contain(line) && !loop.contain(elseOrBreak.get(line))) {
+                int origin = ifOrBreak.get(line);
+                if (loop.contain(line) && !loop.contain(origin)) {
                     instructions.get(line).setComment(COMMENT.IF_BREAK);
+                    instructions.get(origin).setComment(COMMENT.DEFAULT);
                     break;
                 }
             }
