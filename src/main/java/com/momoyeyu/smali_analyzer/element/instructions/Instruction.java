@@ -111,6 +111,8 @@ public class Instruction {
     }
 
     public void setComment(COMMENT comment) {
+        if (this.comment == COMMENT.MUTE)
+            return;
         this.comment = comment;
     }
 }

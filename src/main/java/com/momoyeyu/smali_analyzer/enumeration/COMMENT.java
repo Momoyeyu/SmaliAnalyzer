@@ -6,5 +6,6 @@ public enum COMMENT {
     BREAK, IF_BREAK, BREAK_TO_WHILE,
     TRY, END_TRY,
     CATCH,
-    CONST
+    CONST,
+    MUTE
 }

@@ -58,23 +58,8 @@ public class SmaliField extends SmaliElement {
         String typeName = TypeUtils.getNameFromJava(type);
         sb.append(typeName).append(" ");
         sb.append(name);
-        if (value != null) {
-            sb.append(" = ");
-            if (typeName.equals("boolean") || typeName.equals("Boolean")) {
-                sb.append(switch (value) {
-                    case "0x0" -> "false";
-                    case "0x1" -> "true";
-                    default -> value;
-                });
-            } else if (typeName.equals("int") || typeName.equals("Integer")
-            || typeName.equals("long") || typeName.equals("Long")) {
-                if (value.startsWith("0x")) {
-                    sb.append(Integer.parseInt(value.substring(2), 16));
-                }
-            } else {
-                sb.append(value);
-            }
-        }
+        if (value != null)
+            sb.append(" = ").append(TypeUtils.parseConst(typeName, value));
         sb.append(";");
         return sb.toString();
     }

@@ -32,7 +32,10 @@ public class ReturnInstruction extends Instruction {
     protected void analyze() {
         Matcher matcher = returnPattern.matcher(signature);
         if (matcher.matches()) {
-            returnType = matcher.group(2) == null ? "" : matcher.group(2);
+            if (parentMethod != null)
+                returnType = parentMethod.getReturnType();
+            else
+                returnType = matcher.group(2) == null ? "" : matcher.group(2);
             registers = getRegistersList(matcher.group(4));
             super.analyze();
         }
@@ -59,7 +62,7 @@ public class ReturnInstruction extends Instruction {
         if (TypeUtils.isVoid(returnType)) {
             return "return";
         }
-        return "return " + registers.getFirst();
+        return "return " + TypeUtils.parseConst(returnType, registers.getFirst());
     }
 
     public static boolean isReturnInstruction(String instruction) {

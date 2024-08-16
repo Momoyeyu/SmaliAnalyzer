@@ -1,6 +1,9 @@
 package com.momoyeyu.smali_analyzer.element;
 
 import com.momoyeyu.smali_analyzer.analyzers.ConstructorAnalyzer;
+import com.momoyeyu.smali_analyzer.element.instructions.Instruction;
+import com.momoyeyu.smali_analyzer.element.instructions.ReturnInstruction;
+import com.momoyeyu.smali_analyzer.enumeration.COMMENT;
 import com.momoyeyu.smali_analyzer.utils.Logger;
 
 import java.util.ArrayList;
@@ -32,8 +35,14 @@ public class SmaliConstructor extends SmaliMethod {
         if (!ownerClass.isAnalyzed()) {
             ownerClass.toJava();
         }
-        if (initType.equals("<clinit>"))
+        if (initType.equals("<clinit>")) {
+            for (Instruction instruction : instructions) {
+                if (instruction instanceof ReturnInstruction) {
+                    instruction.setComment(COMMENT.MUTE);
+                }
+            }
             return "static";
+        }
         StringBuilder sb = new StringBuilder();
         if (!accessModifier.equals("default")) {
             sb.append(accessModifier).append(" ");
@@ -51,6 +60,11 @@ public class SmaliConstructor extends SmaliMethod {
 
     public String getInitType() {
         return initType;
+    }
+
+    @Override
+    public String getReturnType() {
+        return "void";
     }
 
     public void setInitType(String initType) {

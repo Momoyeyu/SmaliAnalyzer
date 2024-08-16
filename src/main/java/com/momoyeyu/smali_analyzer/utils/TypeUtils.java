@@ -298,4 +298,20 @@ public class TypeUtils {
         return type.equals("void") || type.equals("java.lang.Void");
     }
 
+    public static String parseConst(String type, String value) {
+        if (type.equals("boolean") || type.equals("Boolean")) {
+            value = switch (value) {
+                case "0x0" -> "false";
+                case "0x1" -> "true";
+                default -> value;
+            };
+        } else if (type.equals("int") || type.equals("Integer")
+                || type.equals("long") || type.equals("Long")) {
+            if (value.startsWith("0x")) {
+                value = "" + Integer.parseInt(value.substring(2), 16);
+            }
+        }
+        return value;
+    }
+
 }

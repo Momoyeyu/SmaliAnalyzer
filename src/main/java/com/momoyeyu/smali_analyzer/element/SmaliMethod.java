@@ -45,6 +45,8 @@ public class SmaliMethod extends SmaliElement {
         this.synchronizedModifier = false;
         this.instructions = new ArrayList<>();
         registerTable = new RegisterMap(this);
+        // analysis
+        this.toJava();
         // generate instructions
         for (String instruction : instructions) {
             if (MovArrayInstruction.isArrayMovInstruction(instruction)) {
@@ -105,8 +107,6 @@ public class SmaliMethod extends SmaliElement {
                 this.instructions.add(new Instruction(instruction, this));
             }
         }
-        // analysis
-        this.toJava();
         // blocking
         blocking();
     }
@@ -135,8 +135,10 @@ public class SmaliMethod extends SmaliElement {
             INSTRUCTION_TYPE type = instruction.getType();
             COMMENT comment = instruction.getComment();
             instruction.updateTable();
-            if (indentLevel < 1)
-                indentLevel = 1;
+            if (comment == COMMENT.MUTE)
+                continue;
+//            if (indentLevel < 1)
+//                indentLevel = 1;
             if (subType == INSTRUCTION_TYPE.INVOKE_CONSTRUCTOR) {
                 if (lastSubType == INSTRUCTION_TYPE.NEW_INSTANCE) {
                     sb.append("\t".repeat(indentLevel)).append(stack.pop()).append(" ");
@@ -418,6 +420,10 @@ public class SmaliMethod extends SmaliElement {
         if (ownerClass == null)
             return "testing";
         return ownerClass.getSource();
+    }
+
+    public String getReturnType() {
+        return returnType;
     }
 
     // setter
